@@ -29,9 +29,13 @@ namespace BetterHades
             and.AddInConnection(c1);
             and.AddInConnection(c2);
             and.Subscribe(c3);
+            Console.WriteLine($"Gate {and} --- Connection {c3}");
             c1.Activate();
+            Console.WriteLine($"Gate {and} --- Connection {c3}");
             c2.Activate();
+            Console.WriteLine($"Gate {and} --- Connection {c3}");
             c2.Deactivate();
+            Console.WriteLine($"Gate {and} --- Connection {c3}");
         }
     }
 }
