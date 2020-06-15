@@ -35,14 +35,11 @@ namespace BetterHades.Components
 
         // Observer
         public void OnNext(Gate gate) { IsActive = gate.Output; }
-
         public void OnCompleted() { Console.WriteLine("COMPLETED"); }
         public void OnError(Exception error) { Console.WriteLine(error); }
 
-        // Helper Methods
-
+        // Output Methods
         public void Activate() { IsActive = true; }
-
         public void Deactivate() { IsActive = false; }
 
         private void Notify(bool b)
@@ -51,7 +48,6 @@ namespace BetterHades.Components
         }
 
         // Overrides
-
         public override int GetHashCode() { return IsActive.GetHashCode(); }
 
         public static bool operator ==(Connection connection, bool comparator)
