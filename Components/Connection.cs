@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
     public class Connection : IObservable<Connection>, IObserver<Gate>
     {
-        private readonly ObservableCollection<Gate> _inComponents;
-        private readonly List<Gate> _observers;
+        private readonly Gate _input;
+        private readonly Gate _output;
         private bool _isActive;
 
-        public Connection()
+        public Connection(Gate input, Gate output)
         {
-            _observers = new List<Gate>();
-            _inComponents = new ObservableCollection<Gate>();
+            _input = input;
+            _input.Subscribe(this);
+            _output = output;
+            _isActive = _input.IsActive;
         }
 
         private bool IsActive
@@ -27,25 +31,15 @@ namespace BetterHades.Components
         }
 
         // Observable
-        public IDisposable Subscribe(IObserver<Connection> observer)
-        {
-            _observers.Add(observer as Gate);
-            return (observer as IDisposable)!;
-        }
+        public IDisposable Subscribe(IObserver<Connection> observer) { throw new UnsubscribableException(); }
 
         // Observer
-        public void OnNext(Gate gate) { IsActive = gate.Output; }
+        public void OnNext(Gate gate) { IsActive = gate.IsActive; }
         public void OnCompleted() { Console.WriteLine("COMPLETED"); }
         public void OnError(Exception error) { Console.WriteLine(error); }
 
         // Output Methods
-        public void Activate() { IsActive = true; }
-        public void Deactivate() { IsActive = false; }
-
-        private void Notify(bool b)
-        {
-            foreach (var obs in _observers) obs.OnNext(this);
-        }
+        private void Notify(bool b) { _output.OnNext(this); }
 
         // Overrides
         public override int GetHashCode() { return IsActive.GetHashCode(); }

@@ -10,7 +10,7 @@ namespace BetterHades.Components
     {
         private readonly List<Connection> _outConnections;
         protected readonly ObservableCollection<Connection> InConnections;
-        private bool _output;
+        private bool _isActive;
 
         protected Gate()
         {
@@ -19,13 +19,13 @@ namespace BetterHades.Components
             InConnections.CollectionChanged += Update;
         }
 
-        public bool Output
+        public bool IsActive
         {
-            get => _output;
+            get => _isActive;
             set
             {
-                if (_output != value) Notify(_output = value);
-                else _output = value;
+                if (_isActive != value) Notify(_isActive = value);
+                else _isActive = value;
             }
         }
 
@@ -44,7 +44,7 @@ namespace BetterHades.Components
         // Output Methods
         protected abstract bool Check();
         private void Update(object sender, NotifyCollectionChangedEventArgs e) { Update(); }
-        private void Update() { Output = Check(); }
+        private void Update() { IsActive = Check(); }
 
         private void Notify(bool b)
         {
