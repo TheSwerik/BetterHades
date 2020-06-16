@@ -38,7 +38,7 @@ namespace BetterHades
             _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[1]));
             _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[2]));
             _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[3]));
-            var andGate = new AndGate();
+            var andGate = new ANDGate();
             _components.Add(andGate);
             _connections.Add(new Connection(_inputs[0], _outputs[0]));
             _connections.Add(new Connection(_inputs[0], andGate));
