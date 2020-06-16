@@ -3,12 +3,9 @@ using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
-    public interface IComponent : IObserver<Connection>, IObservable<IComponent>
+    public interface IComponent: IObservable<IComponent>
     {
         // Implemented:
-        void IObserver<Connection>.OnCompleted() { throw new CompletedException(); }
-        void IObserver<Connection>.OnError(Exception error) { Console.WriteLine("COMPONENT ERROR --- ", error); }
-        void IObserver<Connection>.OnNext(Connection connection) { Update(connection); }
         public string ToString() { return IsActive() + ""; }
 
         // Abstract:
