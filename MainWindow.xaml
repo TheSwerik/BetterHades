@@ -9,25 +9,19 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
+        <!-- <CheckBox Grid.Row="1" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" /> -->
 
-        <CheckBox Grid.Row="1" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" />
-        <CheckBox Grid.Row="2" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" />
-        <TextBlock Grid.Row="1" Grid.Column="2" Width="40" Height="40" Background="Gray" />
-        <TextBlock Grid.Row="2" Grid.Column="2" Width="40" Height="40" Background="Gray" />
+
+        <!-- <CheckBox Grid.Row="2" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" /> -->
+        <!-- <TextBlock Grid.Row="1" Grid.Column="2" Width="40" Height="40" Background="Gray" /> -->
+        <!-- <TextBlock Grid.Row="2" Grid.Column="2" Width="40" Height="40" Background="Gray" /> -->
+        <Canvas Grid.Column="1" Grid.Row="1" DragDrop.AllowDrop="True" />
     </Grid>
 </Window>

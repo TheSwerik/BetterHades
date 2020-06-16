@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -15,6 +16,7 @@ namespace BetterHades
         private readonly List<Connection> _connections;
         private readonly List<Input> _inputs;
         private readonly List<Output> _outputs;
+        private readonly Canvas _canvas;
 
         public MainWindow()
         {
@@ -26,6 +28,7 @@ namespace BetterHades
             _outputs = new List<Output>();
             _components = new List<Component>();
             _connections = new List<Connection>();
+            _canvas = (Canvas) LogicalChildren[0].LogicalChildren[0];
             Test();
         }
 
@@ -33,10 +36,26 @@ namespace BetterHades
 
         private void Test()
         {
-            _inputs.Add(new InputClock((CheckBox) LogicalChildren[0].LogicalChildren[0], 1000));
-            _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[1]));
-            _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[2]));
-            _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[3]));
+            var checkbox1 = new CheckBox();
+            _canvas.Children.Add(checkbox1);
+            var checkbox2 = new CheckBox();
+            _canvas.Children.Add(checkbox2);
+            var rect1 = new TextBlock();
+            rect1.Width = rect1.Height = 100;
+            _canvas.Children.Add(rect1);
+            var rect2 = new TextBlock();
+            rect2.Width = rect2.Height = 100;
+            _canvas.Children.Add(rect2);
+            Canvas.SetTop(checkbox2, 100);
+            Canvas.SetTop(rect1, -40);
+            Canvas.SetTop(rect2, 60);
+            Canvas.SetLeft(rect1, 100);
+            Canvas.SetLeft(rect2, 100);
+
+            _inputs.Add(new InputClock(checkbox1, 1000));
+            _inputs.Add(new Input(checkbox2));
+            _outputs.Add(new Output(rect1));
+            _outputs.Add(new Output(rect2));
             var andGate = new ANDGate();
             _components.Add(andGate);
             _connections.Add(new Connection(_inputs[0], _outputs[0]));
