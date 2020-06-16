@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace BetterHades.Components
 {
-    public abstract class MultiOutputComponent : IComponent
+    public abstract class Component : IComponent
     {
         private readonly List<IObserver<IComponent>> _outputs;
-        private bool _isActive;
-        protected MultiOutputComponent() { _outputs = new List<IObserver<IComponent>>(); }
+
+        protected Component() { _outputs = new List<IObserver<IComponent>>(); }
 
         public IDisposable Subscribe(IObserver<IComponent> observer)
         {
@@ -16,8 +16,7 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        public abstract void Update();
-        public bool IsActive() { return _isActive; }
-        protected void SetActive(bool isActive) { _isActive = isActive; }
+
+        public bool IsActive { get; set; }
     }
 }

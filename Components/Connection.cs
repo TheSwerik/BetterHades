@@ -14,6 +14,8 @@ namespace BetterHades.Components
             Subscribe(output);
         }
 
+        public bool IsActive => _input.IsActive;
+
         /**
         * Subscribes the Observer to this Connection.
         */
@@ -26,33 +28,30 @@ namespace BetterHades.Components
         // Observer-Stuff
         public void OnCompleted() { throw new CompletedException(); }
 
-        public void OnError(Exception error) { Console.WriteLine("CONNECTION --- ", error); }
+        public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}",error); }
 
-        public void OnNext(IComponent input) { Notify(input.IsActive()); }
+        public void OnNext(IComponent input) { Notify(); }
 
-        public void Notify(bool b)
+        private void Notify()
         {
             _output.OnNext(this);
             Console.WriteLine("CONNECTION ONNEXT");
         }
 
-        // Getter
-        public bool IsActive() { return _input.IsActive(); }
-
         // Overrides
-        public override int GetHashCode() { return IsActive().GetHashCode(); }
+        public override int GetHashCode() { return IsActive.GetHashCode(); }
 
         public static bool operator ==(Connection connection, bool comparator)
         {
-            return connection?.IsActive() == comparator;
+            return connection?.IsActive == comparator;
         }
 
         public static bool operator !=(Connection connection, bool comparator)
         {
-            return connection?.IsActive() != comparator;
+            return connection?.IsActive != comparator;
         }
 
-        private bool Equals(Connection other) { return IsActive() == other.IsActive(); }
+        private bool Equals(Connection other) { return IsActive == other.IsActive; }
 
         public override bool Equals(object obj)
         {
@@ -61,6 +60,6 @@ namespace BetterHades.Components
             return obj.GetType() == GetType() && Equals((Connection) obj);
         }
 
-        public override string ToString() { return IsActive() + ""; }
+        public override string ToString() { return IsActive + ""; }
     }
 }

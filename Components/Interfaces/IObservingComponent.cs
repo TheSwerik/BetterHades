@@ -11,6 +11,6 @@ namespace BetterHades.Components
         void IObserver<Connection>.OnNext(Connection value) { Update(value); }
 
         // Abstract:
-        public void Update(Connection value);
+        public void Update(Connection connection);
     }
 }

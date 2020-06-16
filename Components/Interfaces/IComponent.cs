@@ -4,12 +4,12 @@ namespace BetterHades.Components
 {
     public interface IComponent : IObservable<IComponent>
     {
+        public bool IsActive { get; set; }
+
         // Implemented:
-        public string ToString() { return IsActive() + ""; }
+        public string ToString() { return IsActive + ""; }
 
         // Abstract:
-        public void Update();
         public void Notify(bool b);
-        public bool IsActive();
     }
 }

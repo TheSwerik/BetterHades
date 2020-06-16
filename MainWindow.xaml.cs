@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using BetterHades.Components;
+using BetterHades.Components.Implementations.Gates;
 
 namespace BetterHades
 {
@@ -31,6 +32,7 @@ namespace BetterHades
         private void Test()
         {
             and = new AndGate();
+            ();
             inputs.Add(new InputImpl());
             inputs.Add(new InputImpl());
             var c1 = new Connection(inputs[0], and);
