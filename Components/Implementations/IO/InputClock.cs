@@ -17,8 +17,14 @@ namespace BetterHades.Components.Implementations.IO
                            var stopwatch = new Stopwatch();
                            stopwatch.Start();
                            while (stopwatch.ElapsedMilliseconds < 10_000)
-                               if (stopwatch.ElapsedMilliseconds % _ms < 10)
-                                   Dispatcher.UIThread.InvokeAsync(() => InputBox.IsChecked = !InputBox.IsChecked);
+                           {
+                               Dispatcher.UIThread.InvokeAsync(() =>
+                                                               {
+                                                                   InputBox.IsChecked = !InputBox.IsChecked;
+                                                                   Update();
+                                                               });
+                               Thread.Sleep(1000);
+                           }
                        }).Start();
         }
     }
