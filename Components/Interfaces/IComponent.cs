@@ -8,8 +8,8 @@ namespace BetterHades.Components
         public string ToString() { return IsActive() + ""; }
 
         // Abstract:
-        protected void Update(Connection connection);
-        protected void Notify(bool b);
+        public void Update();
+        public void Notify(bool b);
         public bool IsActive();
     }
 }

@@ -16,7 +16,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.9.10" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\Gates" />
-    <Folder Include="Components\IO" />
+    <Folder Include="Components\Implementations\Gates" />
+    <Folder Include="Components\Implementations\IO" />
   </ItemGroup>
 </Project>

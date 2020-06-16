@@ -12,8 +12,8 @@ namespace BetterHades
     public class MainWindow : Window
     {
         private readonly TextBlock _outBox;
-        private AndGate and;
         private readonly List<InputImpl> inputs;
+        private AndGate and;
 
         public MainWindow()
         {
