@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Components;
+using BetterHades.Components.Implementations.Gates;
 using BetterHades.Components.Implementations.IO;
 
 namespace BetterHades
@@ -35,7 +37,13 @@ namespace BetterHades
             _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[0]));
             _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[1]));
             _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[2]));
+            _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[3]));
+            var andGate = new AndGate();
+            _components.Add(andGate);
             _connections.Add(new Connection(_inputs[0], _outputs[0]));
+            _connections.Add(new Connection(_inputs[0], andGate));
+            _connections.Add(new Connection(_inputs[1], andGate));
+            _connections.Add(new Connection(andGate, _outputs[1]));
         }
 
         public void CheckboxOnClick(object sender, RoutedEventArgs e)

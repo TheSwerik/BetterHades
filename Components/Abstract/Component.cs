@@ -9,6 +9,9 @@ namespace BetterHades.Components
 
         protected Component() { _outputs = new List<IObserver<IComponent>>(); }
 
+        /**
+        * Subscribes the Observer to this Connection.
+        */
         public IDisposable Subscribe(IObserver<IComponent> observer)
         {
             _outputs.Add(observer);
@@ -18,5 +21,6 @@ namespace BetterHades.Components
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
 
         public bool IsActive { get; set; }
+        public override string ToString() { return IsActive + ""; }
     }
 }

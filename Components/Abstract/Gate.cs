@@ -15,10 +15,11 @@ namespace BetterHades.Components
 
         public void Update(Connection connection) { Update(); }
 
-        private void Update() { Notify(IsActive = Check()); }
-        private void Update(object sender, NotifyCollectionChangedEventArgs e) { Update(); }
-
         public void AddInput(Connection connection) { Inputs.Add(connection); }
+
+        private void Update() { Notify(IsActive = Check()); }
+
+        private void Update(object sender, NotifyCollectionChangedEventArgs e) { Update(); }
 
         protected abstract bool Check();
     }

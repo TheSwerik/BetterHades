@@ -25,8 +25,9 @@
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
-        <CheckBox Grid.Row="1" Grid.Column="1" Name="InCheckBox1" Click="CheckboxOnClick" IsChecked="False" />
-        <CheckBox Grid.Row="2" Grid.Column="1" Name="InCheckBox2" Click="CheckboxOnClick" IsChecked="False" />
-        <TextBlock Grid.Row="1" Grid.Column="2" Name="OutBlock" Width="40" Height="40" Background="Gray" />
+        <CheckBox Grid.Row="1" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" />
+        <CheckBox Grid.Row="2" Grid.Column="1" Click="CheckboxOnClick" IsChecked="False" />
+        <TextBlock Grid.Row="1" Grid.Column="2" Width="40" Height="40" Background="Gray" />
+        <TextBlock Grid.Row="2" Grid.Column="2" Width="40" Height="40" Background="Gray" />
     </Grid>
 </Window>

@@ -13,6 +13,7 @@ namespace BetterHades.Components
             _input = input;
             _input.Subscribe(this);
             Subscribe(output);
+            _output.AddInput(this);
         }
 
         public bool IsActive => _input.IsActive;

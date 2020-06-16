@@ -8,9 +8,11 @@ namespace BetterHades.Components
         // Implemented:
         void IObserver<Connection>.OnCompleted() { throw new CompletedException(); }
         void IObserver<Connection>.OnError(Exception error) { Console.WriteLine(error); }
+
         void IObserver<Connection>.OnNext(Connection value) { Update(value); }
 
         // Abstract:
         public void Update(Connection connection);
+        public void AddInput(Connection connection);
     }
 }

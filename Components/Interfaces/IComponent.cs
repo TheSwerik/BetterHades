@@ -6,9 +6,6 @@ namespace BetterHades.Components
     {
         public bool IsActive { get; set; }
 
-        // Implemented:
-        public string ToString() { return IsActive + ""; }
-
         // Abstract:
         public void Notify(bool b);
     }

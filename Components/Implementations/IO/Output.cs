@@ -10,6 +10,7 @@ namespace BetterHades.Components.Implementations.IO
         public Output(TextBlock rectangle) { _rectangle = rectangle; }
 
         public void Update(Connection connection) { ChangeColor(connection.IsActive); }
+        public void AddInput(Connection connection) { ; }
 
         private void ChangeColor(bool active) { _rectangle.Background = active ? Brushes.Red : Brushes.Gray; }
     }
