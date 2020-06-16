@@ -28,7 +28,7 @@ namespace BetterHades.Components
         // Observer-Stuff
         public void OnCompleted() { throw new CompletedException(); }
 
-        public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}",error); }
+        public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}", error); }
 
         public void OnNext(IComponent input) { Notify(); }
 
