@@ -42,7 +42,8 @@ namespace BetterHades
             inputs.Add(new InputImpl());
             var c1 = new Connection(inputs[0], and);
             var c2 = new Connection(inputs[1], and);
-            // var c3 = new Connection(and,);
+            var output = new OutputImp();
+            // var c3 = new Connection(and,output);
             and.AddInConnection(c1);
             and.AddInConnection(c2);
             // and.Subscribe(c3);
