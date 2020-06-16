@@ -6,13 +6,13 @@ using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
-    public class Connection : IObservable<Connection>, IObserver<Gate>
+    public class Connection : IObservable<Connection>, IObserver<Input>
     {
-        private readonly Gate _input;
+        private readonly Input _input;
         private readonly Gate _output;
         private bool _isActive;
 
-        public Connection(Gate input, Gate output)
+        public Connection(Input input, Gate output)
         {
             _input = input;
             _input.Subscribe(this);
@@ -34,7 +34,7 @@ namespace BetterHades.Components
         public IDisposable Subscribe(IObserver<Connection> observer) { throw new UnsubscribableException(); }
 
         // Observer
-        public void OnNext(Gate gate) { IsActive = gate.IsActive; }
+        public void OnNext(Input input) { IsActive = input.IsActive; }
         public void OnCompleted() { Console.WriteLine("COMPLETED"); }
         public void OnError(Exception error) { Console.WriteLine(error); }
 
