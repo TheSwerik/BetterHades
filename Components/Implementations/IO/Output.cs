@@ -5,9 +5,9 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Output : Component, IObservingComponent
     {
-        private readonly TextBox _rectangle;
+        private readonly TextBlock _rectangle;
 
-        public Output(TextBox rectangle) { _rectangle = rectangle; }
+        public Output(TextBlock rectangle) { _rectangle = rectangle; }
 
         public void Update(Connection connection) { ChangeColor(connection.IsActive); }
 

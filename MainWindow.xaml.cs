@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.Gates;
+using BetterHades.Components.Implementations.IO;
 
 namespace BetterHades
 {
     public class MainWindow : Window
     {
-        private readonly TextBlock _outBox;
-        private readonly List<InputImpl> inputs;
-        private AndGate and;
+        private readonly List<Input> _inputs;
+        private readonly List<Output> _outputs;
+        private readonly List<Component> _components;
 
         public MainWindow()
         {
@@ -22,8 +21,9 @@ namespace BetterHades
 #if DEBUG
             this.AttachDevTools();
 #endif
-            _outBox = (TextBlock) LogicalChildren[0].LogicalChildren[2];
-            inputs = new List<InputImpl>();
+            _inputs = new List<Input>();
+            _outputs = new List<Output>();
+            _components = new List<Component>();
             Test();
         }
 
@@ -31,33 +31,13 @@ namespace BetterHades
 
         private void Test()
         {
-            and = new AndGate();
-            ();
-            inputs.Add(new InputImpl());
-            inputs.Add(new InputImpl());
-            var c1 = new Connection(inputs[0], and);
-            var c2 = new Connection(inputs[1], and);
-            var output = new OutputImp();
-            // var c3 = new Connection(and,output);
-            and.AddInConnection(c1);
-            and.AddInConnection(c2);
-            // and.Subscribe(c3);
-            // Console.WriteLine($"Gate {and} --- Connection {c3}");
-            // c1.Activate();
-            // Console.WriteLine($"Gate {and} --- Connection {c3}");
-            // c2.Activate();
-            // Console.WriteLine($"Gate {and} --- Connection {c3}");
-            // c2.Deactivate();
-            // Console.WriteLine($"Gate {and} --- Connection {c3}");
+            _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[1]));
+            _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[2]));
         }
 
-        public void button_Click(object sender, RoutedEventArgs e)
+        public void CheckboxOnClick(object sender, RoutedEventArgs e)
         {
-            var senderCheckbox = (CheckBox) sender;
-            var isChecked = senderCheckbox.IsChecked ?? false;
-            var index = int.Parse(Regex.Replace(senderCheckbox.Name, @"[^\d]", ""));
-            inputs[index - 1].IsActive = isChecked;
-            _outBox.Background = and.IsActive ? Brushes.Red : Brushes.Gray;
+            _inputs.Find(i => i.InputBox.Equals(sender))?.Update();
         }
     }
 }

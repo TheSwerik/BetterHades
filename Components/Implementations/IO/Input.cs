@@ -4,13 +4,13 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        private readonly CheckBox _input;
+        public readonly CheckBox InputBox;
 
-        public Input(CheckBox input) { _input = input; }
+        public Input(CheckBox inputBox) { InputBox = inputBox; }
 
         public void Update()
         {
-            if (_input.IsChecked != null) IsActive = (bool) _input.IsChecked;
+            if (InputBox.IsChecked != null) IsActive = (bool) InputBox.IsChecked;
         }
     }
 }
