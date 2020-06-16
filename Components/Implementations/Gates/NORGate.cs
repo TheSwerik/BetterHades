@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace BetterHades.Components.Implementations.Gates
 {
-    public class ANDGate : Gate
+    public class NORGate : Gate
     {
-        protected override bool Check() { return Inputs.All(c => c.IsActive); }
+        protected override bool Check() { return !Inputs.Any(c => c.IsActive); }
     }
 }

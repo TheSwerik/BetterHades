@@ -1,4 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
+
 using System.Linq;
 
 namespace BetterHades.Components.Implementations.Gates

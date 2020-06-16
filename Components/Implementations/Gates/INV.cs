@@ -1,8 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-using System.Collections.ObjectModel;
 using System.Linq;
-using BetterHades.Components.Implementations.IO;
 
 namespace BetterHades.Components.Implementations.Gates
 {
