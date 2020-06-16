@@ -2,8 +2,7 @@
 
 namespace BetterHades.Exceptions
 {
-    public class UnsubscribableException: Exception
+    public class UnsubscribableException : Exception
     {
-        
     }
 }

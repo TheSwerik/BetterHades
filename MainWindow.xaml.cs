@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using BetterHades.Components;
-using BetterHades.Components.Gates;
-using BetterHades.Components.IO;
-using Serilog;
-using SharpDX.Direct2D1;
 
 namespace BetterHades
 {
     public class MainWindow : Window
     {
-        private TextBlock _outBox;
+        private readonly TextBlock _outBox;
+        private AndGate and;
+        private readonly List<InputImpl> inputs;
 
         public MainWindow()
         {
@@ -26,14 +21,12 @@ namespace BetterHades
 #if DEBUG
             this.AttachDevTools();
 #endif
-            _outBox = ((TextBlock) this.LogicalChildren[0].LogicalChildren[2]);
+            _outBox = (TextBlock) LogicalChildren[0].LogicalChildren[2];
             inputs = new List<InputImpl>();
             Test();
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
-        private List<InputImpl> inputs;
-        private AndGate and;
 
         private void Test()
         {
@@ -58,7 +51,7 @@ namespace BetterHades
 
         public void button_Click(object sender, RoutedEventArgs e)
         {
-            var senderCheckbox = ((CheckBox) sender);
+            var senderCheckbox = (CheckBox) sender;
             var isChecked = senderCheckbox.IsChecked ?? false;
             var index = int.Parse(Regex.Replace(senderCheckbox.Name, @"[^\d]", ""));
             inputs[index - 1].IsActive = isChecked;

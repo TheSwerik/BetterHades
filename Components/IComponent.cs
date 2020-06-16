@@ -1,9 +1,8 @@
 ﻿using System;
-using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
-    public interface IComponent: IObservable<IComponent>
+    public interface IComponent : IObservable<IComponent>
     {
         // Implemented:
         public string ToString() { return IsActive() + ""; }

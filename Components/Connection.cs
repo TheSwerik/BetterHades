@@ -1,7 +1,6 @@
 ﻿namespace BetterHades.Components
 {
-    public class Connection 
+    public class Connection
     {
-        
     }
 }
