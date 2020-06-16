@@ -37,8 +37,10 @@ namespace BetterHades
         private void Test()
         {
             var checkbox1 = new CheckBox();
+            checkbox1.Click += CheckboxOnClick;
             _canvas.Children.Add(checkbox1);
             var checkbox2 = new CheckBox();
+            checkbox2.Click += CheckboxOnClick;
             _canvas.Children.Add(checkbox2);
             var rect1 = new TextBlock();
             rect1.Width = rect1.Height = 100;
