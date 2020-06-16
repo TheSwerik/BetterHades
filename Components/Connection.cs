@@ -11,6 +11,7 @@ namespace BetterHades.Components
         public Connection(IComponent input, IObservingComponent output)
         {
             _input = input;
+            _input.Subscribe(this);
             Subscribe(output);
         }
 
@@ -22,7 +23,7 @@ namespace BetterHades.Components
         public IDisposable Subscribe(IObserver<Connection> observer)
         {
             _output = (IObservingComponent) observer;
-            return (IDisposable) observer;
+            return (observer as IDisposable)!;
         }
 
         // Observer-Stuff
@@ -32,11 +33,7 @@ namespace BetterHades.Components
 
         public void OnNext(IComponent input) { Notify(); }
 
-        private void Notify()
-        {
-            _output.OnNext(this);
-            Console.WriteLine("CONNECTION ONNEXT");
-        }
+        private void Notify() { _output.OnNext(this); }
 
         // Overrides
         public override int GetHashCode() { return IsActive.GetHashCode(); }

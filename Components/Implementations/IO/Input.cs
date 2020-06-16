@@ -10,7 +10,7 @@ namespace BetterHades.Components.Implementations.IO
 
         public void Update()
         {
-            if (InputBox.IsChecked != null) IsActive = (bool) InputBox.IsChecked;
+            if (InputBox.IsChecked != null) Notify(IsActive = (bool) InputBox.IsChecked);
         }
     }
 }

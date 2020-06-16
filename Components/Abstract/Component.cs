@@ -12,7 +12,7 @@ namespace BetterHades.Components
         public IDisposable Subscribe(IObserver<IComponent> observer)
         {
             _outputs.Add(observer);
-            return (IDisposable) observer;
+            return (observer as IDisposable)!;
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
