@@ -1,31 +1,25 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 namespace BetterHades.Components.Implementations.IO
 {
-    public class InputClock : Component
+    public class InputClock : Input
     {
-        public readonly CheckBox InputBox;
         private readonly long _ms;
 
-        public InputClock(CheckBox inputBox, long ms)
+        public InputClock(CheckBox inputBox, long ms) : base(inputBox)
         {
-            InputBox = inputBox;
             _ms = ms;
             new Thread(() =>
                        {
                            var stopwatch = new Stopwatch();
+                           stopwatch.Start();
                            while (stopwatch.ElapsedMilliseconds < 10_000)
-                           {
-                               if (stopwatch.ElapsedMilliseconds % _ms < 10) InputBox.IsChecked = !InputBox.IsChecked;
-                           }
+                               if (stopwatch.ElapsedMilliseconds % _ms < 10)
+                                   Dispatcher.UIThread.InvokeAsync(() => InputBox.IsChecked = !InputBox.IsChecked);
                        }).Start();
-        }
-
-        public void Update()
-        {
-            if (InputBox.IsChecked != null) Notify(IsActive = (bool) InputBox.IsChecked);
         }
     }
 }

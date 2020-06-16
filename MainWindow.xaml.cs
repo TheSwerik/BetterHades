@@ -33,7 +33,7 @@ namespace BetterHades
 
         private void Test()
         {
-            _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[0]));
+            _inputs.Add(new InputClock((CheckBox) LogicalChildren[0].LogicalChildren[0], 1000));
             _inputs.Add(new Input((CheckBox) LogicalChildren[0].LogicalChildren[1]));
             _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[2]));
             _outputs.Add(new Output((TextBlock) LogicalChildren[0].LogicalChildren[3]));
