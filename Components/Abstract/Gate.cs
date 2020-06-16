@@ -15,7 +15,7 @@ namespace BetterHades.Components
 
         public void Update(Connection connection) { Update(); }
 
-        public void AddInput(Connection connection) { Inputs.Add(connection); }
+        public virtual void AddInput(Connection connection) { Inputs.Add(connection); }
 
         private void Update() { Notify(IsActive = Check()); }
 
