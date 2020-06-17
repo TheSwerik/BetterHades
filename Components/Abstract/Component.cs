@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Input;
 using Avalonia.Media;
 
 namespace BetterHades.Components
@@ -20,22 +21,26 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
-        protected readonly Polygon _polygon;
+        protected readonly Polygon Polygon;
         public readonly Point OutPoint;
+        public bool IsClicked;
 
         protected Component(IPanel parent, double x, double y, Point outPoint)
         {
             _outputs = new List<Connection>();
-            _polygon = new Polygon
-                       {
-                           Width = 100,
-                           Height = 100,
-                           Fill = Brushes.Gray,
-                           Points = GetPoints(x, y)
-                       };
+            Polygon = new Polygon
+                      {
+                          Width = 100,
+                          Height = 100,
+                          Fill = Brushes.Gray,
+                          Points = GetPoints(x, y)
+                      };
             OutPoint = outPoint;
-            parent.Children.Add(_polygon);
+            parent.Children.Add(Polygon);
+            Polygon.PointerPressed += SetClicked;
         }
+
+        private void SetClicked(object sender, PointerPressedEventArgs e) { IsClicked = true; }
 
         /**
         * Subscribes the Observer to this Connection.
@@ -47,10 +52,9 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-
         public bool IsActive { get; set; }
         public override string ToString() { return IsActive + ""; }
-        public static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
+        private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
         public static Dictionary<string, List<Type>> ToDictionary()
         {

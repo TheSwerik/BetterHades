@@ -23,11 +23,7 @@ namespace BetterHades.Components.Implementations.IO
                            stopwatch.Start();
                            while (stopwatch.ElapsedMilliseconds < 10_000)
                            {
-                               Dispatcher.UIThread.InvokeAsync(() =>
-                                                               {
-                                                                   InputBox.IsChecked = !InputBox.IsChecked;
-                                                                   CheckboxOnClick(null, null);
-                                                               });
+                               Dispatcher.UIThread.InvokeAsync(() => { OnClick(null, null); });
                                Thread.Sleep(1000);
                            }
                        }).Start();

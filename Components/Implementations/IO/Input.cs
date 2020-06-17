@@ -11,14 +11,12 @@ namespace BetterHades.Components.Implementations.IO
     {
         public Input(IPanel parent, double x, double y) : base(parent, x, y, new Point(x, y))
         {
-            _polygon.PointerPressed += CheckboxOnClick;
+            Polygon.PointerPressed += OnClick;
         }
 
-        protected CheckBox InputBox { get; }
-
-        protected void CheckboxOnClick(object sender, RoutedEventArgs e)
+        protected void OnClick(object sender, RoutedEventArgs e)
         {
-            if (InputBox.IsChecked != null) Notify(IsActive = (bool) InputBox.IsChecked);
+            Notify(IsActive = !IsActive);
         }
 
         protected override List<Point> GetPoints(double x, double y)

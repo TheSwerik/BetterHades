@@ -18,7 +18,7 @@ namespace BetterHades.Components.Implementations.IO
 
         protected override void Update() { ChangeColor(_inConnection.IsActive); }
         public override void AddInput(Connection connection) { _inConnection = connection; }
-        private void ChangeColor(bool active) { _polygon.Fill = active ? Brushes.Red : Brushes.Gray; }
+        private void ChangeColor(bool active) { Polygon.Fill = active ? Brushes.Red : Brushes.Gray; }
 
         protected override List<Point> GetPoints(double x, double y)
         {

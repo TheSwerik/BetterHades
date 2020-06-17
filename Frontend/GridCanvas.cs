@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -41,7 +43,16 @@ namespace BetterHades.Frontend
             }
             else if (args.MouseButton == MouseButton.Left)
             {
-                // TODO
+                while (_components.Count(c => c.IsClicked) >= 2)
+                {
+                    var inComponent = _components.First(c => c.IsClicked && !(c is ObservingComponent));
+                    if (inComponent == null) break;
+                    var outComponent = (ObservingComponent) _components.First(c => c.IsClicked && c is ObservingComponent);
+                    if (outComponent == null) break;
+                    inComponent.IsClicked = false;
+                    outComponent.IsClicked = false;
+                    _connections.Add(new Connection(inComponent, outComponent));
+                }
             }
         }
 
