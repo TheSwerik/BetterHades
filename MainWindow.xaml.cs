@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.Gates;
 using BetterHades.Components.Implementations.IO;
@@ -13,11 +14,14 @@ namespace BetterHades
 {
     public class MainWindow : Window
     {
+        private readonly Canvas _canvas;
         private readonly List<Component> _components;
         private readonly List<Connection> _connections;
         private readonly List<Input> _inputs;
         private readonly List<Output> _outputs;
-        private readonly Canvas _canvas;
+
+        public List<string> MyItems;
+        private readonly ContextMenu rightClickCOntextMenu;
 
         public MainWindow()
         {
@@ -30,8 +34,13 @@ namespace BetterHades
             _components = new List<Component>();
             _connections = new List<Connection>();
             _canvas = (Canvas) LogicalChildren[0].LogicalChildren[0];
-            _canvas.PointerReleased += CreateCheckbox;
-            Test();
+            _canvas.PointerPressed += ClickHandler;
+            MyItems = new List<string> {"hello", "dishfsodif"};
+            rightClickCOntextMenu = new ContextMenu {Background = Brushes.Aqua, Items = MyItems, IsVisible = false};
+            rightClickCOntextMenu.PointerPressed += RightClickContextMenuSelection;
+            rightClickCOntextMenu.KeyDown += RightClickContextMenuSelection;
+            _canvas.Children.Add(rightClickCOntextMenu);
+            // Test();
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
@@ -73,17 +82,29 @@ namespace BetterHades
             _inputs.Find(i => i.InputBox.Equals(sender))?.Update();
         }
 
-        public void CreateCheckbox(object sender, RoutedEventArgs e)
+        private void ClickHandler(object sender, RoutedEventArgs e)
         {
-            var checkbox = new CheckBox();
-            checkbox.Click += CheckboxOnClick;
-            _canvas.Children.Add(checkbox);
-            var args = (PointerReleasedEventArgs) e;
+            var args = (PointerPressedEventArgs) e;
             var pos = args.GetCurrentPoint(_canvas).Position;
-            Canvas.SetTop(checkbox, pos.Y);
-            Canvas.SetLeft(checkbox, pos.X);
-            if(args.InitialPressMouseButton == MouseButton.Left) Console.WriteLine("LEFT");
-            if(args.InitialPressMouseButton == MouseButton.Right) Console.WriteLine("RIGHT");
+            if (args.MouseButton == MouseButton.Right)
+            {
+                Canvas.SetTop(rightClickCOntextMenu, pos.Y);
+                Canvas.SetLeft(rightClickCOntextMenu, pos.X);
+                rightClickCOntextMenu.IsVisible = true;
+            }
+            else if (args.MouseButton == MouseButton.Left)
+            {
+                // TODO
+            }
+        }
+
+        private void RightClickContextMenuSelection(object sender, RoutedEventArgs e)
+        {
+            if (e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left || 
+                e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)
+            {
+                Console.WriteLine(rightClickCOntextMenu.SelectedItem);
+            }
         }
     }
 }
