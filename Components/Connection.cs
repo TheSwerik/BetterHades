@@ -20,6 +20,7 @@ namespace BetterHades.Components
             Subscribe(output);
             _output.AddInput(this);
             _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Fill = Brushes.Green};
+            //BUG LINES DONT APPEAR IN FRONTEND (user parent)
         }
 
         public bool IsActive => _input.IsActive;
