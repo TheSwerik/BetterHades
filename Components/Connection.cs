@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls.Shapes;
+using Avalonia.Media;
 using BetterHades.Exceptions;
 
 namespace BetterHades.Components
@@ -16,7 +19,7 @@ namespace BetterHades.Components
             _input.Subscribe(this);
             Subscribe(output);
             _output.AddInput(this);
-            _line = new Polyline() {Points = {_input.OutPoint, _output.InPoint}};
+            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Fill = Brushes.Green};
         }
 
         public bool IsActive => _input.IsActive;
