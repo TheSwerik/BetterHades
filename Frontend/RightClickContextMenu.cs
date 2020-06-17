@@ -35,7 +35,11 @@ namespace BetterHades.Frontend
                   (e is KeyEventArgs keyArgs) && keyArgs.Key == Key.Return)) return;
             var selected = ((MenuItem) _contextMenu.SelectedItem);
             var group = (string) selected.Header;
-            _canvas.AddComponent(@group,  selected.SelectedItem.ToString());
+            _canvas.AddComponent(@group,
+                                 selected.SelectedItem.ToString(),
+                                 Canvas.GetLeft(_contextMenu),
+                                 Canvas.GetTop(_contextMenu));
+            Hide();
         }
 
         public void Show(in double posX, in double posY)
@@ -43,12 +47,13 @@ namespace BetterHades.Frontend
             Canvas.SetLeft(_contextMenu, posX);
             Canvas.SetTop(_contextMenu, posY);
             _contextMenu.IsVisible = true;
-            _contextMenu.ZIndex = _contextMenu.Parent.ZIndex + 1;
+            foreach (MenuItem item in _contextMenu.Items) item.IsVisible = true;
         }
 
-        public void Hide()
+        private void Hide()
         {
             _contextMenu.IsVisible = false;
+            ((MenuItem) _contextMenu.SelectedItem)?.Close();
             Canvas.SetLeft(_contextMenu, 0);
             Canvas.SetTop(_contextMenu, 0);
         }

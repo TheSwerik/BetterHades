@@ -9,9 +9,9 @@ namespace BetterHades.Components.Implementations.IO
     {
         private readonly long _ms;
 
-        public InputClock(IPanel parent) : this(parent, 1000) { }
+        public InputClock(IPanel parent, double x, double y) : this(parent, x, y, 1000) { }
 
-        public InputClock(IPanel parent, long ms) : base(parent)
+        public InputClock(IPanel parent, double x, double y, long ms) : base(parent, x, y)
         {
             //TODO Popup when Constructing
             _ms = ms;

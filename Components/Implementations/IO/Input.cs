@@ -7,11 +7,13 @@ namespace BetterHades.Components.Implementations.IO
     {
         public CheckBox InputBox { get; }
 
-        public Input(IPanel parent)
+        public Input(IPanel parent, double x, double y)
         {
             InputBox = new CheckBox();
             parent.Children.Add(InputBox);
             InputBox.Click += CheckboxOnClick;
+            Canvas.SetLeft(InputBox, x);
+            Canvas.SetTop(InputBox, y);
         }
 
         protected void CheckboxOnClick(object sender, RoutedEventArgs e)
