@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Components;
@@ -29,6 +30,7 @@ namespace BetterHades
             _components = new List<Component>();
             _connections = new List<Connection>();
             _canvas = (Canvas) LogicalChildren[0].LogicalChildren[0];
+            _canvas.PointerReleased += CreateCheckbox;
             Test();
         }
 
@@ -69,6 +71,19 @@ namespace BetterHades
         public void CheckboxOnClick(object sender, RoutedEventArgs e)
         {
             _inputs.Find(i => i.InputBox.Equals(sender))?.Update();
+        }
+
+        public void CreateCheckbox(object sender, RoutedEventArgs e)
+        {
+            var checkbox = new CheckBox();
+            checkbox.Click += CheckboxOnClick;
+            _canvas.Children.Add(checkbox);
+            var args = (PointerReleasedEventArgs) e;
+            var pos = args.GetCurrentPoint(_canvas).Position;
+            Canvas.SetTop(checkbox, pos.Y);
+            Canvas.SetLeft(checkbox, pos.X);
+            if(args.InitialPressMouseButton == MouseButton.Left) Console.WriteLine("LEFT");
+            if(args.InitialPressMouseButton == MouseButton.Right) Console.WriteLine("RIGHT");
         }
     }
 }
