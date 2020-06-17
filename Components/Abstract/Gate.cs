@@ -32,8 +32,8 @@ namespace BetterHades.Components
                    {
                        new Point(x - 5, y - 5),
                        new Point(x + 5, y - 5),
+                       new Point(x + 5, y + 5),
                        new Point(x - 5, y + 5),
-                       new Point(x + 5, y + 5)
                    };
         }
     }
