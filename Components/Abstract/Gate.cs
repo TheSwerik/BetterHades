@@ -30,10 +30,10 @@ namespace BetterHades.Components
         {
             return new List<Point>
                    {
-                       new Point(x - 5, y - 5),
-                       new Point(x + 5, y - 5),
-                       new Point(x + 5, y + 5),
-                       new Point(x - 5, y + 5),
+                       new Point(x - 10, y - 10),
+                       new Point(x + 10, y - 10),
+                       new Point(x + 10, y + 10),
+                       new Point(x - 10, y + 10),
                    };
         }
     }
