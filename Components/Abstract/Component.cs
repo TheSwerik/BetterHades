@@ -19,13 +19,13 @@ namespace BetterHades.Components
             Output = 202
         }
 
-        private readonly List<IObserver<IComponent>> _outputs;
+        private readonly List<Connection> _outputs;
         protected readonly Polygon _polygon;
         public readonly Point OutPoint;
 
         protected Component(IPanel parent, double x, double y, Point outPoint)
         {
-            _outputs = new List<IObserver<IComponent>>();
+            _outputs = new List<Connection>();
             _polygon = new Polygon
                        {
                            Width = 100,
@@ -40,9 +40,9 @@ namespace BetterHades.Components
         /**
         * Subscribes the Observer to this Connection.
         */
-        public IDisposable Subscribe(IObserver<IComponent> observer)
+        public IDisposable Subscribe(IObserver<Component> observer)
         {
-            _outputs.Add(observer);
+            _outputs.Add((Connection) observer);
             return (observer as IDisposable)!;
         }
 

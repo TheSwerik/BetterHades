@@ -2,7 +2,7 @@
 
 namespace BetterHades.Components
 {
-    public interface IComponent : IObservable<IComponent>
+    public interface IComponent : IObservable<Component>
     {
         public bool IsActive { get; set; }
 

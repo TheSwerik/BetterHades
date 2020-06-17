@@ -1,19 +1,22 @@
 ﻿using System;
+using Avalonia.Controls.Shapes;
 using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
-    public class Connection : IObserver<IComponent>, IObservable<Connection>
+    public class Connection : IObserver<Component>, IObservable<Connection>
     {
-        private readonly IComponent _input;
+        private readonly Component _input;
         private ObservingComponent _output;
+        private Polyline _line;
 
-        public Connection(IComponent input, ObservingComponent output)
+        public Connection(Component input, ObservingComponent output)
         {
             _input = input;
             _input.Subscribe(this);
             Subscribe(output);
             _output.AddInput(this);
+            _line = new Polyline() {Points = {_input.OutPoint, _output.InPoint}};
         }
 
         public bool IsActive => _input.IsActive;
@@ -32,7 +35,7 @@ namespace BetterHades.Components
 
         public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}", error); }
 
-        public void OnNext(IComponent input) { Notify(); }
+        public void OnNext(Component input) { Notify(); }
 
         private void Notify() { _output.OnNext(this); }
 
