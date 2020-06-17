@@ -8,13 +8,12 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
+                <MenuItem Header="_New" />
                 <MenuItem Header="_Open..." />
-                <Separator />
                 <MenuItem Header="_Exit" />
             </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="Copy" />
-                <MenuItem Header="Paste" />
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About..." Click="AboutOnClick" />
             </MenuItem>
         </Menu>
     </DockPanel>

@@ -1,5 +1,10 @@
-﻿using Avalonia;
+﻿using System;
+using System.IO;
+using System.Net;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
 
@@ -19,5 +24,20 @@ namespace BetterHades
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
+
+        public void AboutOnClick(object sender, RoutedEventArgs args)
+        {
+            var window = new Window
+                         {
+                             Title = "About",
+                             CanResize = false,
+                             ShowInTaskbar = false,
+                             Width = 300,
+                             Height = 100,
+                             WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                             Content = string.Join("\n", File.ReadLines(@"Resources\about.txt"))
+                         };
+            window.ShowDialog(App.MainWindow);
+        }
     }
 }
