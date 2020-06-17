@@ -6,9 +6,9 @@ namespace BetterHades.Components
     public class Connection : IObserver<IComponent>, IObservable<Connection>
     {
         private readonly IComponent _input;
-        private IObservingComponent _output;
+        private ObservingComponent _output;
 
-        public Connection(IComponent input, IObservingComponent output)
+        public Connection(IComponent input, ObservingComponent output)
         {
             _input = input;
             _input.Subscribe(this);
@@ -23,7 +23,7 @@ namespace BetterHades.Components
         */
         public IDisposable Subscribe(IObserver<Connection> observer)
         {
-            _output = (IObservingComponent) observer;
+            _output = (ObservingComponent) observer;
             return (observer as IDisposable)!;
         }
 

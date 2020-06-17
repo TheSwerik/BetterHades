@@ -7,13 +7,12 @@ using Avalonia.Media;
 
 namespace BetterHades.Components.Implementations.IO
 {
-    public class Output : Component, IObservingComponent
+    public class Output : ObservingComponent
     {
+        private Connection _inConnection;
         public Output(IPanel parent, double x, double y) : base(parent, x, y) { }
-
-        public void Update(Connection connection) { ChangeColor(connection.IsActive); }
-        public void AddInput(Connection connection) { ; }
-
+        protected override void Update() { ChangeColor(_inConnection.IsActive); }
+        public override void AddInput(Connection connection) { _inConnection = connection; }
         private void ChangeColor(bool active) { _polygon.Fill = active ? Brushes.Red : Brushes.Gray; }
 
         protected override List<Point> GetPoints(double x, double y)
