@@ -6,7 +6,11 @@ namespace BetterHades.Components
 {
     public abstract class Gate : ObservingComponent
     {
-        protected Gate(IPanel parent, double x, double y) : base(parent, x, y) { }
+        protected Gate(IPanel parent, double x, double y) :
+            base(parent, x, y, new Point(x + 10, y + 5), new Point(x - 10, y + 5))
+        {
+        }
+
         protected abstract bool Check();
         protected override void Update() { Notify(IsActive = Check()); }
 

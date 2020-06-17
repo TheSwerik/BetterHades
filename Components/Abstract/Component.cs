@@ -21,8 +21,9 @@ namespace BetterHades.Components
 
         private readonly List<IObserver<IComponent>> _outputs;
         protected readonly Polygon _polygon;
+        public readonly Point OutPoint;
 
-        protected Component(IPanel parent, double x, double y)
+        protected Component(IPanel parent, double x, double y, Point outPoint)
         {
             _outputs = new List<IObserver<IComponent>>();
             _polygon = new Polygon
@@ -32,6 +33,7 @@ namespace BetterHades.Components
                            Fill = Brushes.Gray,
                            Points = GetPoints(x, y)
                        };
+            OutPoint = outPoint;
             parent.Children.Add(_polygon);
         }
 

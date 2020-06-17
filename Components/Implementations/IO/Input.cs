@@ -9,7 +9,7 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public Input(IPanel parent, double x, double y) : base(parent, x, y)
+        public Input(IPanel parent, double x, double y) : base(parent, x, y, new Point(x, y))
         {
             _polygon.PointerPressed += CheckboxOnClick;
         }

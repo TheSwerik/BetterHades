@@ -10,7 +10,12 @@ namespace BetterHades.Components.Implementations.IO
     public class Output : ObservingComponent
     {
         private Connection _inConnection;
-        public Output(IPanel parent, double x, double y) : base(parent, x, y) { }
+
+        public Output(IPanel parent, double x, double y)
+            : base(parent, x, y, new Point(-999999, -999999), new Point(x, y))
+        {
+        }
+
         protected override void Update() { ChangeColor(_inConnection.IsActive); }
         public override void AddInput(Connection connection) { _inConnection = connection; }
         private void ChangeColor(bool active) { _polygon.Fill = active ? Brushes.Red : Brushes.Gray; }
