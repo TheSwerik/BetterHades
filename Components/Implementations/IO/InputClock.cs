@@ -9,7 +9,7 @@ namespace BetterHades.Components.Implementations.IO
     {
         private readonly long _ms;
 
-        public InputClock(CheckBox inputBox, long ms) : base(inputBox)
+        public InputClock(IPanel parent, long ms) : base(parent)
         {
             _ms = ms;
             new Thread(() =>
@@ -21,7 +21,7 @@ namespace BetterHades.Components.Implementations.IO
                                Dispatcher.UIThread.InvokeAsync(() =>
                                                                {
                                                                    InputBox.IsChecked = !InputBox.IsChecked;
-                                                                   Update();
+                                                                   CheckboxOnClick(null, null);
                                                                });
                                Thread.Sleep(1000);
                            }

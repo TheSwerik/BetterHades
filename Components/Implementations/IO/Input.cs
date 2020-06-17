@@ -1,14 +1,20 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public readonly CheckBox InputBox;
+        protected readonly CheckBox InputBox;
 
-        public Input(CheckBox inputBox) { InputBox = inputBox; }
+        public Input(IPanel parent)
+        {
+            InputBox = new CheckBox();
+            parent.Children.Add(InputBox);
+            InputBox.Click += CheckboxOnClick;
+        }
 
-        public void Update()
+        public void CheckboxOnClick(object sender, RoutedEventArgs e)
         {
             if (InputBox.IsChecked != null) Notify(IsActive = (bool) InputBox.IsChecked);
         }
