@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -18,7 +19,7 @@ namespace BetterHades.Frontend
             _contextMenu = new ContextMenu
                            {
                                Background = Brushes.Aqua,
-                               Items = Component.ToList(),
+                               Items = MenuItems(),
                                IsVisible = false
                            };
             _contextMenu.PointerPressed += OnClick;
@@ -30,9 +31,11 @@ namespace BetterHades.Frontend
 
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            if (e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left ||
-                e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)
-                _canvas.AddComponent((Component.Type) _contextMenu.SelectedItem);
+            if (!((e is PointerPressedEventArgs mouseArgs) && mouseArgs.MouseButton == MouseButton.Left ||
+                  (e is KeyEventArgs keyArgs) && keyArgs.Key == Key.Return)) return;
+            var selected = ((MenuItem) _contextMenu.SelectedItem);
+            var group = (string) selected.Header;
+            _canvas.AddComponent(@group, (Component.Type) selected.SelectedItem);
         }
 
         public void Show(in double posX, in double posY)
@@ -48,6 +51,13 @@ namespace BetterHades.Frontend
             _contextMenu.IsVisible = false;
             Canvas.SetLeft(_contextMenu, 0);
             Canvas.SetTop(_contextMenu, 0);
+        }
+
+        private static IEnumerable<MenuItem> MenuItems()
+        {
+            return Component.ToDictionary()
+                            .Select(@group => new MenuItem {Header = @group.Key, Items = @group.Value})
+                            .ToList();
         }
     }
 }

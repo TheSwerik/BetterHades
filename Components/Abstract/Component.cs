@@ -10,11 +10,11 @@ namespace BetterHades.Components
     {
         public enum Type
         {
-            Connection,
-            AND,
-            Input,
-            InputClock,
-            Output
+            Connection = 0,
+            AND = 100,
+            Input = 200,
+            InputClock = 201,
+            Output = 202
         }
 
         private readonly List<IObserver<IComponent>> _outputs;
@@ -34,21 +34,22 @@ namespace BetterHades.Components
 
         public bool IsActive { get; set; }
         public override string ToString() { return IsActive + ""; }
+        public static List<Type> ToList() => Enum.GetValues(typeof(Type)).Cast<Type>().ToList();
 
-        public static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
-
-        public static System.Type GetComponent(Component.Type componentType)
+        public static Dictionary<string, List<Type>> ToDictionary()
         {
-            var typeString = componentType switch
-                             {
-                                 Type.Connection => "Connection",
-                                 Type.AND => "Gates.ANDGate",
-                                 Type.Input => "IO.Input",
-                                 Type.InputClock => "IO.InputClock",
-                                 Type.Output => "IO.Output",
-                                 _ => ""
-                             };
-            var t = System.Type.GetType($"BetterHades.Components.Implementations.{typeString}");
+            var list = ToList();
+            return new Dictionary<string, List<Type>>
+                   {
+                       {"Gates", list.FindAll(t => t >= (Type) 100 && t < (Type) 200)},
+                       {"IO", list.FindAll(t => t >= (Type) 200)}
+                   };
+        }
+
+        public static System.Type GetComponent(string group, Type componentType)
+        {
+            var typeString = group.Equals("Gates") ? componentType + "Gate" : componentType.ToString();
+            var t = System.Type.GetType($"BetterHades.Components.Implementations.{group}.{typeString}");
             if (t == null) throw new ComponentNotFoundException(componentType);
             return t;
         }

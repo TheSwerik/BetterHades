@@ -45,16 +45,17 @@ namespace BetterHades.Frontend
             }
         }
 
-        public void AddComponent(Component.Type type)
+        public void AddComponent(string group, Component.Type type)
         {
             // TODO Same Constructor for all
             // TODO Pass Categories directly
             Component component;
-            if (type == Component.Type.Input || type == Component.Type.InputClock || type == Component.Type.Output)
-                component = (Component) Activator.CreateInstance(Component.GetComponent(type), _canvas) ??
-                            throw new ComponentNotFoundException(type);
+            if (group.Equals("IO"))
+                component =
+                    (Component) Activator.CreateInstance(Component.GetComponent(group, type), (IPanel) _canvas) ??
+                    throw new ComponentNotFoundException(type);
             else
-                component = (Component) Activator.CreateInstance(Component.GetComponent(type)) ??
+                component = (Component) Activator.CreateInstance(Component.GetComponent(group, type)) ??
                             throw new ComponentNotFoundException(type);
             _components.Add(component);
         }
