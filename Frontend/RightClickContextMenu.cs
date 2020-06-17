@@ -35,7 +35,7 @@ namespace BetterHades.Frontend
                   (e is KeyEventArgs keyArgs) && keyArgs.Key == Key.Return)) return;
             var selected = ((MenuItem) _contextMenu.SelectedItem);
             var group = (string) selected.Header;
-            _canvas.AddComponent(@group, (Component.Type) selected.SelectedItem);
+            _canvas.AddComponent(@group,  selected.SelectedItem.ToString());
         }
 
         public void Show(in double posX, in double posY)

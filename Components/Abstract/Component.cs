@@ -45,13 +45,5 @@ namespace BetterHades.Components
                        {"IO", list.FindAll(t => t >= (Type) 200)}
                    };
         }
-
-        public static System.Type GetComponent(string group, Type componentType)
-        {
-            var typeString = group.Equals("Gates") ? componentType + "Gate" : componentType.ToString();
-            var t = System.Type.GetType($"BetterHades.Components.Implementations.{group}.{typeString}");
-            if (t == null) throw new ComponentNotFoundException(componentType);
-            return t;
-        }
     }
 }
