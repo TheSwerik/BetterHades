@@ -5,7 +5,7 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        protected readonly CheckBox InputBox;
+        public CheckBox InputBox { get; }
 
         public Input(IPanel parent)
         {
@@ -14,7 +14,7 @@ namespace BetterHades.Components.Implementations.IO
             InputBox.Click += CheckboxOnClick;
         }
 
-        public void CheckboxOnClick(object sender, RoutedEventArgs e)
+        protected void CheckboxOnClick(object sender, RoutedEventArgs e)
         {
             if (InputBox.IsChecked != null) Notify(IsActive = (bool) InputBox.IsChecked);
         }

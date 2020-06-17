@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
+using BetterHades.Exceptions;
 
 namespace BetterHades.Frontend
 {
@@ -22,7 +24,7 @@ namespace BetterHades.Frontend
             _canvas = new Canvas {Background = Brushes.LightGray};
             _canvas.PointerPressed += ClickHandler;
             parent.Children.Add(_canvas);
-            _contextMenu = new RightClickContextMenu(_canvas);
+            _contextMenu = new RightClickContextMenu(_canvas, this);
             _inputs = new List<Input>();
             _outputs = new List<Output>();
             _components = new List<Component>();
@@ -41,6 +43,20 @@ namespace BetterHades.Frontend
             {
                 // TODO
             }
+        }
+
+        public void AddComponent(Component.Type type)
+        {
+            // TODO Same Constructor for all
+            // TODO Pass Categories directly
+            Component component;
+            if (type == Component.Type.Input || type == Component.Type.InputClock || type == Component.Type.Output)
+                component = (Component) Activator.CreateInstance(Component.GetComponent(type), _canvas) ??
+                            throw new ComponentNotFoundException(type);
+            else
+                component = (Component) Activator.CreateInstance(Component.GetComponent(type)) ??
+                            throw new ComponentNotFoundException(type);
+            _components.Add(component);
         }
     }
 }
