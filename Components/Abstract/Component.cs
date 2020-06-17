@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Media;
 
 namespace BetterHades.Components
 {
@@ -16,8 +20,20 @@ namespace BetterHades.Components
         }
 
         private readonly List<IObserver<IComponent>> _outputs;
+        protected readonly Polygon _polygon;
 
-        protected Component() { _outputs = new List<IObserver<IComponent>>(); }
+        protected Component(IPanel parent, double x, double y)
+        {
+            _outputs = new List<IObserver<IComponent>>();
+            _polygon = new Polygon
+                       {
+                           Width = 100,
+                           Height = 100,
+                           Fill = Brushes.Gray,
+                           Points = GetPoints(x, y)
+                       };
+            parent.Children.Add(_polygon);
+        }
 
         /**
         * Subscribes the Observer to this Connection.
@@ -43,5 +59,7 @@ namespace BetterHades.Components
                        {"IO", list.FindAll(t => t >= (Type) 200)}
                    };
         }
+
+        protected abstract List<Point> GetPoints(double x, double y);
     }
 }

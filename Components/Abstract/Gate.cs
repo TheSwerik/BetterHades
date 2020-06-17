@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using Avalonia;
+using Avalonia.Controls;
 
 namespace BetterHades.Components
 {
@@ -7,7 +10,7 @@ namespace BetterHades.Components
     {
         protected readonly ObservableCollection<Connection> Inputs;
 
-        protected Gate()
+        protected Gate(IPanel parent, double x, double y) : base(parent, x, y)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
@@ -22,5 +25,16 @@ namespace BetterHades.Components
         private void Update(object sender, NotifyCollectionChangedEventArgs e) { Update(); }
 
         protected abstract bool Check();
+
+        protected override List<Point> GetPoints(double x, double y)
+        {
+            return new List<Point>
+                   {
+                       new Point(x - 5, y - 5),
+                       new Point(x + 5, y - 5),
+                       new Point(x - 5, y + 5),
+                       new Point(x + 5, y + 5)
+                   };
+        }
     }
 }

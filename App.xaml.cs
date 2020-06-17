@@ -6,8 +6,8 @@ namespace BetterHades
 {
     public class App : Application
     {
-        public override void Initialize() { AvaloniaXamlLoader.Load(this); }
         public static MainWindow MainWindow;
+        public override void Initialize() { AvaloniaXamlLoader.Load(this); }
 
         public override void OnFrameworkInitializationCompleted()
         {
