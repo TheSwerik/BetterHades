@@ -13,7 +13,7 @@ namespace BetterHades
         {
             InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+            // this.AttachDevTools();
 #endif
             _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
         }
