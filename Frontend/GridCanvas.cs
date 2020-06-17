@@ -48,12 +48,12 @@ namespace BetterHades.Frontend
         public void AddComponent(string group, string type, double x, double y)
         {
             if (group.Equals("Gates")) type += "Gate";
-            var t = System.Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
+            var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
             // TODO Same Constructor for all
             Component component;
             if (group.Equals("IO"))
-                component = (Component) Activator.CreateInstance(t, _canvas,x,y) ??
+                component = (Component) Activator.CreateInstance(t, _canvas, x, y) ??
                             throw new ComponentNotFoundException(type);
             else component = (Component) Activator.CreateInstance(t) ?? throw new ComponentNotFoundException(type);
             _components.Add(component);

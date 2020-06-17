@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -11,8 +10,8 @@ namespace BetterHades.Frontend
 {
     public class RightClickContextMenu
     {
-        private readonly ContextMenu _contextMenu;
         private readonly GridCanvas _canvas;
+        private readonly ContextMenu _contextMenu;
 
         public RightClickContextMenu(IPanel parent, GridCanvas canvas)
         {
@@ -31,11 +30,11 @@ namespace BetterHades.Frontend
 
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            if (!((e is PointerPressedEventArgs mouseArgs) && mouseArgs.MouseButton == MouseButton.Left ||
-                  (e is KeyEventArgs keyArgs) && keyArgs.Key == Key.Return)) return;
-            var selected = ((MenuItem) _contextMenu.SelectedItem);
+            if (!(e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left ||
+                  e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
+            var selected = (MenuItem) _contextMenu.SelectedItem;
             var group = (string) selected.Header;
-            _canvas.AddComponent(@group,
+            _canvas.AddComponent(group,
                                  selected.SelectedItem.ToString(),
                                  Canvas.GetLeft(_contextMenu),
                                  Canvas.GetTop(_contextMenu));
@@ -61,7 +60,7 @@ namespace BetterHades.Frontend
         private static IEnumerable<MenuItem> MenuItems()
         {
             return Component.ToDictionary()
-                            .Select(@group => new MenuItem {Header = @group.Key, Items = @group.Value})
+                            .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
                             .ToList();
         }
     }

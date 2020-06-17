@@ -8,8 +8,6 @@ namespace BetterHades.Exceptions
     {
         public ComponentNotFoundException(Component.Type componentType) : base(componentType + "") { }
 
-        public ComponentNotFoundException([CanBeNull] string? message) : base(message)
-        {
-        }
+        public ComponentNotFoundException([CanBeNull] string? message) : base(message) { }
     }
 }

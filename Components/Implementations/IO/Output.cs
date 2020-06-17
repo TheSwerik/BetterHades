@@ -1,5 +1,6 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
+﻿// ReSharper disable ClassNeverInstantiated.Global
+
+using Avalonia.Controls;
 using Avalonia.Media;
 
 namespace BetterHades.Components.Implementations.IO

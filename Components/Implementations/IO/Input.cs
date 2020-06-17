@@ -1,12 +1,12 @@
-﻿using Avalonia.Controls;
+﻿// ReSharper disable MemberCanBeProtected.Global
+
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public CheckBox InputBox { get; }
-
         public Input(IPanel parent, double x, double y)
         {
             InputBox = new CheckBox();
@@ -15,6 +15,8 @@ namespace BetterHades.Components.Implementations.IO
             Canvas.SetLeft(InputBox, x);
             Canvas.SetTop(InputBox, y);
         }
+
+        protected CheckBox InputBox { get; }
 
         protected void CheckboxOnClick(object sender, RoutedEventArgs e)
         {

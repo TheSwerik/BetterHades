@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using BetterHades.Exceptions;
 
 namespace BetterHades.Components
 {
@@ -34,7 +32,7 @@ namespace BetterHades.Components
 
         public bool IsActive { get; set; }
         public override string ToString() { return IsActive + ""; }
-        public static List<Type> ToList() => Enum.GetValues(typeof(Type)).Cast<Type>().ToList();
+        public static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
         public static Dictionary<string, List<Type>> ToDictionary()
         {

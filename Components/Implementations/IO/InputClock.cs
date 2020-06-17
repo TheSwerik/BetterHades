@@ -9,6 +9,8 @@ namespace BetterHades.Components.Implementations.IO
     {
         private readonly long _ms;
 
+        // TODO remove this constructor
+        // ReSharper disable once IntroduceOptionalParameters.Global
         public InputClock(IPanel parent, double x, double y) : this(parent, x, y, 1000) { }
 
         public InputClock(IPanel parent, double x, double y, long ms) : base(parent, x, y)
