@@ -26,6 +26,10 @@ namespace BetterHades
         {
             FileHandler.Save(_canvas);
         }
+        public void Load(object sender, RoutedEventArgs args)
+        {
+            FileHandler.Load(_canvas);
+        }
         public void AboutOnClick(object sender, RoutedEventArgs args)
         {
             var window = new Window

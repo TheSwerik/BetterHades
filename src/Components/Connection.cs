@@ -10,32 +10,32 @@ namespace BetterHades.Components
 {
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
-        private readonly Component _input;
+        public readonly Component Input;
+        public ObservingComponent Output;
         private readonly Polyline _line;
-        private ObservingComponent _output;
 
         public Connection(Component input, ObservingComponent output, IPanel parent)
         {
-            _input = input;
-            _input.Subscribe(this);
+            Input = input;
+            Input.Subscribe(this);
             Subscribe(output);
-            _output.AddInput(this);
+            Output.AddInput(this);
             _line = new Polyline
                     {
-                        Points = new List<Point> {_input.OutPoint.Bounds.Center, _output.InPoint.Bounds.Center},
+                        Points = new List<Point> {Input.OutPoint.Bounds.Center, Output.InPoint.Bounds.Center},
                         Stroke = Brushes.Green
                     };
             parent.Children.Add(_line);
         }
 
-        public bool IsActive => _input.IsActive;
+        public bool IsActive => Input.IsActive;
 
         /**
         * Subscribes the Observer to this Connection.
         */
         public IDisposable Subscribe(IObserver<Connection> observer)
         {
-            _output = (ObservingComponent) observer;
+            Output = (ObservingComponent) observer;
             return (observer as IDisposable)!;
         }
 
@@ -46,7 +46,7 @@ namespace BetterHades.Components
 
         public void OnNext(Component input) { Notify(); }
 
-        private void Notify() { _output.OnNext(this); }
+        private void Notify() { Output.OnNext(this); }
 
         // Overrides
         public override int GetHashCode() { return IsActive.GetHashCode(); }
@@ -70,6 +70,6 @@ namespace BetterHades.Components
             return obj.GetType() == GetType() && Equals((Connection) obj);
         }
 
-        public override string ToString() { return IsActive + ""; }
+        public override string ToString() { return $"{Input} {Output} {IsActive}"; }
     }
 }

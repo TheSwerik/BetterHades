@@ -32,6 +32,8 @@ namespace BetterHades.Components
         public readonly Ellipse OutPoint;
         protected readonly Polygon Polygon;
         public bool IsClicked;
+        public double X;
+        public double Y;
 
         protected Component(GridCanvas gridCanvas, double x, double y, Point outPoint)
         {
@@ -42,7 +44,7 @@ namespace BetterHades.Components
                           Width = 100,
                           Height = 100,
                           Fill = Brushes.Gray,
-                          Points = GetPoints(x, y)
+                          Points = GetPoints(X = x, Y = y)
                       };
             GridCanvas.Canvas.Children.Add(Polygon);
 
@@ -67,7 +69,7 @@ namespace BetterHades.Components
         public bool IsActive { get; set; }
 
         private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
-        public override string ToString() { return IsActive + ""; }
+        public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
         public static Dictionary<string, List<Type>> ToDictionary()
