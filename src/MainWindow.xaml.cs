@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
@@ -18,9 +19,16 @@ namespace BetterHades
             // this.AttachDevTools();
 #endif
             _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            this.KeyDown += KeyPressed;
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
+
+        private void KeyPressed(object sender, RoutedEventArgs args)
+        {
+            var arg = (KeyEventArgs) args;
+            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S) FileHandler.Save(_canvas);
+        }
 
         public void New(object sender, RoutedEventArgs args)
         {
