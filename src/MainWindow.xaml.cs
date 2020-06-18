@@ -22,14 +22,10 @@ namespace BetterHades
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
-        public void Save(object sender, RoutedEventArgs args)
-        {
-            FileHandler.Save(_canvas);
-        }
-        public void Load(object sender, RoutedEventArgs args)
-        {
-            FileHandler.Load(_canvas);
-        }
+        public void Save(object sender, RoutedEventArgs args) { FileHandler.Save(_canvas); }
+
+        public void Load(object sender, RoutedEventArgs args) { FileHandler.Load(_canvas); }
+
         public void AboutOnClick(object sender, RoutedEventArgs args)
         {
             var window = new Window

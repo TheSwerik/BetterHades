@@ -12,9 +12,12 @@ namespace BetterHades.Components.Implementations.IO
 
         // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global
-        public InputClock(GridCanvas parent, double x, double y) : this(parent, x, y, 1000) { _parent = parent; }
+        public InputClock(GridCanvas parent, double x, double y, bool isActive) : this(parent, x, y, isActive, 1000)
+        {
+            _parent = parent;
+        }
 
-        public InputClock(GridCanvas parent, double x, double y, long ms) : base(parent, x, y)
+        public InputClock(GridCanvas parent, double x, double y, bool isActive, long ms) : base(parent, x, y, isActive)
         {
             //TODO Popup when Constructing
             _ms = ms;

@@ -10,8 +10,8 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_New" />
                 <MenuItem Header="_Open..." />
-                <MenuItem Header="_Save"  Click="Save" />
-                <MenuItem Header="_Load"  Click="Load" />
+                <MenuItem Header="_Save" Click="Save" />
+                <MenuItem Header="_Load" Click="Load" />
                 <MenuItem Header="_Exit" />
             </MenuItem>
             <MenuItem Header="_Help">

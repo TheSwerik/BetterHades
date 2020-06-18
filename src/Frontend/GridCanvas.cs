@@ -12,10 +12,10 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        public readonly List<Component> Components;
-        public readonly List<Connection> Connections;
         private readonly RightClickContextMenu _contextMenu;
         public readonly Canvas Canvas;
+        public readonly List<Component> Components;
+        public readonly List<Connection> Connections;
 
         private Component buffer;
 
@@ -33,10 +33,10 @@ namespace BetterHades.Frontend
 
         private void ClickHandler(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine(string.Join("\n", Connections));
             var args = (PointerPressedEventArgs) e;
             var pos = args.GetCurrentPoint(Canvas).Position;
-            if (args.MouseButton == MouseButton.Right)
-                _contextMenu.Show(pos.X, pos.Y);
+            if (args.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
             else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }
 

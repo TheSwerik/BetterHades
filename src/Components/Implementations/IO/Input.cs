@@ -10,9 +10,11 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public Input(GridCanvas parent, double x, double y) : base(parent, x, y, new Point(x, y))
+        public Input(GridCanvas parent, double x, double y, bool isActive) : base(
+            parent, x, y, isActive, new Point(x, y))
         {
             Polygon.PointerPressed += OnClick;
+            Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
         protected void OnClick(object sender, RoutedEventArgs e)

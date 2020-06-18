@@ -16,8 +16,9 @@ namespace BetterHades.Components
         public readonly Ellipse InPoint;
         protected readonly ObservableCollection<Connection> Inputs;
 
-        protected ObservingComponent(GridCanvas parent, double x, double y, Point outPoint, Point inPoint) : base(
-            parent, x, y, outPoint)
+        protected ObservingComponent(GridCanvas parent, double x, double y, bool isActive, Point outPoint,
+                                     Point inPoint) : base(
+            parent, x, y, isActive, outPoint)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;

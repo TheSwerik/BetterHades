@@ -7,7 +7,7 @@ namespace BetterHades.Components.Implementations.Gates
 {
     public class INVGate : Gate
     {
-        public INVGate(GridCanvas parent, double x, double y) : base(parent, x, y) { }
+        public INVGate(GridCanvas parent, double x, double y, bool isActive) : base(parent, x, y, isActive) { }
 
         protected override bool Check() { return Inputs.Count > 0 && !Inputs.First().IsActive; }
 

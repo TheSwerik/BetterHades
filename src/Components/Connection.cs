@@ -10,9 +10,9 @@ namespace BetterHades.Components
 {
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
+        private readonly Polyline _line;
         public readonly Component Input;
         public ObservingComponent Output;
-        private readonly Polyline _line;
 
         public Connection(Component input, ObservingComponent output, IPanel parent)
         {
@@ -23,7 +23,7 @@ namespace BetterHades.Components
             _line = new Polyline
                     {
                         Points = new List<Point> {Input.OutPoint.Bounds.Center, Output.InPoint.Bounds.Center},
-                        Stroke = Brushes.Green
+                        Stroke = IsActive ? Brushes.Red : Brushes.Gray
                     };
             parent.Children.Add(_line);
         }
@@ -44,7 +44,11 @@ namespace BetterHades.Components
 
         public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}", error); }
 
-        public void OnNext(Component input) { Notify(); }
+        public void OnNext(Component input)
+        {
+            Notify();
+            _line.Stroke = IsActive ? Brushes.Red : Brushes.Gray;
+        }
 
         private void Notify() { Output.OnNext(this); }
 

@@ -11,8 +11,8 @@ namespace BetterHades.Components.Implementations.IO
     {
         private Connection _inConnection;
 
-        public Output(GridCanvas parent, double x, double y)
-            : base(parent, x, y, new Point(-999999, -999999), new Point(x, y))
+        public Output(GridCanvas parent, double x, double y, bool isActive)
+            : base(parent, x, y, isActive, new Point(-999999, -999999), new Point(x, y))
         {
         }
 

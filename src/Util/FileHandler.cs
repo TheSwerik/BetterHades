@@ -38,10 +38,11 @@ namespace BetterHades.Util
                 {
                     // canvas.Components.Add((Component) Activator.CreateInstance(t, canvas, vars[1], vars[2]) ??
                     // throw new ComponentNotFoundException(vars[0]));
-                    var component =
-                        (Component) Activator.CreateInstance(t, canvas, double.Parse(vars[1]), double.Parse(vars[2])) ??
-                        throw new ComponentNotFoundException(vars[0]);
-                    component.IsActive = bool.Parse(vars[3]);
+                    var component = (Component) Activator.CreateInstance(t, canvas,
+                                                                         double.Parse(vars[1]),
+                                                                         double.Parse(vars[2]),
+                                                                         bool.Parse(vars[3])) ??
+                                    throw new ComponentNotFoundException(vars[0]);
                     canvas.Components.Add(component);
                 }
                 else
@@ -53,8 +54,6 @@ namespace BetterHades.Util
                         throw new ComponentNotFoundException(vars[0]));
                 }
             }
-
-            Console.WriteLine(string.Join("\n", canvas.Connections));
         }
     }
 }

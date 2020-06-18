@@ -35,7 +35,7 @@ namespace BetterHades.Components
         public double X;
         public double Y;
 
-        protected Component(GridCanvas gridCanvas, double x, double y, Point outPoint)
+        protected Component(GridCanvas gridCanvas, double x, double y, bool isActive, Point outPoint)
         {
             GridCanvas = gridCanvas;
             _outputs = new List<Connection>();
@@ -54,6 +54,7 @@ namespace BetterHades.Components
             Canvas.SetTop(OutPoint, y - diameter / 2);
             Canvas.SetLeft(OutPoint, x - diameter / 2);
             OutPoint.PointerPressed += SetClicked;
+            IsActive = isActive;
         }
 
         /**

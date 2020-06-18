@@ -7,7 +7,7 @@ namespace BetterHades.Components.Implementations.Gates
 {
     public class ANDGate : Gate
     {
-        public ANDGate(GridCanvas parent, double x, double y) : base(parent, x, y) { }
+        public ANDGate(GridCanvas parent, double x, double y, bool isActive) : base(parent, x, y, isActive) { }
 
         protected override bool Check() { return Inputs.All(c => c.IsActive); }
     }
