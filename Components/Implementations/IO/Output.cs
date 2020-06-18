@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.IO
 {
@@ -11,7 +12,7 @@ namespace BetterHades.Components.Implementations.IO
     {
         private Connection _inConnection;
 
-        public Output(IPanel parent, double x, double y)
+        public Output(GridCanvas parent, double x, double y)
             : base(parent, x, y, new Point(-999999, -999999), new Point(x, y))
         {
         }

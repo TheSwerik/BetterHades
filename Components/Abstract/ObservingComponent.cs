@@ -3,22 +3,33 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Input;
+using Avalonia.Media;
 using BetterHades.Exceptions;
+using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        public readonly Point InPoint;
+        public readonly Ellipse InPoint;
         protected readonly ObservableCollection<Connection> Inputs;
 
-        protected ObservingComponent(IPanel parent, double x, double y, Point outPoint, Point inPoint) : base(
+        protected ObservingComponent(GridCanvas parent, double x, double y, Point outPoint, Point inPoint) : base(
             parent, x, y, outPoint)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
-            InPoint = inPoint;
+            
+            const double diameter = 10.0;
+            InPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
+            parent.Canvas.Children.Add(InPoint);
+            Canvas.SetTop(InPoint, y - diameter / 2);
+            Canvas.SetLeft(InPoint, x - diameter / 2);
+            InPoint.PointerPressed += SetClicked;
         }
+        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this); }
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }

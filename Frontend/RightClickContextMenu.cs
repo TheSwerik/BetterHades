@@ -49,7 +49,7 @@ namespace BetterHades.Frontend
             foreach (MenuItem item in _contextMenu.Items) item.IsVisible = true;
         }
 
-        private void Hide()
+        public void Hide()
         {
             _contextMenu.IsVisible = false;
             ((MenuItem) _contextMenu.SelectedItem)?.Close();

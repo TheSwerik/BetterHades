@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
+using BetterHades.Frontend;
 using SharpDX.Direct2D1;
 using Ellipse = Avalonia.Controls.Shapes.Ellipse;
 
@@ -29,12 +30,14 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
+        protected readonly GridCanvas GridCanvas;
         protected readonly Polygon Polygon;
         public readonly Ellipse OutPoint;
         public bool IsClicked;
 
-        protected Component(IPanel parent, double x, double y, Point outPoint)
+        protected Component(GridCanvas gridCanvas, double x, double y, Point outPoint)
         {
+            GridCanvas = gridCanvas;
             _outputs = new List<Connection>();
             Polygon = new Polygon
                       {
@@ -43,16 +46,17 @@ namespace BetterHades.Components
                           Fill = Brushes.Gray,
                           Points = GetPoints(x, y)
                       };
-            parent.Children.Add(Polygon);
+            GridCanvas.Canvas.Children.Add(Polygon);
+            
             const double diameter = 10.0;
             OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            parent.Children.Add(OutPoint);
+            GridCanvas.Canvas.Children.Add(OutPoint);
             Canvas.SetTop(OutPoint, y - diameter / 2);
             Canvas.SetLeft(OutPoint, x - diameter / 2);
             OutPoint.PointerPressed += SetClicked;
         }
 
-        private void SetClicked(object sender, PointerPressedEventArgs e) { IsClicked = true; }
+        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
 
         /**
         * Subscribes the Observer to this Connection.
@@ -67,6 +71,7 @@ namespace BetterHades.Components
         public bool IsActive { get; set; }
         public override string ToString() { return IsActive + ""; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
+
         public static Dictionary<string, List<Type>> ToDictionary()
         {
             var list = ToList();
@@ -76,6 +81,7 @@ namespace BetterHades.Components
                        {"IO", list.FindAll(t => t >= (Type) 200)}
                    };
         }
+
         protected abstract List<Point> GetPoints(double x, double y);
     }
 }

@@ -14,7 +14,7 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        private readonly Canvas _canvas;
+        public readonly Canvas Canvas;
         private readonly List<Component> _components;
         private readonly List<Connection> _connections;
         private readonly RightClickContextMenu _contextMenu;
@@ -23,10 +23,10 @@ namespace BetterHades.Frontend
 
         public GridCanvas(IPanel parent)
         {
-            _canvas = new Canvas {Background = Brushes.LightGray};
-            _canvas.PointerPressed += ClickHandler;
-            parent.Children.Add(_canvas);
-            _contextMenu = new RightClickContextMenu(_canvas, this);
+            Canvas = new Canvas {Background = Brushes.LightGray};
+            Canvas.PointerPressed += ClickHandler;
+            parent.Children.Add(Canvas);
+            _contextMenu = new RightClickContextMenu(Canvas, this);
             _inputs = new List<Input>();
             _outputs = new List<Output>();
             _components = new List<Component>();
@@ -36,30 +36,36 @@ namespace BetterHades.Frontend
         private void ClickHandler(object sender, RoutedEventArgs e)
         {
             var args = (PointerPressedEventArgs) e;
-            var pos = args.GetCurrentPoint(_canvas).Position;
+            var pos = args.GetCurrentPoint(Canvas).Position;
             if (args.MouseButton == MouseButton.Right)
             {
                 _contextMenu.Show(pos.X, pos.Y);
             }
             else if (args.MouseButton == MouseButton.Left)
             {
-                try
-                {
-                    while (_components.Count(c => c.IsClicked) >= 2)
-                    {
-                        var inComponent = _components.First(c => c.IsClicked && !(c is ObservingComponent));
-                        if (inComponent == null) break;
-                        var outComponent =
-                            (ObservingComponent) _components.First(c => c.IsClicked && c is ObservingComponent);
-                        if (outComponent == null) break;
-                        inComponent.IsClicked = false;
-                        outComponent.IsClicked = false;
-                        _connections.Add(new Connection(inComponent, outComponent, _canvas));
-                    }
-                }
-                catch (InvalidOperationException)
-                {
-                }
+                _contextMenu.Hide();
+            }
+        }
+
+        private Component buffer;
+
+        public void OnComponentInClick(ObservingComponent sender)
+        {
+            if (buffer == null) buffer = sender;
+            else
+            {
+                if (!(buffer is Output)) _connections.Add(new Connection(buffer, sender, Canvas));
+                buffer = null;
+            }
+        }
+
+        public void OnComponentOutClick(Component sender)
+        {
+            if (buffer == null) buffer = sender;
+            else
+            {
+                _connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));
+                buffer = null;
             }
         }
 
@@ -68,7 +74,7 @@ namespace BetterHades.Frontend
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
-            _components.Add((Component) Activator.CreateInstance(t, _canvas, x, y) ??
+            _components.Add((Component) Activator.CreateInstance(t, this, x, y) ??
                             throw new ComponentNotFoundException(type));
         }
     }

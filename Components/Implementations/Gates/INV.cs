@@ -2,12 +2,13 @@
 
 using System.Linq;
 using Avalonia.Controls;
+using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.Gates
 {
     public class INV : Gate
     {
-        public INV(IPanel parent, double x, double y) : base(parent, x, y) { }
+        public INV(GridCanvas parent, double x, double y) : base(parent, x, y) { }
 
         protected override bool Check() { return !Inputs.First().IsActive; }
 
