@@ -19,7 +19,7 @@ namespace BetterHades
             // this.AttachDevTools();
 #endif
             _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
-            this.KeyDown += KeyPressed;
+            KeyDown += KeyPressed;
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }

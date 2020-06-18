@@ -1,6 +1,5 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
 
-using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Media;
@@ -24,6 +23,7 @@ namespace BetterHades.Components.Implementations.IO
         }
 
         public override void AddInput(Connection connection) { _inConnection = connection; }
+
         protected override List<Point> GetPoints(double x, double y)
         {
             return new List<Point>
