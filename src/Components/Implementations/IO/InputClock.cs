@@ -7,7 +7,7 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class InputClock : Input
     {
-        private readonly long _ms;
+        private readonly long _duration;
         private readonly GridCanvas _parent;
 
         // TODO remove this constructor
@@ -17,10 +17,11 @@ namespace BetterHades.Components.Implementations.IO
             _parent = parent;
         }
 
-        public InputClock(GridCanvas parent, double x, double y, bool isActive, long ms) : base(parent, x, y, isActive)
+        public InputClock(GridCanvas parent, double x, double y, bool isActive, long duration) : base(
+            parent, x, y, isActive)
         {
             //TODO Popup when Constructing
-            _ms = ms;
+            _duration = duration;
             new Thread(() =>
                        {
                            var stopwatch = new Stopwatch();
@@ -32,5 +33,7 @@ namespace BetterHades.Components.Implementations.IO
                            }
                        }).Start();
         }
+
+        public double MsToSec() => (double) _duration / 1000;
     }
 }
