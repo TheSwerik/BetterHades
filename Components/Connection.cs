@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using BetterHades.Exceptions;
@@ -13,14 +14,15 @@ namespace BetterHades.Components
         private ObservingComponent _output;
         private Polyline _line;
 
-        public Connection(Component input, ObservingComponent output)
+        public Connection(Component input, ObservingComponent output, IPanel parent)
         {
             _input = input;
             _input.Subscribe(this);
             Subscribe(output);
             _output.AddInput(this);
-            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Fill = Brushes.Green};
-            //BUG LINES DONT APPEAR IN FRONTEND (user parent)
+            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Stroke = Brushes.Green, Width = 50};
+            parent.Children.Add(_line);
+            Console.WriteLine(_line);
         }
 
         public bool IsActive => _input.IsActive;

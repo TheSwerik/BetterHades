@@ -43,15 +43,22 @@ namespace BetterHades.Frontend
             }
             else if (args.MouseButton == MouseButton.Left)
             {
-                while (_components.Count(c => c.IsClicked) >= 2)
+                try
                 {
-                    var inComponent = _components.First(c => c.IsClicked && !(c is ObservingComponent));
-                    if (inComponent == null) break;
-                    var outComponent = (ObservingComponent) _components.First(c => c.IsClicked && c is ObservingComponent);
-                    if (outComponent == null) break;
-                    inComponent.IsClicked = false;
-                    outComponent.IsClicked = false;
-                    _connections.Add(new Connection(inComponent, outComponent));
+                    while (_components.Count(c => c.IsClicked) >= 2)
+                    {
+                        var inComponent = _components.First(c => c.IsClicked && !(c is ObservingComponent));
+                        if (inComponent == null) break;
+                        var outComponent =
+                            (ObservingComponent) _components.First(c => c.IsClicked && c is ObservingComponent);
+                        if (outComponent == null) break;
+                        inComponent.IsClicked = false;
+                        outComponent.IsClicked = false;
+                        _connections.Add(new Connection(inComponent, outComponent, _canvas));
+                    }
+                }
+                catch (InvalidOperationException)
+                {
                 }
             }
         }
