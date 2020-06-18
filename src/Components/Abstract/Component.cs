@@ -68,11 +68,9 @@ namespace BetterHades.Components
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
         public bool IsActive { get; set; }
-
         private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
         public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
-
         public static Dictionary<string, List<Type>> ToDictionary()
         {
             var list = ToList();
@@ -82,7 +80,6 @@ namespace BetterHades.Components
                        {"IO", list.FindAll(t => t >= (Type) 200)}
                    };
         }
-
         protected abstract List<Point> GetPoints(double x, double y);
     }
 }

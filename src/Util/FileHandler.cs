@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using Avalonia.Threading;
 using BetterHades.Components;
 using BetterHades.Exceptions;
 using BetterHades.Frontend;
@@ -22,37 +24,40 @@ namespace BetterHades.Util
 
         public static void Load(GridCanvas canvas)
         {
-            var components = true;
-            foreach (var line in File.ReadLines("Test.txt"))
+            var lines = File.ReadAllLines("Test.txt");
+            var max = lines.Length;
+            for (var i = 0; i < lines.Length; i++)
             {
-                if (line.Contains("--------"))
+                if (lines[i].Contains("---------"))
                 {
-                    components = false;
-                    continue;
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                                                    {
+                                                        for (var j = i + 1; j < lines.Length; j++)
+                                                        {
+                                                            var vars = lines[j].Split(";");
+                                                            var t = Type.GetType(vars[0]);
+                                                            if (t == null)
+                                                                throw new ComponentNotFoundException(vars[0]);
+                                                            canvas.Connections.Add(
+                                                                (Connection) Activator.CreateInstance(
+                                                                    t, canvas.Components[int.Parse(vars[1])],
+                                                                    (ObservingComponent) canvas.Components[
+                                                                        int.Parse(vars[2])], canvas.Canvas) ??
+                                                                throw new ComponentNotFoundException(vars[0]));
+                                                        }
+                                                    }, DispatcherPriority.Render);
+                    break;
                 }
 
-                var vars = line.Split(";");
+                var vars = lines[i].Split(";");
                 var t = Type.GetType(vars[0]);
                 if (t == null) throw new ComponentNotFoundException(vars[0]);
-                if (components)
-                {
-                    // canvas.Components.Add((Component) Activator.CreateInstance(t, canvas, vars[1], vars[2]) ??
-                    // throw new ComponentNotFoundException(vars[0]));
-                    var component = (Component) Activator.CreateInstance(t, canvas,
-                                                                         double.Parse(vars[1]),
-                                                                         double.Parse(vars[2]),
-                                                                         bool.Parse(vars[3])) ??
-                                    throw new ComponentNotFoundException(vars[0]);
-                    canvas.Components.Add(component);
-                }
-                else
-                {
-                    canvas.Connections.Add(
-                        (Connection) Activator.CreateInstance(t, canvas.Components[int.Parse(vars[1])],
-                                                              (ObservingComponent) canvas.Components[
-                                                                  int.Parse(vars[2])], canvas.Canvas) ??
-                        throw new ComponentNotFoundException(vars[0]));
-                }
+                var component = (Component) Activator.CreateInstance(t, canvas,
+                                                                     double.Parse(vars[1]),
+                                                                     double.Parse(vars[2]),
+                                                                     bool.Parse(vars[3])) ??
+                                throw new ComponentNotFoundException(vars[0]);
+                canvas.Components.Add(component);
             }
         }
     }

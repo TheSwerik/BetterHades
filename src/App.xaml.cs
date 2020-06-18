@@ -13,7 +13,6 @@ namespace BetterHades
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.MainWindow = MainWindow = new MainWindow();
-
             base.OnFrameworkInitializationCompleted();
         }
     }

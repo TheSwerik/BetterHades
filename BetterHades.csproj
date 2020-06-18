@@ -19,6 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)Resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="Resources" />
+        <None Include="$(SolutionDir)res\**" CopyToOutputDirectory="PreserveNewest" LinkBase="res" />
     </ItemGroup>
 </Project>

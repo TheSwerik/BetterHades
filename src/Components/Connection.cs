@@ -74,6 +74,6 @@ namespace BetterHades.Components
             return obj.GetType() == GetType() && Equals((Connection) obj);
         }
 
-        public override string ToString() { return $"{Input} {Output} {IsActive}"; }
+        public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
     }
 }

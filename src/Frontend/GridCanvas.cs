@@ -71,7 +71,7 @@ namespace BetterHades.Frontend
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
-            Components.Add((Component) Activator.CreateInstance(t, this, x, y) ??
+            Components.Add((Component) Activator.CreateInstance(t, this, x, y, false) ??
                            throw new ComponentNotFoundException(type));
         }
     }
