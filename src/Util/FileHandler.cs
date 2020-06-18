@@ -20,8 +20,7 @@ namespace BetterHades.Util
                 file.WriteLine($"{component.GetType()}; {component.X}; {component.Y}; {component}");
             file.WriteLine("--------------------------------------");
             foreach (var connection in canvas.Connections)
-                file.WriteLine(
-                    $"{connection.GetType()}; {canvas.Components.IndexOf(connection.Input)}; {canvas.Components.IndexOf(connection.Output)}");
+                file.WriteLine($"{connection.GetType()}; {canvas.Components.IndexOf(connection.Input)}; {canvas.Components.IndexOf(connection.Output)}");
         }
 
         public static void Load(GridCanvas canvas)
@@ -73,6 +72,18 @@ namespace BetterHades.Util
                     ) ?? throw new ComponentNotFoundException(vars[0])
                 );
             }
+        }
+        
+        
+        public static void ExportToHades(GridCanvas canvas)
+        {
+            using var file = new StreamWriter("Test.hds");
+
+            foreach (var component in canvas.Components)
+                file.WriteLine($"{component.GetType()}; {component.X}; {component.Y}; {component}");
+            file.WriteLine("--------------------------------------");
+            foreach (var connection in canvas.Connections)
+                file.WriteLine($"{connection.GetType()}; {canvas.Components.IndexOf(connection.Input)}; {canvas.Components.IndexOf(connection.Output)}");
         }
     }
 }
