@@ -23,7 +23,9 @@ namespace BetterHades.Components
             _line = new Polyline
                     {
                         Points = new List<Point> {Input.OutPoint.Bounds.Center, Output.InPoint.Bounds.Center},
-                        Stroke = IsActive ? Brushes.Red : Brushes.Gray
+                        Stroke = IsActive ? Brushes.Red : Brushes.Gray,
+                        ZIndex = int.MinValue,
+                        // ZIndex = parent.ZIndex + 1,
                     };
             parent.Children.Add(_line);
         }

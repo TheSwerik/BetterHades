@@ -16,11 +16,11 @@ namespace BetterHades.Util
         {
             using var file = new StreamWriter("Test.txt");
 
-            foreach (var component in canvas.Components)
-                file.WriteLine($"{component.GetType()}; {component.X}; {component.Y}; {component}");
+            foreach (var c in canvas.Components) file.WriteLine($"{c.GetType()}; {c.X}; {c.Y}; {c.IsActive}");
             file.WriteLine("--------------------------------------");
-            foreach (var connection in canvas.Connections)
-                file.WriteLine($"{connection.GetType()}; {canvas.Components.IndexOf(connection.Input)}; {canvas.Components.IndexOf(connection.Output)}");
+            foreach (var c in canvas.Connections)
+                file.WriteLine(
+                    $"{c.GetType()}; {canvas.Components.IndexOf(c.Input)}; {canvas.Components.IndexOf(c.Output)}");
         }
 
         public static void Load(GridCanvas canvas)
@@ -30,7 +30,7 @@ namespace BetterHades.Util
             LoadComponents(canvas, lines.TakeWhile(l => !l.Contains("---------")));
             Dispatcher.UIThread.InvokeAsync
             (
-                () => LoadConnections(canvas, lines.SkipWhile(l => !l.Contains("---------"))),
+                () => LoadConnections(canvas, lines.SkipWhile(l => !l.Contains("---------")).Skip(1)),
                 DispatcherPriority.Render
             );
         }
@@ -73,5 +73,5 @@ namespace BetterHades.Util
                 );
             }
         }
-        }
+    }
 }

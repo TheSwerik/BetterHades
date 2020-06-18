@@ -9,7 +9,7 @@ namespace BetterHades
 {
     public class MainWindow : Window
     {
-        private readonly GridCanvas _canvas;
+        private GridCanvas _canvas;
 
         public MainWindow()
         {
@@ -21,6 +21,11 @@ namespace BetterHades
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
+
+        public void New(object sender, RoutedEventArgs args)
+        {
+            _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+        }
 
         public void Save(object sender, RoutedEventArgs args) { FileHandler.Save(_canvas); }
 
