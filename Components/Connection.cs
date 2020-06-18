@@ -20,7 +20,7 @@ namespace BetterHades.Components
             _input.Subscribe(this);
             Subscribe(output);
             _output.AddInput(this);
-            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Stroke = Brushes.Green};
+            _line = new Polyline {Points = new List<Point>() {_input.OutPoint.Bounds.Center, _output.InPoint}, Stroke = Brushes.Green};
             parent.Children.Add(_line);
         }
 

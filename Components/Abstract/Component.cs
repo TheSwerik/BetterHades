@@ -6,6 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
+using SharpDX.Direct2D1;
+using Ellipse = Avalonia.Controls.Shapes.Ellipse;
 
 namespace BetterHades.Components
 {
@@ -15,6 +17,12 @@ namespace BetterHades.Components
         {
             Connection = 0,
             AND = 100,
+            INV = 101,
+            NAND = 102,
+            NOR = 103,
+            OR = 104,
+            XNOR = 105,
+            XOR = 106,
             Input = 200,
             InputClock = 201,
             Output = 202
@@ -22,7 +30,7 @@ namespace BetterHades.Components
 
         private readonly List<Connection> _outputs;
         protected readonly Polygon Polygon;
-        public readonly Point OutPoint;
+        public readonly Ellipse OutPoint;
         public bool IsClicked;
 
         protected Component(IPanel parent, double x, double y, Point outPoint)
@@ -35,9 +43,13 @@ namespace BetterHades.Components
                           Fill = Brushes.Gray,
                           Points = GetPoints(x, y)
                       };
-            OutPoint = outPoint;
             parent.Children.Add(Polygon);
-            Polygon.PointerPressed += SetClicked;
+            const double diameter = 10.0;
+            OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
+            parent.Children.Add(OutPoint);
+            Canvas.SetTop(OutPoint, y - diameter / 2);
+            Canvas.SetLeft(OutPoint, x - diameter / 2);
+            OutPoint.PointerPressed += SetClicked;
         }
 
         private void SetClicked(object sender, PointerPressedEventArgs e) { IsClicked = true; }
@@ -55,7 +67,6 @@ namespace BetterHades.Components
         public bool IsActive { get; set; }
         public override string ToString() { return IsActive + ""; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
-
         public static Dictionary<string, List<Type>> ToDictionary()
         {
             var list = ToList();
@@ -65,7 +76,6 @@ namespace BetterHades.Components
                        {"IO", list.FindAll(t => t >= (Type) 200)}
                    };
         }
-
         protected abstract List<Point> GetPoints(double x, double y);
     }
 }

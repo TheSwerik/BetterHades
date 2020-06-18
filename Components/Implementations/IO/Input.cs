@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Brush = Avalonia.Media.Brush;
 using Brushes = Avalonia.Media.Brushes;
@@ -22,6 +23,7 @@ namespace BetterHades.Components.Implementations.IO
             Notify(IsActive = !IsActive);
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
+
 
         protected override List<Point> GetPoints(double x, double y)
         {
