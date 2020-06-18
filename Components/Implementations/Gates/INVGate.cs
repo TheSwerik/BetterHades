@@ -6,11 +6,11 @@ using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.Gates
 {
-    public class INV : Gate
+    public class INVGate : Gate
     {
-        public INV(GridCanvas parent, double x, double y) : base(parent, x, y) { }
+        public INVGate(GridCanvas parent, double x, double y) : base(parent, x, y) { }
 
-        protected override bool Check() { return !Inputs.First().IsActive; }
+        protected override bool Check() { return Inputs.Count > 0 && !Inputs.First().IsActive; }
 
         // Inverse always has only one output.
         public override void AddInput(Connection connection)
