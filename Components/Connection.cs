@@ -20,9 +20,8 @@ namespace BetterHades.Components
             _input.Subscribe(this);
             Subscribe(output);
             _output.AddInput(this);
-            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Stroke = Brushes.Green, Width = 50};
+            _line = new Polyline {Points = new List<Point>() {_input.OutPoint, _output.InPoint}, Stroke = Brushes.Green};
             parent.Children.Add(_line);
-            Console.WriteLine(_line);
         }
 
         public bool IsActive => _input.IsActive;
