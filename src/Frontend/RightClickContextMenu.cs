@@ -17,7 +17,7 @@ namespace BetterHades.Frontend
         {
             _contextMenu = new ContextMenu
                            {
-                               Background = Brushes.Aqua,
+                               Background = Brushes.White,
                                Items = MenuItems(),
                                IsVisible = false
                            };

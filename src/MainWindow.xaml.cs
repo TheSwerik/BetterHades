@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
+using BetterHades.Util;
 
 namespace BetterHades
 {
@@ -21,6 +22,10 @@ namespace BetterHades
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
+        public void Save(object sender, RoutedEventArgs args)
+        {
+            FileHandler.Save(_canvas);
+        }
         public void AboutOnClick(object sender, RoutedEventArgs args)
         {
             var window = new Window
@@ -31,7 +36,7 @@ namespace BetterHades
                              Width = 300,
                              Height = 100,
                              WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                             Content = string.Join("\n", File.ReadLines(@"Resources\about.txt"))
+                             Content = string.Join("\n", File.ReadLines(@"res\about.txt"))
                          };
             window.ShowDialog(App.MainWindow);
         }

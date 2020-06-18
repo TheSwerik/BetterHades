@@ -12,25 +12,23 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        private readonly List<Component> _components;
-        private readonly List<Connection> _connections;
+        public readonly List<Component> Components;
+        public readonly List<Connection> Connections;
         private readonly RightClickContextMenu _contextMenu;
-        private readonly List<Input> _inputs;
-        private readonly List<Output> _outputs;
         public readonly Canvas Canvas;
 
         private Component buffer;
 
-        public GridCanvas(IPanel parent)
+        public GridCanvas(IPanel parent) : this(parent, new List<Component>(), new List<Connection>()) { }
+
+        public GridCanvas(IPanel parent, List<Component> components, List<Connection> connections)
         {
             Canvas = new Canvas {Background = Brushes.LightGray};
             Canvas.PointerPressed += ClickHandler;
             parent.Children.Add(Canvas);
             _contextMenu = new RightClickContextMenu(Canvas, this);
-            _inputs = new List<Input>();
-            _outputs = new List<Output>();
-            _components = new List<Component>();
-            _connections = new List<Connection>();
+            Components = components;
+            Connections = connections;
         }
 
         private void ClickHandler(object sender, RoutedEventArgs e)
@@ -50,7 +48,7 @@ namespace BetterHades.Frontend
             }
             else
             {
-                if (!(buffer is Output)) _connections.Add(new Connection(buffer, sender, Canvas));
+                if (!(buffer is Output)) Connections.Add(new Connection(buffer, sender, Canvas));
                 buffer = null;
             }
         }
@@ -63,7 +61,7 @@ namespace BetterHades.Frontend
             }
             else
             {
-                _connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));
+                Connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));
                 buffer = null;
             }
         }
@@ -73,8 +71,8 @@ namespace BetterHades.Frontend
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
-            _components.Add((Component) Activator.CreateInstance(t, this, x, y) ??
-                            throw new ComponentNotFoundException(type));
+            Components.Add((Component) Activator.CreateInstance(t, this, x, y) ??
+                           throw new ComponentNotFoundException(type));
         }
     }
 }
