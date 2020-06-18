@@ -1,14 +1,10 @@
 ﻿// ReSharper disable MemberCanBeProtected.Global
 
 using System.Collections.Generic;
-using System.Drawing;
-using Avalonia.Controls;
-using Avalonia.Input;
+using Avalonia;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using BetterHades.Frontend;
-using Brush = Avalonia.Media.Brush;
-using Brushes = Avalonia.Media.Brushes;
-using Point = Avalonia.Point;
 
 namespace BetterHades.Components.Implementations.IO
 {
@@ -24,7 +20,6 @@ namespace BetterHades.Components.Implementations.IO
             Notify(IsActive = !IsActive);
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
-
 
         protected override List<Point> GetPoints(double x, double y)
         {

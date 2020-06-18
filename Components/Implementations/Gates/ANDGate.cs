@@ -1,8 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-using System;
 using System.Linq;
-using Avalonia.Controls;
 using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.Gates

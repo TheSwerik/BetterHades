@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Threading;
-using Avalonia.Controls;
 using Avalonia.Threading;
 using BetterHades.Frontend;
 
@@ -8,8 +7,8 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class InputClock : Input
     {
-        private readonly GridCanvas _parent;
         private readonly long _ms;
+        private readonly GridCanvas _parent;
 
         // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global

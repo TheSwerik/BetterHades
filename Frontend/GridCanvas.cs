@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -14,12 +12,14 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        public readonly Canvas Canvas;
         private readonly List<Component> _components;
         private readonly List<Connection> _connections;
         private readonly RightClickContextMenu _contextMenu;
         private readonly List<Input> _inputs;
         private readonly List<Output> _outputs;
+        public readonly Canvas Canvas;
+
+        private Component buffer;
 
         public GridCanvas(IPanel parent)
         {
@@ -38,20 +38,16 @@ namespace BetterHades.Frontend
             var args = (PointerPressedEventArgs) e;
             var pos = args.GetCurrentPoint(Canvas).Position;
             if (args.MouseButton == MouseButton.Right)
-            {
                 _contextMenu.Show(pos.X, pos.Y);
-            }
-            else if (args.MouseButton == MouseButton.Left)
-            {
-                _contextMenu.Hide();
-            }
+            else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }
-
-        private Component buffer;
 
         public void OnComponentInClick(ObservingComponent sender)
         {
-            if (buffer == null) buffer = sender;
+            if (buffer == null)
+            {
+                buffer = sender;
+            }
             else
             {
                 if (!(buffer is Output)) _connections.Add(new Connection(buffer, sender, Canvas));
@@ -61,7 +57,10 @@ namespace BetterHades.Frontend
 
         public void OnComponentOutClick(Component sender)
         {
-            if (buffer == null) buffer = sender;
+            if (buffer == null)
+            {
+                buffer = sender;
+            }
             else
             {
                 _connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));

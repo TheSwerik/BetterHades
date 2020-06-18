@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Avalonia;
-using Avalonia.Controls;
 using BetterHades.Frontend;
 
 namespace BetterHades.Components

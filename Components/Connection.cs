@@ -11,8 +11,8 @@ namespace BetterHades.Components
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
         private readonly Component _input;
+        private readonly Polyline _line;
         private ObservingComponent _output;
-        private Polyline _line;
 
         public Connection(Component input, ObservingComponent output, IPanel parent)
         {
@@ -22,7 +22,7 @@ namespace BetterHades.Components
             _output.AddInput(this);
             _line = new Polyline
                     {
-                        Points = new List<Point>() {_input.OutPoint.Bounds.Center, _output.InPoint.Bounds.Center},
+                        Points = new List<Point> {_input.OutPoint.Bounds.Center, _output.InPoint.Bounds.Center},
                         Stroke = Brushes.Green
                     };
             parent.Children.Add(_line);

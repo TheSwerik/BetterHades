@@ -7,8 +7,6 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
 using BetterHades.Frontend;
-using SharpDX.Direct2D1;
-using Ellipse = Avalonia.Controls.Shapes.Ellipse;
 
 namespace BetterHades.Components
 {
@@ -31,8 +29,8 @@ namespace BetterHades.Components
 
         private readonly List<Connection> _outputs;
         protected readonly GridCanvas GridCanvas;
-        protected readonly Polygon Polygon;
         public readonly Ellipse OutPoint;
+        protected readonly Polygon Polygon;
         public bool IsClicked;
 
         protected Component(GridCanvas gridCanvas, double x, double y, Point outPoint)
@@ -47,7 +45,7 @@ namespace BetterHades.Components
                           Points = GetPoints(x, y)
                       };
             GridCanvas.Canvas.Children.Add(Polygon);
-            
+
             const double diameter = 10.0;
             OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
             GridCanvas.Canvas.Children.Add(OutPoint);
@@ -55,8 +53,6 @@ namespace BetterHades.Components
             Canvas.SetLeft(OutPoint, x - diameter / 2);
             OutPoint.PointerPressed += SetClicked;
         }
-
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
 
         /**
         * Subscribes the Observer to this Connection.
@@ -69,6 +65,8 @@ namespace BetterHades.Components
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
         public bool IsActive { get; set; }
+
+        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
         public override string ToString() { return IsActive + ""; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 

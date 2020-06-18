@@ -21,7 +21,7 @@ namespace BetterHades.Components
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
-            
+
             const double diameter = 10.0;
             InPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
             parent.Canvas.Children.Add(InPoint);
@@ -29,12 +29,12 @@ namespace BetterHades.Components
             Canvas.SetLeft(InPoint, x - diameter / 2);
             InPoint.PointerPressed += SetClicked;
         }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this); }
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }
         public void OnError(Exception error) { Console.WriteLine(error); }
         public void OnNext(Connection value) { Update(); }
+        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this); }
 
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }
