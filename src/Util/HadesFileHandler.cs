@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.Gates;
 using BetterHades.Components.Implementations.IO;
@@ -11,7 +12,12 @@ namespace BetterHades.Util
         // File Handling:
         public static void ExportToHades()
         {
-            using var file = new StreamWriter($"{FileHandler.CurrentFile}.hds");
+            using var file = new StreamWriter(
+                FileHandler.FullPath.Replace(
+                    ".bhds",
+                    ".hds",
+                    StringComparison.InvariantCultureIgnoreCase
+                ));
 
             file.WriteLine("# hades.models.Design file");
             file.WriteLine("#  ");

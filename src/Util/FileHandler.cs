@@ -25,6 +25,8 @@ namespace BetterHades.Util
             }
         }
 
+        public static string FullPath => _currentFile.FullName;
+
         // File Handling:
         public static void New()
         {
