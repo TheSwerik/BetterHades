@@ -23,7 +23,7 @@ namespace BetterHades
         private readonly ZoomBorder _zoomBorder;
         public GridCanvas GridCanvas;
         public const int GridSize = 5000;
-        public const int GridCellSize = 10;
+        public const int GridCellSize = 100;
 
         public MainWindow()
         {

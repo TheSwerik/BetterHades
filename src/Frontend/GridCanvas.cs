@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
@@ -26,14 +27,11 @@ namespace BetterHades.Frontend
             _zoomBorder = parent;
             Canvas = new Canvas
                      {
-                         Background = Brushes.LightGray, 
+                         Background = Brushes.White,
                          Width = MainWindow.GridSize,
                          Height = MainWindow.GridSize
                      };
-            for (var i = MainWindow.GridCellSize; i < MainWindow.GridSize; i += MainWindow.GridCellSize)
-            for (var j = MainWindow.GridCellSize; j < MainWindow.GridSize; j += MainWindow.GridCellSize)
-                Canvas.Children.Add(Cross(i, j));
-
+            DrawGrid();
 
             _zoomBorder.Child = Canvas;
             Dispatcher.UIThread.InvokeAsync
@@ -91,24 +89,10 @@ namespace BetterHades.Frontend
             FileHandler.Changed();
         }
 
-        private Polyline Cross(double x, double y)
+        private void DrawGrid()
         {
-            var middle = new Point(x, y);
-            return new Polyline
-                   {
-                       Stroke = Brushes.Black,
-                       Points = new List<Point>
-                                {
-                                    middle,
-                                    middle.WithX(x + 10),
-                                    middle,
-                                    middle.WithX(x - 10),
-                                    middle,
-                                    middle.WithY(y + 10),
-                                    middle,
-                                    middle.WithY(y - 10)
-                                }
-                   };
+            Canvas.Children.Add(
+                new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid.png")});
         }
     }
 }
