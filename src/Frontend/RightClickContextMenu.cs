@@ -13,17 +13,13 @@ namespace BetterHades.Frontend
         private readonly GridCanvas _canvas;
         private readonly ContextMenu _contextMenu;
 
-        public RightClickContextMenu(IPanel parent, GridCanvas canvas)
+        public RightClickContextMenu(IPanel parent, GridCanvas canvas, ContextMenu contextMenu)
         {
-            _contextMenu = new ContextMenu
-                           {
-                               Background = Brushes.White,
-                               Items = MenuItems(),
-                               IsVisible = false
-                           };
+            _contextMenu = contextMenu;
+            _contextMenu.Items = MenuItems();
             _contextMenu.PointerPressed += OnClick;
             _contextMenu.KeyDown += OnClick;
-            parent.Children.Add(_contextMenu);
+            // parent.Children.Add(_contextMenu);
             _canvas = canvas;
             Hide();
         }

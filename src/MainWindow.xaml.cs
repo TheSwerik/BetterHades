@@ -20,6 +20,7 @@ namespace BetterHades
     public class MainWindow : Window
     {
         public GridCanvas GridCanvas;
+        public Canvas background;
         private readonly MenuItem _saveButton;
         private readonly List<FileDialogFilter> _filters;
         private readonly ZoomBorder _zoomBorder;
@@ -42,7 +43,8 @@ namespace BetterHades
                            }
                        };
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
-            GridCanvas = new GridCanvas(_zoomBorder);
+            GridCanvas = new GridCanvas(_zoomBorder, this.Find<ContextMenu>("contextMenu"));
+            background = (Canvas) LogicalChildren[0];
             KeyDown += KeyPressed;
             _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
@@ -60,7 +62,7 @@ namespace BetterHades
         // Title Bar Buttons:
         public void New(object sender, RoutedEventArgs args)
         {
-            GridCanvas = new GridCanvas(_zoomBorder);
+            GridCanvas = new GridCanvas(_zoomBorder, this.Find<ContextMenu>("contextMenu"));
             FileHandler.New();
             _saveButton.IsEnabled = false;
         }

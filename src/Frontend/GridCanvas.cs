@@ -13,6 +13,7 @@ using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
 using BetterHades.Util;
+using SkiaSharp;
 using Component = BetterHades.Components.Component;
 
 namespace BetterHades.Frontend
@@ -27,7 +28,7 @@ namespace BetterHades.Frontend
         private Component _buffer;
         public const int Width = 5000;
 
-        public GridCanvas(ZoomBorder parent)
+        public GridCanvas(ZoomBorder parent, ContextMenu contextMenu)
         {
             _zoomBorder = parent;
             _zoomBorder.PointerPressed += ClickHandler;
@@ -48,7 +49,7 @@ namespace BetterHades.Frontend
                 },
                 DispatcherPriority.Render
             );
-            _contextMenu = new RightClickContextMenu(Canvas, this);
+            _contextMenu = new RightClickContextMenu(Canvas, this,contextMenu);
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
@@ -57,7 +58,7 @@ namespace BetterHades.Frontend
 
         private void ClickHandler(object sender, PointerPressedEventArgs e)
         {
-            var pos = e.GetCurrentPoint(Canvas).Position;
+            var pos = e.GetCurrentPoint(App.MainWindow.background).Position;
             Console.WriteLine(pos.ToString());
             if (e.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
             else if (e.MouseButton == MouseButton.Left) _contextMenu.Hide();

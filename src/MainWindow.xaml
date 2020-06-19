@@ -30,5 +30,6 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch" />
         </DockPanel>
+        <ContextMenu Name="contextMenu" IsVisible="false" Background="White" />
     </Canvas>
 </Window>
