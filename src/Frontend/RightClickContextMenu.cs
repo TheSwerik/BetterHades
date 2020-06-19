@@ -25,7 +25,8 @@ namespace BetterHades.Frontend
         // Handlers:
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            if (!(e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left ||
+            if (!(e is PointerPressedEventArgs mouseArgs &&
+                  mouseArgs.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed ||
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
             var group = (string) selected.Header;

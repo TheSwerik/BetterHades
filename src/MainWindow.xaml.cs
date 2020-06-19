@@ -66,8 +66,8 @@ namespace BetterHades
         {
             var pos = e.GetCurrentPoint(BackgroundCanvas).Position;
             // Console.WriteLine(pos.ToString());
-            if (e.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
-            else if (e.MouseButton == MouseButton.Left) _contextMenu.Hide();
+            if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed) _contextMenu.Show(pos.X, pos.Y);
+            else if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) _contextMenu.Hide();
         }
 
         // Title Bar Buttons:
@@ -93,7 +93,7 @@ namespace BetterHades
             _saveButton.IsEnabled = true;
         }
 
-        public async void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
+        public void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
 
         public async void SaveAs(object sender, RoutedEventArgs args)
         {
