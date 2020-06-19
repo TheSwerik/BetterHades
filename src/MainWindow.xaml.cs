@@ -20,8 +20,9 @@ namespace BetterHades
     public class MainWindow : Window
     {
         public GridCanvas GridCanvas;
-        public Canvas background;
+        public Canvas BackgroundCanvas;
         private readonly MenuItem _saveButton;
+        private readonly RightClickContextMenu _contextMenu;
         private readonly List<FileDialogFilter> _filters;
         private readonly ZoomBorder _zoomBorder;
 
@@ -42,9 +43,11 @@ namespace BetterHades
                                Name = "BetterHades File"
                            }
                        };
+            BackgroundCanvas = (Canvas) LogicalChildren[0];
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
-            GridCanvas = new GridCanvas(_zoomBorder, this.Find<ContextMenu>("contextMenu"));
-            background = (Canvas) LogicalChildren[0];
+            GridCanvas = new GridCanvas(_zoomBorder);
+            _contextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
+            GridCanvas.Canvas.PointerPressed += ClickHandler;
             KeyDown += KeyPressed;
             _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
@@ -59,10 +62,18 @@ namespace BetterHades
                 else SaveAs(null, null);
         }
 
+        private void ClickHandler(object sender, PointerPressedEventArgs e)
+        {
+            var pos = e.GetCurrentPoint(BackgroundCanvas).Position;
+            // Console.WriteLine(pos.ToString());
+            if (e.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
+            else if (e.MouseButton == MouseButton.Left) _contextMenu.Hide();
+        }
+
         // Title Bar Buttons:
         public void New(object sender, RoutedEventArgs args)
         {
-            GridCanvas = new GridCanvas(_zoomBorder, this.Find<ContextMenu>("contextMenu"));
+            GridCanvas = new GridCanvas(_zoomBorder);
             FileHandler.New();
             _saveButton.IsEnabled = false;
         }

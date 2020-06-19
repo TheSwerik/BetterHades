@@ -21,24 +21,21 @@ namespace BetterHades.Frontend
     public class GridCanvas
     {
         private readonly ZoomBorder _zoomBorder;
-        private readonly RightClickContextMenu _contextMenu;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
         public const int Width = 5000;
 
-        public GridCanvas(ZoomBorder parent, ContextMenu contextMenu)
+        public GridCanvas(ZoomBorder parent)
         {
             _zoomBorder = parent;
-            _zoomBorder.PointerPressed += ClickHandler;
             Canvas = new Canvas {Background = Brushes.LightGray, Width = Width, Height = Width,};
             for (var i = 100; i < Width; i += 100)
             for (var j = 100; j < Width; j += 100)
                 Canvas.Children.Add(Cross(i, j));
 
 
-            Canvas.PointerPressed += ClickHandler;
             _zoomBorder.Child = Canvas;
             Dispatcher.UIThread.InvokeAsync
             (
@@ -49,20 +46,11 @@ namespace BetterHades.Frontend
                 },
                 DispatcherPriority.Render
             );
-            _contextMenu = new RightClickContextMenu(Canvas, this,contextMenu);
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
 
         // Handlers:
-
-        private void ClickHandler(object sender, PointerPressedEventArgs e)
-        {
-            var pos = e.GetCurrentPoint(App.MainWindow.background).Position;
-            Console.WriteLine(pos.ToString());
-            if (e.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
-            else if (e.MouseButton == MouseButton.Left) _contextMenu.Hide();
-        }
 
         public void OnComponentInClick(ObservingComponent sender)
         {
