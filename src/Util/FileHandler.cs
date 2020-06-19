@@ -17,8 +17,12 @@ namespace BetterHades.Util
 
         public static string CurrentFile
         {
-            get => _currentFile.Name.Replace(_currentFile.Extension,"");
-            set => _currentFile = new FileInfo(value);
+            get => _currentFile.Name.Replace(_currentFile.Extension, "");
+            set
+            {
+                _currentFile = new FileInfo(value);
+                Environment.CurrentDirectory = _currentFile.DirectoryName!;
+            }
         }
 
         // File Handling:

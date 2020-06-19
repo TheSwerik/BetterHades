@@ -11,8 +11,7 @@
                 <MenuItem Header="_New" Click="New" />
                 <MenuItem Header="_Open..." Click="Open" />
                 <MenuItem Header="_Save" Click="Save" />
-                <MenuItem Header="_Save As..." Click="Save" />
-                <MenuItem Header="_Load" Click="Load" />
+                <MenuItem Header="_Save As..." Click="SaveAs" />
                 <MenuItem Header="_Exit" Click="Exit" />
             </MenuItem>
             <MenuItem Header="_Help">

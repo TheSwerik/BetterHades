@@ -27,6 +27,9 @@ namespace BetterHades
 #if DEBUG
             // this.AttachDevTools();
 #endif
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BetterHades";
+            Directory.CreateDirectory(path);
+            Environment.CurrentDirectory = path;
             filters = new List<FileDialogFilter>()
                       {
                           new FileDialogFilter()
@@ -50,11 +53,12 @@ namespace BetterHades
         private void KeyPressed(object sender, RoutedEventArgs args)
         {
             var arg = (KeyEventArgs) args;
-            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S) Save(null, null);
+            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S)
+                if (SaveButton.IsEnabled) Save(null, null);
+                else SaveAs(null, null);
         }
 
-        public void Open(object sender, RoutedEventArgs args) { }
-
+        // Title Bar Buttons:
         public void New(object sender, RoutedEventArgs args)
         {
             GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
@@ -62,25 +66,39 @@ namespace BetterHades
             SaveButton.IsEnabled = false;
         }
 
-        public async void Save(object sender, RoutedEventArgs args)
+        public async void Open(object sender, RoutedEventArgs args)
         {
-            if (!SaveButton.IsEnabled)
-            {
-                var x = new SaveFileDialog
-                        {
-                            Title = "Save BetterHades-File",
-                            DefaultExtension = "bhds",
-                            InitialFileName = "Unnamed",
-                            Filters = filters,
-                        };
-                var y = await x.ShowAsync(this);
-                if (y == null) return;
-                FileHandler.Save(y);
-            }
-            else FileHandler.Save();
+            var dialog = new OpenFileDialog()
+                         {
+                             Title = "Open BetterHades-File",
+                             Filters = filters,
+                             Directory = Environment.CurrentDirectory,
+                             AllowMultiple = false,
+                         };
+            var result = await dialog.ShowAsync(this);
+            if (result == null) return;
+            FileHandler.Load(result[0]);
+            SaveButton.IsEnabled = true;
         }
 
-        public void Load(object sender, RoutedEventArgs args) { FileHandler.Load("Test.bhds"); }
+        public async void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
+
+        public async void SaveAs(object sender, RoutedEventArgs args)
+        {
+            var dialog = new SaveFileDialog
+                         {
+                             Title = "Save BetterHades-File",
+                             DefaultExtension = "bhds",
+                             InitialFileName = "Unnamed",
+                             Filters = filters,
+                             Directory = Environment.CurrentDirectory
+                         };
+            var result = await dialog.ShowAsync(this);
+            if (result == null) return;
+            FileHandler.Save(result);
+            SaveButton.IsEnabled = true;
+        }
+
         public void Exit(object sender, RoutedEventArgs args) { Close(); }
 
         public void AboutOnClick(object sender, RoutedEventArgs args)
