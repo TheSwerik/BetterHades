@@ -32,8 +32,17 @@ namespace BetterHades
 #if DEBUG
             // this.AttachDevTools();
 #endif
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BetterHades";
-            Directory.CreateDirectory(path);
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades";
+            try
+            {
+                Directory.CreateDirectory(path);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                path = "/BetterHades";
+                Directory.CreateDirectory(path);
+            }
+
             Environment.CurrentDirectory = path;
             _filters = new List<FileDialogFilter>()
                        {
@@ -123,7 +132,10 @@ namespace BetterHades
                              Width = 300,
                              Height = 100,
                              WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                             Content = string.Join("\n", File.ReadLines(@"res\about.txt"))
+                             Content = string.Join(
+                                 "\n",
+                                 File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"res\about.txt")
+                             )
                          };
             window.ShowDialog(App.MainWindow);
         }
