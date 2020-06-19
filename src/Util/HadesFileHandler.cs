@@ -25,7 +25,7 @@ namespace BetterHades.Util
             file.WriteLine("[end signals]");
             file.WriteLine("[end]");
         }
-        
+
         // Helper Methods:
         private static string ToHadesString(this Component component)
         {
@@ -45,6 +45,7 @@ namespace BetterHades.Util
                        _ => throw new ComponentNotFoundException(component.GetType().ToString())
                    };
         }
+
         private static string ToHadesString(this Connection connection)
         {
             //TODO WHY IS IT LIKE THIS I HATE MY LIFE

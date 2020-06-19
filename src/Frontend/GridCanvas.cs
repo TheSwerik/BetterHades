@@ -28,7 +28,7 @@ namespace BetterHades.Frontend
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
-        
+
         // Handlers:
         private void ClickHandler(object sender, RoutedEventArgs e)
         {
@@ -37,6 +37,7 @@ namespace BetterHades.Frontend
             if (args.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
             else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }
+
         public void OnComponentInClick(ObservingComponent sender)
         {
             if (_buffer == null)
@@ -50,6 +51,7 @@ namespace BetterHades.Frontend
                 FileHandler.Changed();
             }
         }
+
         public void OnComponentOutClick(Component sender)
         {
             if (_buffer == null)
@@ -63,7 +65,7 @@ namespace BetterHades.Frontend
                 FileHandler.Changed();
             }
         }
-        
+
         // Helper Methods:
         public void AddComponent(string group, string type, double x, double y)
         {
