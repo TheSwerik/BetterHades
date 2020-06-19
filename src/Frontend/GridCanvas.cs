@@ -8,6 +8,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
@@ -24,7 +25,7 @@ namespace BetterHades.Frontend
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
-        private const int Width = 5000;
+        public const int Width = 5000;
 
         public GridCanvas(ZoomBorder parent)
         {
@@ -38,21 +39,17 @@ namespace BetterHades.Frontend
 
             Canvas.PointerPressed += ClickHandler;
             _zoomBorder.Child = Canvas;
-            _zoomBorder.PropertyChanged += CheckIfOutOfBounds;
+            Dispatcher.UIThread.InvokeAsync
+            (
+                () =>_zoomBorder.StartPan((Width - App.MainWindow.Width) / 2, (Width - App.MainWindow.Height) / 2),
+                DispatcherPriority.Render
+            );
             _contextMenu = new RightClickContextMenu(Canvas, this);
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
 
         // Handlers:
-        private void CheckIfOutOfBounds(object sender, AvaloniaPropertyChangedEventArgs e)
-        {
-            Console.Write(e.Property.Name + ": ");
-            if (e.Property.Name.Equals("OffsetX")) Console.WriteLine(e.NewValue);
-            if (e.Property.Name.Equals("OffsetY")) Console.WriteLine(e.NewValue);
-            if (e.Property.Name.Equals("ZoomX")) Console.WriteLine(e.NewValue);
-            if (e.Property.Name.Equals("ZoomY")) Console.WriteLine(e.NewValue);
-        }
 
         private void ClickHandler(object sender, PointerPressedEventArgs e)
         {

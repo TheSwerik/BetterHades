@@ -44,11 +44,7 @@ namespace BetterHades
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             GridCanvas = new GridCanvas(_zoomBorder);
             KeyDown += KeyPressed;
-            _saveButton = (MenuItem) LogicalChildren[0]
-                                     .LogicalChildren[0]
-                                     .LogicalChildren[0]
-                                     .LogicalChildren
-                                     .First(c => ((MenuItem) c).Header.Equals("_Save"));
+            _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
         }
 
@@ -59,7 +55,10 @@ namespace BetterHades
             if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
                 if (_saveButton.IsEnabled) Save(null, null);
                 else SaveAs(null, null);
-            if (e.Key == Key.R) _zoomBorder.Reset();
+            if (e.Key == Key.R)
+            {
+                _zoomBorder.Reset();
+            }
         }
 
         // Title Bar Buttons:
