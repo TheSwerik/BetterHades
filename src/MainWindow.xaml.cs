@@ -7,9 +7,11 @@ using System.IO;
 using System.Linq;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using BetterHades.Frontend;
 using BetterHades.Util;
 
@@ -18,8 +20,9 @@ namespace BetterHades
     public class MainWindow : Window
     {
         public GridCanvas GridCanvas;
-        private MenuItem SaveButton;
-        private readonly List<FileDialogFilter> filters;
+        private readonly MenuItem _saveButton;
+        private readonly List<FileDialogFilter> _filters;
+        private readonly ZoomBorder _zoomBorder;
 
         public MainWindow()
         {
@@ -30,22 +33,25 @@ namespace BetterHades
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BetterHades";
             Directory.CreateDirectory(path);
             Environment.CurrentDirectory = path;
-            filters = new List<FileDialogFilter>()
-                      {
-                          new FileDialogFilter()
-                          {
-                              Extensions = new List<string>() {"bhds"},
-                              Name = "BetterHades File"
-                          }
-                      };
-            GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            _filters = new List<FileDialogFilter>()
+                       {
+                           new FileDialogFilter()
+                           {
+                               Extensions = new List<string>() {"bhds"},
+                               Name = "BetterHades File"
+                           }
+                       };
+            _zoomBorder = new ZoomBorder {Background = Brushes.Aqua};
+            ((DockPanel) LogicalChildren[0]).Children.Add(_zoomBorder);
+            GridCanvas = new GridCanvas(_zoomBorder);
+            // GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
             KeyDown += KeyPressed;
-            SaveButton = (MenuItem) LogicalChildren[0]
+            _saveButton = (MenuItem) LogicalChildren[0]
                                     .LogicalChildren[0]
                                     .LogicalChildren[0]
                                     .LogicalChildren
                                     .First(c => ((MenuItem) c).Header.Equals("_Save"));
-            SaveButton.IsEnabled = false;
+            _saveButton.IsEnabled = false;
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
@@ -54,16 +60,16 @@ namespace BetterHades
         {
             var arg = (KeyEventArgs) args;
             if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S)
-                if (SaveButton.IsEnabled) Save(null, null);
+                if (_saveButton.IsEnabled) Save(null, null);
                 else SaveAs(null, null);
         }
 
         // Title Bar Buttons:
         public void New(object sender, RoutedEventArgs args)
         {
-            GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            GridCanvas = new GridCanvas(_zoomBorder);
             FileHandler.New();
-            SaveButton.IsEnabled = false;
+            _saveButton.IsEnabled = false;
         }
 
         public async void Open(object sender, RoutedEventArgs args)
@@ -71,14 +77,14 @@ namespace BetterHades
             var dialog = new OpenFileDialog()
                          {
                              Title = "Open BetterHades-File",
-                             Filters = filters,
+                             Filters = _filters,
                              Directory = Environment.CurrentDirectory,
                              AllowMultiple = false,
                          };
             var result = await dialog.ShowAsync(this);
             if (result == null) return;
             FileHandler.Load(result[0]);
-            SaveButton.IsEnabled = true;
+            _saveButton.IsEnabled = true;
         }
 
         public async void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
@@ -90,13 +96,13 @@ namespace BetterHades
                              Title = "Save BetterHades-File",
                              DefaultExtension = "bhds",
                              InitialFileName = "Unnamed",
-                             Filters = filters,
+                             Filters = _filters,
                              Directory = Environment.CurrentDirectory
                          };
             var result = await dialog.ShowAsync(this);
             if (result == null) return;
             FileHandler.Save(result);
-            SaveButton.IsEnabled = true;
+            _saveButton.IsEnabled = true;
         }
 
         public void Exit(object sender, RoutedEventArgs args) { Close(); }

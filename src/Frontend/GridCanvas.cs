@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -19,11 +20,11 @@ namespace BetterHades.Frontend
         public readonly List<Connection> Connections;
         private Component _buffer;
 
-        public GridCanvas(IPanel parent)
+        public GridCanvas(ZoomBorder parent)
         {
             Canvas = new Canvas {Background = Brushes.LightGray};
             Canvas.PointerPressed += ClickHandler;
-            parent.Children.Add(Canvas);
+            parent.Child = Canvas;
             _contextMenu = new RightClickContextMenu(Canvas, this);
             Components = new List<Component>();
             Connections = new List<Connection>();
