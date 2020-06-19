@@ -12,23 +12,19 @@ namespace BetterHades.Util
     {
         private const string Title = "BetterHades - ";
         private static bool _hasChanged = true;
+        public static string CurrentFile = "Unnamed";
 
-        public static void Changed(bool changed = true)
+        // File Handling:
+        public static void New()
         {
-            _hasChanged = changed;
-            UpdateTitle();
+            CurrentFile = "Unnamed";
+            Changed();
         }
-
-        public static string CurrentFile { get; set; } = "Unnamed";
-
-        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(_hasChanged ? "*" : "")}"; }
-
         public static void Save(string fileName)
         {
             CurrentFile = fileName;
             Save();
         }
-
         public static void Save()
         {
             using var file = new StreamWriter($"{CurrentFile}.bhds");
@@ -40,7 +36,6 @@ namespace BetterHades.Util
                     $"{c.GetType()}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Input)}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Output)}");
             Changed(false);
         }
-
         public static void Load(string fileName)
         {
             CurrentFile = fileName;
@@ -53,7 +48,6 @@ namespace BetterHades.Util
             );
             Changed(false);
         }
-
         private static void LoadConnections(IEnumerable<string> lines)
         {
             foreach (var line in lines)
@@ -74,7 +68,6 @@ namespace BetterHades.Util
 
             Changed(false);
         }
-
         private static void LoadComponents(IEnumerable<string> lines)
         {
             foreach (var line in lines)
@@ -94,11 +87,13 @@ namespace BetterHades.Util
                 );
             }
         }
-
-        public static void New()
+        
+        // Helper Methods:
+        public static void Changed(bool changed = true)
         {
-            CurrentFile = "Unnamed";
-            Changed();
+            _hasChanged = changed;
+            UpdateTitle();
         }
+        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(_hasChanged ? "*" : "")}"; }
     }
 }

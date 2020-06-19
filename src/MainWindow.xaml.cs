@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿// ReSharper disable UnusedParameter.Global
+// ReSharper disable UnusedMember.Global
+
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;

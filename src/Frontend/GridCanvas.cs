@@ -17,58 +17,54 @@ namespace BetterHades.Frontend
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
+        private Component _buffer;
 
-        private Component buffer;
-
-        public GridCanvas(IPanel parent) : this(parent, new List<Component>(), new List<Connection>()) { }
-
-        public GridCanvas(IPanel parent, List<Component> components, List<Connection> connections)
+        public GridCanvas(IPanel parent)
         {
             Canvas = new Canvas {Background = Brushes.LightGray};
             Canvas.PointerPressed += ClickHandler;
             parent.Children.Add(Canvas);
             _contextMenu = new RightClickContextMenu(Canvas, this);
-            Components = components;
-            Connections = connections;
+            Components = new List<Component>();
+            Connections = new List<Connection>();
         }
-
+        
+        // Handlers:
         private void ClickHandler(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(string.Join("\n", Connections));
             var args = (PointerPressedEventArgs) e;
             var pos = args.GetCurrentPoint(Canvas).Position;
             if (args.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
             else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }
-
         public void OnComponentInClick(ObservingComponent sender)
         {
-            if (buffer == null)
+            if (_buffer == null)
             {
-                buffer = sender;
+                _buffer = sender;
             }
             else
             {
-                if (!(buffer is Output)) Connections.Add(new Connection(buffer, sender, Canvas));
-                buffer = null;
+                if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, sender, Canvas));
+                _buffer = null;
                 FileHandler.Changed();
             }
         }
-
         public void OnComponentOutClick(Component sender)
         {
-            if (buffer == null)
+            if (_buffer == null)
             {
-                buffer = sender;
+                _buffer = sender;
             }
             else
             {
-                Connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));
-                buffer = null;
+                Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
+                _buffer = null;
                 FileHandler.Changed();
             }
         }
-
+        
+        // Helper Methods:
         public void AddComponent(string group, string type, double x, double y)
         {
             if (group.Equals("Gates")) type += "Gate";

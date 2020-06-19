@@ -27,7 +27,8 @@ namespace BetterHades.Frontend
             _canvas = canvas;
             Hide();
         }
-
+        
+        // Handlers:
         private void OnClick(object sender, RoutedEventArgs e)
         {
             if (!(e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left ||
@@ -40,7 +41,8 @@ namespace BetterHades.Frontend
                                  Canvas.GetTop(_contextMenu));
             Hide();
         }
-
+        
+        // Public Methods:
         public void Show(in double posX, in double posY)
         {
             Canvas.SetLeft(_contextMenu, posX);
@@ -48,7 +50,6 @@ namespace BetterHades.Frontend
             _contextMenu.IsVisible = true;
             foreach (MenuItem item in _contextMenu.Items) item.IsVisible = true;
         }
-
         public void Hide()
         {
             _contextMenu.IsVisible = false;
@@ -56,7 +57,8 @@ namespace BetterHades.Frontend
             Canvas.SetLeft(_contextMenu, 0);
             Canvas.SetTop(_contextMenu, 0);
         }
-
+        
+        // Helper Methods:
         private static IEnumerable<MenuItem> MenuItems()
         {
             return Component.ToDictionary()

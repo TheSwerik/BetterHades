@@ -8,14 +8,14 @@ namespace BetterHades.Util
 {
     public static class HadesFileHandler
     {
+        // File Handling:
         public static void ExportToHades()
         {
-            var name = "Test";
-            using var file = new StreamWriter($"{name}.hds");
+            using var file = new StreamWriter($"{FileHandler.CurrentFile}.hds");
 
             file.WriteLine("# hades.models.Design file");
             file.WriteLine("#  ");
-            file.WriteLine($"[name] {name}");
+            file.WriteLine($"[name] {FileHandler.CurrentFile}");
             file.WriteLine("[components]");
             foreach (var component in App.MainWindow.GridCanvas.Components) file.WriteLine(component.ToHadesString());
             file.WriteLine("[end components]");
@@ -25,7 +25,8 @@ namespace BetterHades.Util
             file.WriteLine("[end signals]");
             file.WriteLine("[end]");
         }
-
+        
+        // Helper Methods:
         private static string ToHadesString(this Component component)
         {
             return component switch
@@ -44,7 +45,6 @@ namespace BetterHades.Util
                        _ => throw new ComponentNotFoundException(component.GetType().ToString())
                    };
         }
-
         private static string ToHadesString(this Connection connection)
         {
             //TODO WHY IS IT LIKE THIS I HATE MY LIFE
