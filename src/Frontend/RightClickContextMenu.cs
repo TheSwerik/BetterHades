@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -28,11 +29,15 @@ namespace BetterHades.Frontend
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
             var group = (string) selected.Header;
+            var translatedPoint = _contextMenu.Parent.TranslatePoint(
+                new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
+                App.MainWindow.GridCanvas.Canvas
+            )!.Value;
             App.MainWindow.GridCanvas.AddComponent(
                 group,
                 selected.SelectedItem.ToString(),
-                Canvas.GetLeft(_contextMenu),
-                Canvas.GetTop(_contextMenu)
+                translatedPoint.X,
+                translatedPoint.Y
             );
             Hide();
         }
