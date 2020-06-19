@@ -3,13 +3,12 @@ using BetterHades.Components;
 using BetterHades.Components.Implementations.Gates;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
-using BetterHades.Frontend;
 
 namespace BetterHades.Util
 {
     public static class HadesFileHandler
     {
-        public static void ExportToHades(GridCanvas canvas)
+        public static void ExportToHades()
         {
             var name = "Test";
             using var file = new StreamWriter($"{name}.hds");
@@ -18,10 +17,11 @@ namespace BetterHades.Util
             file.WriteLine("#  ");
             file.WriteLine($"[name] {name}");
             file.WriteLine("[components]");
-            foreach (var component in canvas.Components) file.WriteLine(component.ToHadesString());
+            foreach (var component in App.MainWindow.GridCanvas.Components) file.WriteLine(component.ToHadesString());
             file.WriteLine("[end components]");
             file.WriteLine("[signals]");
-            foreach (var connection in canvas.Connections) file.WriteLine(connection.ToHadesString());
+            foreach (var connection in App.MainWindow.GridCanvas.Connections)
+                file.WriteLine(connection.ToHadesString());
             file.WriteLine("[end signals]");
             file.WriteLine("[end]");
         }

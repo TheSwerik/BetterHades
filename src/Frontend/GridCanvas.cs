@@ -7,6 +7,7 @@ using Avalonia.Media;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
+using BetterHades.Util;
 
 namespace BetterHades.Frontend
 {
@@ -50,6 +51,7 @@ namespace BetterHades.Frontend
             {
                 if (!(buffer is Output)) Connections.Add(new Connection(buffer, sender, Canvas));
                 buffer = null;
+                FileHandler.Changed();
             }
         }
 
@@ -63,6 +65,7 @@ namespace BetterHades.Frontend
             {
                 Connections.Add(new Connection(sender, buffer as ObservingComponent, Canvas));
                 buffer = null;
+                FileHandler.Changed();
             }
         }
 
@@ -73,6 +76,7 @@ namespace BetterHades.Frontend
             if (t == null) throw new ComponentNotFoundException(type);
             Components.Add((Component) Activator.CreateInstance(t, this, x, y, false) ??
                            throw new ComponentNotFoundException(type));
+            FileHandler.Changed();
         }
     }
 }

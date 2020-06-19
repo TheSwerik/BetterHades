@@ -10,7 +10,7 @@ namespace BetterHades
 {
     public class MainWindow : Window
     {
-        private GridCanvas _canvas;
+        public GridCanvas GridCanvas;
 
         public MainWindow()
         {
@@ -18,7 +18,7 @@ namespace BetterHades
 #if DEBUG
             // this.AttachDevTools();
 #endif
-            _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
             KeyDown += KeyPressed;
         }
 
@@ -27,17 +27,19 @@ namespace BetterHades
         private void KeyPressed(object sender, RoutedEventArgs args)
         {
             var arg = (KeyEventArgs) args;
-            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S) FileHandler.Save(_canvas);
+            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S) FileHandler.Save();
         }
 
         public void New(object sender, RoutedEventArgs args)
         {
-            _canvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            FileHandler.New();
         }
 
-        public void Save(object sender, RoutedEventArgs args) { FileHandler.Save(_canvas); }
+        public void Save(object sender, RoutedEventArgs args) { FileHandler.Save("Test"); }
 
-        public void Load(object sender, RoutedEventArgs args) { FileHandler.Load(_canvas); }
+        public void Load(object sender, RoutedEventArgs args) { FileHandler.Load("Test"); }
+        public void Exit(object sender, RoutedEventArgs args) { Close(); }
 
         public void AboutOnClick(object sender, RoutedEventArgs args)
         {
