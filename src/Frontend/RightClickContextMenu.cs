@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -36,8 +37,8 @@ namespace BetterHades.Frontend
             App.MainWindow.GridCanvas.AddComponent(
                 group,
                 selected.SelectedItem.ToString(),
-                translatedPoint.X,
-                translatedPoint.Y
+                Math.Round(translatedPoint.X / MainWindow.GridCellSize) * MainWindow.GridCellSize,
+                Math.Round(translatedPoint.Y / MainWindow.GridCellSize) * MainWindow.GridCellSize
             );
             Hide();
         }

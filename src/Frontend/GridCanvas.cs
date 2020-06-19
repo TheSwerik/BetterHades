@@ -15,7 +15,6 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        private const int Width = 20000;
         private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
@@ -25,9 +24,14 @@ namespace BetterHades.Frontend
         public GridCanvas(ZoomBorder parent)
         {
             _zoomBorder = parent;
-            Canvas = new Canvas {Background = Brushes.LightGray, Width = Width, Height = Width};
-            for (var i = 100; i < Width; i += 100)
-            for (var j = 100; j < Width; j += 100)
+            Canvas = new Canvas
+                     {
+                         Background = Brushes.LightGray, 
+                         Width = MainWindow.GridSize,
+                         Height = MainWindow.GridSize
+                     };
+            for (var i = MainWindow.GridCellSize; i < MainWindow.GridSize; i += MainWindow.GridCellSize)
+            for (var j = MainWindow.GridCellSize; j < MainWindow.GridSize; j += MainWindow.GridCellSize)
                 Canvas.Children.Add(Cross(i, j));
 
 
@@ -37,7 +41,8 @@ namespace BetterHades.Frontend
                 () =>
                 {
                     _zoomBorder.StartPan(0, 0);
-                    _zoomBorder.PanTo(-(Width - App.MainWindow.Width) / 2, -(Width - App.MainWindow.Height) / 2);
+                    _zoomBorder.PanTo(-(MainWindow.GridSize - App.MainWindow.Width) / 2,
+                                      -(MainWindow.GridSize - App.MainWindow.Height) / 2);
                 },
                 DispatcherPriority.Render
             );
