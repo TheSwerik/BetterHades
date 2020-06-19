@@ -56,6 +56,7 @@ namespace BetterHades.Util
         {
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
+            App.MainWindow.New(null, null);
             LoadComponents(lines.TakeWhile(l => !l.Contains("---------")));
             Dispatcher.UIThread.InvokeAsync
             (
