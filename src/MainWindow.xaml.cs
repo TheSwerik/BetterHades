@@ -41,27 +41,26 @@ namespace BetterHades
                                Name = "BetterHades File"
                            }
                        };
-            _zoomBorder = new ZoomBorder {Background = Brushes.Aqua};
-            ((DockPanel) LogicalChildren[0]).Children.Add(_zoomBorder);
+            _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             GridCanvas = new GridCanvas(_zoomBorder);
-            // GridCanvas = new GridCanvas((DockPanel) LogicalChildren[0]);
+            _zoomBorder.MaxZoomX = 100;
             KeyDown += KeyPressed;
             _saveButton = (MenuItem) LogicalChildren[0]
-                                    .LogicalChildren[0]
-                                    .LogicalChildren[0]
-                                    .LogicalChildren
-                                    .First(c => ((MenuItem) c).Header.Equals("_Save"));
+                                     .LogicalChildren[0]
+                                     .LogicalChildren[0]
+                                     .LogicalChildren
+                                     .First(c => ((MenuItem) c).Header.Equals("_Save"));
             _saveButton.IsEnabled = false;
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
-        private void KeyPressed(object sender, RoutedEventArgs args)
+        private void KeyPressed(object sender, KeyEventArgs e)
         {
-            var arg = (KeyEventArgs) args;
-            if ((arg.KeyModifiers & KeyModifiers.Control) != 0 && arg.Key == Key.S)
+            if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
                 if (_saveButton.IsEnabled) Save(null, null);
                 else SaveAs(null, null);
+            if (e.Key == Key.R) _zoomBorder.Reset();
         }
 
         // Title Bar Buttons:

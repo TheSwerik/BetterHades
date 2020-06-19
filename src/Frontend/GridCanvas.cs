@@ -14,6 +14,7 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
+        private readonly ZoomBorder _zoomBorder;
         private readonly RightClickContextMenu _contextMenu;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
@@ -22,9 +23,11 @@ namespace BetterHades.Frontend
 
         public GridCanvas(ZoomBorder parent)
         {
-            Canvas = new Canvas {Background = Brushes.LightGray};
+            _zoomBorder = parent;
+            _zoomBorder.PointerPressed += ClickHandler;
+            Canvas = new Canvas {Background = Brushes.LightGray, Width = 20000, Height = 20000};
             Canvas.PointerPressed += ClickHandler;
-            parent.Child = Canvas;
+            _zoomBorder.Child = Canvas;
             _contextMenu = new RightClickContextMenu(Canvas, this);
             Components = new List<Component>();
             Connections = new List<Connection>();
@@ -35,6 +38,7 @@ namespace BetterHades.Frontend
         {
             var args = (PointerPressedEventArgs) e;
             var pos = args.GetCurrentPoint(Canvas).Position;
+            Console.WriteLine(pos.ToString());
             if (args.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
             else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }

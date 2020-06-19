@@ -13,7 +13,7 @@ namespace BetterHades.Util
         private const string Title = "BetterHades - ";
         private const string Unnamed = "Unnamed.bhds";
         private static bool _hasChanged = true;
-        private static FileInfo _currentFile;
+        private static FileInfo _currentFile = new FileInfo(Unnamed);
 
         public static string CurrentFile
         {
