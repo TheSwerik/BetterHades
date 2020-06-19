@@ -20,7 +20,7 @@ namespace BetterHades
     public class MainWindow : Window
     {
         public GridCanvas GridCanvas;
-        public Canvas BackgroundCanvas;
+        private readonly Canvas _backgroundCanvas;
         private readonly MenuItem _saveButton;
         private readonly RightClickContextMenu _contextMenu;
         private readonly List<FileDialogFilter> _filters;
@@ -52,7 +52,7 @@ namespace BetterHades
                                Name = "BetterHades File"
                            }
                        };
-            BackgroundCanvas = (Canvas) LogicalChildren[0];
+            _backgroundCanvas = (Canvas) LogicalChildren[0];
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             GridCanvas = new GridCanvas(_zoomBorder);
             _contextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
@@ -73,7 +73,7 @@ namespace BetterHades
 
         private void ClickHandler(object sender, PointerPressedEventArgs e)
         {
-            var pos = e.GetCurrentPoint(BackgroundCanvas).Position;
+            var pos = e.GetCurrentPoint(_backgroundCanvas).Position;
             // Console.WriteLine(pos.ToString());
             if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed) _contextMenu.Show(pos.X, pos.Y);
             else if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) _contextMenu.Hide();
