@@ -34,13 +34,12 @@ namespace BetterHades.Frontend
         }
 
         // Handlers:
-        private void ClickHandler(object sender, RoutedEventArgs e)
+        private void ClickHandler(object sender, PointerPressedEventArgs e)
         {
-            var args = (PointerPressedEventArgs) e;
-            var pos = args.GetCurrentPoint(Canvas).Position;
+            var pos = e.GetCurrentPoint(Canvas).Position;
             Console.WriteLine(pos.ToString());
-            if (args.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
-            else if (args.MouseButton == MouseButton.Left) _contextMenu.Hide();
+            if (e.MouseButton == MouseButton.Right) _contextMenu.Show(pos.X, pos.Y);
+            else if (e.MouseButton == MouseButton.Left) _contextMenu.Hide();
         }
 
         public void OnComponentInClick(ObservingComponent sender)
