@@ -6,7 +6,7 @@
         x:Class="BetterHades.MainWindow"
         Title="BetterHades - Unnamed*">
     <DockPanel>
-        <Menu DockPanel.Dock="Top" ZIndex="">
+        <Menu DockPanel.Dock="Top" ZIndex="2147483647" Background="White">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Click="New" />
                 <MenuItem Header="_Open..." Click="Open" />
