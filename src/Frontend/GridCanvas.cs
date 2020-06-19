@@ -91,8 +91,9 @@ namespace BetterHades.Frontend
 
         private void DrawGrid()
         {
+            //TODO finalize grid
             Canvas.Children.Add(
-                new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid2.png"),});
+                new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid2.png")});
             // var points = new List<Line>();
             // for (var i = 0; i <= MainWindow.GridSize; i += MainWindow.GridCellSize)
             // for (var j = 0; j <= MainWindow.GridSize; j += MainWindow.GridCellSize)
