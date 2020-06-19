@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -9,6 +12,7 @@ using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
 using BetterHades.Util;
+using Component = BetterHades.Components.Component;
 
 namespace BetterHades.Frontend
 {
@@ -20,20 +24,36 @@ namespace BetterHades.Frontend
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
+        private const int Width = 5000;
 
         public GridCanvas(ZoomBorder parent)
         {
             _zoomBorder = parent;
             _zoomBorder.PointerPressed += ClickHandler;
-            Canvas = new Canvas {Background = Brushes.LightGray, Width = 20000, Height = 20000};
+            Canvas = new Canvas {Background = Brushes.LightGray, Width = Width, Height = Width,};
+            for (var i = 100; i < Width; i += 100)
+            for (var j = 100; j < Width; j += 100)
+                Canvas.Children.Add(Cross(i, j));
+
+
             Canvas.PointerPressed += ClickHandler;
             _zoomBorder.Child = Canvas;
+            _zoomBorder.PropertyChanged += CheckIfOutOfBounds;
             _contextMenu = new RightClickContextMenu(Canvas, this);
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
 
         // Handlers:
+        private void CheckIfOutOfBounds(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            Console.Write(e.Property.Name + ": ");
+            if (e.Property.Name.Equals("OffsetX")) Console.WriteLine(e.NewValue);
+            if (e.Property.Name.Equals("OffsetY")) Console.WriteLine(e.NewValue);
+            if (e.Property.Name.Equals("ZoomX")) Console.WriteLine(e.NewValue);
+            if (e.Property.Name.Equals("ZoomY")) Console.WriteLine(e.NewValue);
+        }
+
         private void ClickHandler(object sender, PointerPressedEventArgs e)
         {
             var pos = e.GetCurrentPoint(Canvas).Position;
@@ -79,6 +99,26 @@ namespace BetterHades.Frontend
             Components.Add((Component) Activator.CreateInstance(t, this, x, y, false) ??
                            throw new ComponentNotFoundException(type));
             FileHandler.Changed();
+        }
+
+        private Polyline Cross(double x, double y)
+        {
+            var middle = new Point(x, y);
+            return new Polyline()
+                   {
+                       Stroke = Brushes.Black,
+                       Points = new List<Point>()
+                                {
+                                    middle,
+                                    middle.WithX(x + 10),
+                                    middle,
+                                    middle.WithX(x - 10),
+                                    middle,
+                                    middle.WithY(y + 10),
+                                    middle,
+                                    middle.WithY(y - 10),
+                                }
+                   };
         }
     }
 }

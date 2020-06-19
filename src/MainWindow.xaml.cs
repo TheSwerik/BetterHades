@@ -43,7 +43,6 @@ namespace BetterHades
                        };
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             GridCanvas = new GridCanvas(_zoomBorder);
-            _zoomBorder.MaxZoomX = 100;
             KeyDown += KeyPressed;
             _saveButton = (MenuItem) LogicalChildren[0]
                                      .LogicalChildren[0]
