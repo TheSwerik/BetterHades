@@ -13,7 +13,7 @@ namespace BetterHades.Util
         private const string Title = "BetterHades - ";
         private const string Unnamed = "Unnamed.bhds";
         private static bool _hasChanged = true;
-        private static FileInfo _currentFile;
+        private static FileInfo _currentFile = new FileInfo(Unnamed);
 
         public static string CurrentFile
         {
@@ -56,6 +56,7 @@ namespace BetterHades.Util
         {
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
+            App.MainWindow.New(null, null);
             LoadComponents(lines.TakeWhile(l => !l.Contains("---------")));
             Dispatcher.UIThread.InvokeAsync
             (

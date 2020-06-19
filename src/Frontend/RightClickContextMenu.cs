@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -10,21 +11,14 @@ namespace BetterHades.Frontend
 {
     public class RightClickContextMenu
     {
-        private readonly GridCanvas _canvas;
         private readonly ContextMenu _contextMenu;
 
-        public RightClickContextMenu(IPanel parent, GridCanvas canvas)
+        public RightClickContextMenu(ContextMenu contextMenu)
         {
-            _contextMenu = new ContextMenu
-                           {
-                               Background = Brushes.White,
-                               Items = MenuItems(),
-                               IsVisible = false
-                           };
+            _contextMenu = contextMenu;
+            _contextMenu.Items = MenuItems();
             _contextMenu.PointerPressed += OnClick;
             _contextMenu.KeyDown += OnClick;
-            parent.Children.Add(_contextMenu);
-            _canvas = canvas;
             Hide();
         }
 
@@ -35,10 +29,16 @@ namespace BetterHades.Frontend
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
             var group = (string) selected.Header;
-            _canvas.AddComponent(group,
-                                 selected.SelectedItem.ToString(),
-                                 Canvas.GetLeft(_contextMenu),
-                                 Canvas.GetTop(_contextMenu));
+            var translatedPoint = _contextMenu.Parent.TranslatePoint(
+                new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
+                App.MainWindow.GridCanvas.Canvas
+            )!.Value;
+            App.MainWindow.GridCanvas.AddComponent(
+                group,
+                selected.SelectedItem.ToString(),
+                translatedPoint.X,
+                translatedPoint.Y
+            );
             Hide();
         }
 
