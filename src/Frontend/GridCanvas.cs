@@ -15,7 +15,7 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        public const int Width = 5000;
+        private const int Width = 20000;
         private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
