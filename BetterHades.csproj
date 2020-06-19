@@ -16,7 +16,6 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.9.999-cibuild0008420-beta" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.9.11" />
         <PackageReference Include="Avalonia.Controls.PanAndZoom" Version="2.3.3" />
         <PackageReference Include="Avalonia.Desktop" Version="0.9.999-cibuild0008420-beta" />
     </ItemGroup>
