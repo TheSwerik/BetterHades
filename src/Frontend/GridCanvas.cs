@@ -92,7 +92,16 @@ namespace BetterHades.Frontend
         private void DrawGrid()
         {
             Canvas.Children.Add(
-                new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid.png")});
+            new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid.png")});
+            // var points = new List<Line>();
+            // for (var i = 0; i <= MainWindow.GridSize; i += MainWindow.GridCellSize)
+            // for (var j = 0; j <= MainWindow.GridSize; j += MainWindow.GridCellSize)
+            // {
+            //     var p = new Point(i, j);
+            //     points.Add(new Line() {Stroke = Brushes.Gray, StartPoint = p, EndPoint = p.WithX(p.X+1)});
+            // }
+            //
+            // Canvas.Children.AddRange(points);
         }
     }
 }
