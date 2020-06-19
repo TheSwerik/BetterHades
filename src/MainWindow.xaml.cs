@@ -4,14 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using BetterHades.Frontend;
 using BetterHades.Util;
 
@@ -19,19 +16,40 @@ namespace BetterHades
 {
     public class MainWindow : Window
     {
-        public GridCanvas GridCanvas;
         private readonly Canvas _backgroundCanvas;
-        private readonly MenuItem _saveButton;
         private readonly RightClickContextMenu _contextMenu;
         private readonly List<FileDialogFilter> _filters;
+        private readonly MenuItem _saveButton;
         private readonly ZoomBorder _zoomBorder;
+        public GridCanvas GridCanvas;
 
         public MainWindow()
         {
             InitializeComponent();
 #if DEBUG
-            // this.AttachDevTools();
+            this.AttachDevTools();
 #endif
+            SetDirectory();
+            KeyDown += KeyPressed;
+            _filters = new List<FileDialogFilter>
+                       {
+                           new FileDialogFilter
+                           {
+                               Extensions = new List<string> {"bhds"},
+                               Name = "BetterHades File"
+                           }
+                       };
+            _backgroundCanvas = (Canvas) LogicalChildren[0];
+            _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
+            GridCanvas = new GridCanvas(_zoomBorder);
+            GridCanvas.Canvas.PointerPressed += ClickHandler;
+            _contextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
+            _saveButton = this.Find<MenuItem>("saveButton");
+            _saveButton.IsEnabled = false;
+        }
+
+        private void SetDirectory()
+        {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades";
             try
             {
@@ -44,22 +62,6 @@ namespace BetterHades
             }
 
             Environment.CurrentDirectory = path;
-            _filters = new List<FileDialogFilter>()
-                       {
-                           new FileDialogFilter()
-                           {
-                               Extensions = new List<string>() {"bhds"},
-                               Name = "BetterHades File"
-                           }
-                       };
-            _backgroundCanvas = (Canvas) LogicalChildren[0];
-            _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
-            GridCanvas = new GridCanvas(_zoomBorder);
-            _contextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
-            GridCanvas.Canvas.PointerPressed += ClickHandler;
-            KeyDown += KeyPressed;
-            _saveButton = this.Find<MenuItem>("saveButton");
-            _saveButton.IsEnabled = false;
         }
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
@@ -89,12 +91,12 @@ namespace BetterHades
 
         public async void Open(object sender, RoutedEventArgs args)
         {
-            var dialog = new OpenFileDialog()
+            var dialog = new OpenFileDialog
                          {
                              Title = "Open BetterHades-File",
                              Filters = _filters,
                              Directory = Environment.CurrentDirectory,
-                             AllowMultiple = false,
+                             AllowMultiple = false
                          };
             var result = await dialog.ShowAsync(this);
             if (result == null) return;
