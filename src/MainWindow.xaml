@@ -9,8 +9,9 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Click="New" />
-                <MenuItem Header="_Open..." />
+                <MenuItem Header="_Open..." Click="Open" />
                 <MenuItem Header="_Save" Click="Save" />
+                <MenuItem Header="_Save As..." Click="Save" />
                 <MenuItem Header="_Load" Click="Load" />
                 <MenuItem Header="_Exit" Click="Exit" />
             </MenuItem>

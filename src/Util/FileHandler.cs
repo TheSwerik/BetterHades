@@ -11,13 +11,20 @@ namespace BetterHades.Util
     public static class FileHandler
     {
         private const string Title = "BetterHades - ";
+        private const string Unnamed = "Unnamed.bhds";
         private static bool _hasChanged = true;
-        public static string CurrentFile = "Unnamed";
+        private static FileInfo _currentFile;
+
+        public static string CurrentFile
+        {
+            get => _currentFile.Name.Replace(_currentFile.Extension,"");
+            set => _currentFile = new FileInfo(value);
+        }
 
         // File Handling:
         public static void New()
         {
-            CurrentFile = "Unnamed";
+            CurrentFile = Unnamed;
             Changed();
         }
 
@@ -29,7 +36,7 @@ namespace BetterHades.Util
 
         public static void Save()
         {
-            using var file = new StreamWriter($"{CurrentFile}.bhds");
+            using var file = new StreamWriter(_currentFile.FullName);
             foreach (var c in App.MainWindow.GridCanvas.Components)
                 file.WriteLine($"{c.GetType()}; {c.X}; {c.Y}; {c.IsActive}");
             file.WriteLine("--------------------------------------");
@@ -42,7 +49,7 @@ namespace BetterHades.Util
         public static void Load(string fileName)
         {
             CurrentFile = fileName;
-            var lines = File.ReadAllLines($"{CurrentFile}.bhds");
+            var lines = File.ReadAllLines(_currentFile.FullName);
             LoadComponents(lines.TakeWhile(l => !l.Contains("---------")));
             Dispatcher.UIThread.InvokeAsync
             (
