@@ -24,7 +24,7 @@
                 Name="zoomBorder"
                 Stretch="None"
                 ZoomSpeed="1.01"
-                Background="Black"
+                Background="White"
                 ClipToBounds="True"
                 Focusable="True"
                 HorizontalAlignment="Stretch"

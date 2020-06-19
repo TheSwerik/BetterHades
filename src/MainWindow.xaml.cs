@@ -55,10 +55,6 @@ namespace BetterHades
             if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
                 if (_saveButton.IsEnabled) Save(null, null);
                 else SaveAs(null, null);
-            if (e.Key == Key.R)
-            {
-                _zoomBorder.Reset();
-            }
         }
 
         // Title Bar Buttons:

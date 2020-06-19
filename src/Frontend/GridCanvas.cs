@@ -41,7 +41,11 @@ namespace BetterHades.Frontend
             _zoomBorder.Child = Canvas;
             Dispatcher.UIThread.InvokeAsync
             (
-                () =>_zoomBorder.StartPan((Width - App.MainWindow.Width) / 2, (Width - App.MainWindow.Height) / 2),
+                () =>
+                {
+                    _zoomBorder.StartPan(0,0);
+                    _zoomBorder.PanTo(-(Width - App.MainWindow.Width) / 2, -(Width - App.MainWindow.Height) / 2);
+                },
                 DispatcherPriority.Render
             );
             _contextMenu = new RightClickContextMenu(Canvas, this);
