@@ -1,5 +1,5 @@
 ﻿environment:
-  my_version_number: 1.0.0          # DONT FORGET TO CHANGE IS IN THE ISS FILE
+  my_version_number: 1.0.0              # DONT FORGET TO CHANGE IS IN THE ISS FILE
   application_name: BetterHades         # DONT FORGET TO CHANGE IS IN THE ISS FILE
   project_name: BetterHades
 
@@ -34,38 +34,42 @@ for:
     after_test:
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\bin\64bit -v:m -r:win-x64   --self-contained:true -p:PublishSingleFile=false  -p:PublishTrimmed=true
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\Portable  -v:m -r:win-x64   --self-contained:true -p:PublishSingleFile=true   -p:PublishTrimmed=true
+      - 'ren "publish\Portable\%project_name%.exe" "%project_name%-Portable-x64.exe"'
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\bin\32bit -v:m -r:win-x86   --self-contained:true -p:PublishSingleFile=false  -p:PublishTrimmed=true
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\Portable  -v:m -r:win-x86   --self-contained:true -p:PublishSingleFile=true   -p:PublishTrimmed=true
+      - 'ren "publish\Portable\%project_name%.exe" "%project_name%-Portable-x86.exe"'
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\bin\linux -v:m -r:linux-x64 --self-contained:true -p:PublishSingleFile=false  -p:PublishTrimmed=true
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\Portable  -v:m -r:linux-x64 --self-contained:true -p:PublishSingleFile=true   -p:PublishTrimmed=true
+      - 'ren "publish\Portable\%project_name%" "%project_name%-Portable-linux"'
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\bin\osx   -v:m -r:osx-x64   --self-contained:true -p:PublishSingleFile=false  -p:PublishTrimmed=true
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\Portable  -v:m -r:osx-x64   --self-contained:true -p:PublishSingleFile=true   -p:PublishTrimmed=true
-      - ps: cd Publish\Portable
-      - ps: ls
+      - 'ren "publish\Portable\%project_name%" "%project_name%-Portable-mac"'
       - '"C:\Program Files (x86)\Inno Setup 6\iscc.exe" "/ssigntool=$qC:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool.exe$q sign /f %APPVEYOR_BUILD_FOLDER%/developer-certificate.pfx /t http://timestamp.comodoca.com/authenticode /p %cert_password% /fd sha256 $f" /qp "Inno Config.iss"'
-      - ps: tar -C Publish --exclude='bin/64bit' --exclude=bin/32bit --exclude=bin/osx -czf "Installer\$($env:application_name) Linux.tar.gz" bin
-      - ps: 7z a "Installer\$($env:application_name) MacOS.zip" .\Publish\* -xr!bin\64bit -xr!bin\32bit -xr!bin\linux
+      - ps: tar -C Publish --exclude='bin/64bit' --exclude=bin/32bit --exclude=bin/osx -czf "Installer\$($env:application_name)-Linux.tar.gz" bin
+      - ps: 7z a "Installer\$($env:application_name)-MacOS.zip" .\Publish\* -xr!bin\64bit -xr!bin\32bit -xr!bin\linux
 
     artifacts:
-      - path: /Installer/$(application_name).exe
+      - path: /Installer/$(application_name)-Installer.exe
         name: WinInstaller
-      - path: /Installer/$(application_name) MacOS.zip
-        name: MacInstaller
-      - path: /Installer/$(application_name) Linux.tar.gz
+      - path: /Installer/$(application_name)-Linux.tar.gz
         name: LinuxInstaller
-      - path: /Publish/Portable/$(application_name).exe
-        name: WinPortable
-      - path: /Publish/Portable/$(application_name) MacOS.zip
-        name: MacPortable
-      - path: /Publish/Portable/$(application_name) Linux.tar.gz
+      - path: /Installer/$(application_name)-MacOS.zip
+        name: MacInstaller
+      - path: /Publish/Portable/$(application_name)-Portable-x64.exe
+        name: Win64Portable
+      - path: /Publish/Portable/$(application_name)-Portable-x86.exe
+        name: Win32Portable
+      - path: /Publish/Portable/$(application_name)-Portable-linux
         name: LinuxPortable
+      - path: /Publish/Portable/$(application_name)-Portable-mac
+        name: MacPortable
 
     deploy:
       - provider: GitHub
         release: $(my_version_number)
         auth_token: # encrypted token:
           secure: HESVuhwKdUbPpbBsQrWslB7GYNy5r03/MN/enpu7UWbY886bOE+EpbEFwAVMrtLO #REPLACE WITH TOKEN
-        artifact: WinInstaller, MacInstaller, LinuxInstaller
+        artifact: WinInstaller, LinuxInstaller, MacInstaller, Win64Portable, Win32Portable, LinuxPortable, MacPortable
         draft: false
         prerelease: false
         force_update: false
