@@ -16,14 +16,14 @@ namespace BetterHades
 {
     public class MainWindow : Window
     {
+        public const int GridSize = 5000;
+        public const int GridCellSize = 100;
         private readonly Canvas _backgroundCanvas;
         private readonly RightClickContextMenu _contextMenu;
         private readonly List<FileDialogFilter> _filters;
         private readonly MenuItem _saveButton;
         private readonly ZoomBorder _zoomBorder;
         public GridCanvas GridCanvas;
-        public const int GridSize = 5000;
-        public const int GridCellSize = 100;
 
         public MainWindow()
         {
