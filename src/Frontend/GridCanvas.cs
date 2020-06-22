@@ -97,30 +97,13 @@ namespace BetterHades.Frontend
             {
                 for (var j = 0; j < MainWindow.GridSize / 1000; j++)
                 {
-                    var img = new Image
-                              {
-                                  Source = bitmap,
-                                  Stretch = Stretch.None,
-                                  UseLayoutRounding = true,
-                              };
+                    var img = new Image {Source = bitmap};
                     RenderOptions.SetBitmapInterpolationMode(img, BitmapInterpolationMode.Default);
                     Canvas.Children.Add(img);
                     Avalonia.Controls.Canvas.SetLeft(img, i * 1000);
                     Avalonia.Controls.Canvas.SetTop(img, j * 1000);
                 }
             }
-
-            // Canvas.Children.Add(new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid2.png")});
-
-            // var points = new List<Line>();
-            // for (var i = 0; i <= MainWindow.GridSize; i += MainWindow.GridCellSize)
-            // for (var j = 0; j <= MainWindow.GridSize; j += MainWindow.GridCellSize)
-            // {
-            //     var p = new Point(i, j);
-            //     points.Add(new Line() {Stroke = Brushes.Gray, StartPoint = p, EndPoint = p.WithX(p.X+1)});
-            // }
-            //
-            // Canvas.Children.AddRange(points);
         }
     }
 }
