@@ -7,6 +7,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonia.Visuals.Media.Imaging;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
@@ -92,7 +93,6 @@ namespace BetterHades.Frontend
         private void DrawGrid()
         {
             var bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid-small.png");
-            //TODO finalize grid
             for (var i = 0; i < MainWindow.GridSize / 1000; i++)
             {
                 for (var j = 0; j < MainWindow.GridSize / 1000; j++)
@@ -103,7 +103,7 @@ namespace BetterHades.Frontend
                                   Stretch = Stretch.None,
                                   UseLayoutRounding = true,
                               };
-                    
+                    RenderOptions.SetBitmapInterpolationMode(img, BitmapInterpolationMode.Default);
                     Canvas.Children.Add(img);
                     Avalonia.Controls.Canvas.SetLeft(img, i * 1000);
                     Avalonia.Controls.Canvas.SetTop(img, j * 1000);
