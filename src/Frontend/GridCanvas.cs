@@ -91,9 +91,27 @@ namespace BetterHades.Frontend
 
         private void DrawGrid()
         {
+            var bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid-small.png");
             //TODO finalize grid
-            Canvas.Children.Add(
-                new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid2.png")});
+            for (var i = 0; i < MainWindow.GridSize / 1000; i++)
+            {
+                for (var j = 0; j < MainWindow.GridSize / 1000; j++)
+                {
+                    var img = new Image
+                              {
+                                  Source = bitmap,
+                                  Stretch = Stretch.None,
+                                  UseLayoutRounding = true,
+                              };
+                    
+                    Canvas.Children.Add(img);
+                    Avalonia.Controls.Canvas.SetLeft(img, i * 1000);
+                    Avalonia.Controls.Canvas.SetTop(img, j * 1000);
+                }
+            }
+
+            // Canvas.Children.Add(new Image {Source = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid2.png")});
+
             // var points = new List<Line>();
             // for (var i = 0; i <= MainWindow.GridSize; i += MainWindow.GridCellSize)
             // for (var j = 0; j <= MainWindow.GridSize; j += MainWindow.GridCellSize)
