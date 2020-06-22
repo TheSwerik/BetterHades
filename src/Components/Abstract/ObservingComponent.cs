@@ -35,7 +35,6 @@ namespace BetterHades.Components
         public void OnCompleted() { throw new CompletedException(); }
         public void OnError(Exception error) { Console.WriteLine(error); }
         public void OnNext(Connection value) { Update(); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this,e); }
 
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }

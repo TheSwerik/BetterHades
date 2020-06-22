@@ -54,7 +54,7 @@ namespace BetterHades.Frontend
 
         // Handlers:
 
-        public void OnComponentInClick(ObservingComponent sender, PointerPressedEventArgs e)
+        public void OnComponentClick(Component sender, PointerPressedEventArgs e)
         {
             if (_buffer == null)
             {
@@ -72,32 +72,11 @@ namespace BetterHades.Frontend
             }
             else
             {
-                if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, sender, Canvas));
-                _buffer = null;
-                _previewConnection = null;
-                FileHandler.Changed();
-            }
-        }
-
-        public void OnComponentOutClick(Component sender, PointerPressedEventArgs e)
-        {
-            if (_buffer == null)
-            {
-                _buffer = sender;
-                _previewConnection = new Polyline
-                                     {
-                                         Stroke = Brushes.Black,
-                                         Points = new List<Point>()
-                                                  {
-                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
-                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
-                                                  }
-                                     };
-                Canvas.Children.Add(_previewConnection);
-            }
-            else
-            {
-                Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
+                if (sender is ObservingComponent observingSender)
+                {
+                    if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, observingSender, Canvas));
+                }
+                else Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
                 _buffer = null;
                 _previewConnection = null;
                 FileHandler.Changed();
@@ -108,7 +87,7 @@ namespace BetterHades.Frontend
         {
             if (_previewConnection == null) return;
             _previewConnection.Points[^1] = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
-            Console.WriteLine(string.Join(" ",_previewConnection.Points));
+            Console.WriteLine(string.Join(" ", _previewConnection.Points));
             //TODO fix this line
         }
 

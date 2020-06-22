@@ -69,7 +69,7 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this,e); }
+        protected void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentClick(this, e); }
         public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
