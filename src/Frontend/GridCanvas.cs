@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
+using Avalonia.Controls.Shapes;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -16,6 +19,7 @@ namespace BetterHades.Frontend
     public class GridCanvas
     {
         private readonly ZoomBorder _zoomBorder;
+        private Polyline _previewConnection;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
@@ -30,6 +34,7 @@ namespace BetterHades.Frontend
                          Width = MainWindow.GridSize,
                          Height = MainWindow.GridSize
                      };
+            Canvas.PointerMoved += MoveHandler;
             DrawGrid();
 
             _zoomBorder.Child = Canvas;
@@ -49,32 +54,62 @@ namespace BetterHades.Frontend
 
         // Handlers:
 
-        public void OnComponentInClick(ObservingComponent sender)
+        public void OnComponentInClick(ObservingComponent sender, PointerPressedEventArgs e)
         {
             if (_buffer == null)
             {
                 _buffer = sender;
+                _previewConnection = new Polyline
+                                     {
+                                         Stroke = Brushes.Black,
+                                         Points = new List<Point>()
+                                                  {
+                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
+                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
+                                                  }
+                                     };
+                Canvas.Children.Add(_previewConnection);
             }
             else
             {
                 if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, sender, Canvas));
                 _buffer = null;
+                _previewConnection = null;
                 FileHandler.Changed();
             }
         }
 
-        public void OnComponentOutClick(Component sender)
+        public void OnComponentOutClick(Component sender, PointerPressedEventArgs e)
         {
             if (_buffer == null)
             {
                 _buffer = sender;
+                _previewConnection = new Polyline
+                                     {
+                                         Stroke = Brushes.Black,
+                                         Points = new List<Point>()
+                                                  {
+                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
+                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
+                                                  }
+                                     };
+                Canvas.Children.Add(_previewConnection);
             }
             else
             {
                 Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
                 _buffer = null;
+                _previewConnection = null;
                 FileHandler.Changed();
             }
+        }
+
+        private void MoveHandler(object sender, PointerEventArgs e)
+        {
+            if (_previewConnection == null) return;
+            _previewConnection.Points[^1] = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
+            Console.WriteLine(string.Join(" ",_previewConnection.Points));
+            //TODO fix this line
         }
 
         // Helper Methods:
@@ -100,6 +135,16 @@ namespace BetterHades.Frontend
                 Canvas.SetLeft(img, i * 1000);
                 Canvas.SetTop(img, j * 1000);
             }
+        }
+
+        public static double ToGridCoordinates(double value)
+        {
+            return Math.Round(value / MainWindow.GridCellSize) * MainWindow.GridCellSize;
+        }
+
+        public static Point ToGridCoordinates(Point point)
+        {
+            return new Point(ToGridCoordinates(point.X), ToGridCoordinates(point.Y));
         }
     }
 }

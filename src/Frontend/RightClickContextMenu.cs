@@ -37,8 +37,8 @@ namespace BetterHades.Frontend
             App.MainWindow.GridCanvas.AddComponent(
                 group,
                 selected.SelectedItem.ToString(),
-                Math.Round(translatedPoint.X / MainWindow.GridCellSize) * MainWindow.GridCellSize,
-                Math.Round(translatedPoint.Y / MainWindow.GridCellSize) * MainWindow.GridCellSize
+                GridCanvas.ToGridCoordinates(translatedPoint.X),
+                GridCanvas.ToGridCoordinates(translatedPoint.Y)
             );
             Hide();
         }
