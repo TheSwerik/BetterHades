@@ -19,13 +19,13 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
+        private readonly Rectangle _previewComponent;
         private readonly string[] _previewComponentData;
         private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
-        private Rectangle _previewComponent;
         private Polyline _previewConnection;
 
         public GridCanvas(ZoomBorder parent)
@@ -55,10 +55,11 @@ namespace BetterHades.Frontend
             _previewComponentData = new string[2];
             _previewComponent = new Rectangle
                                 {
-                                    Width = 3 * MainWindow.GridCellSize,
-                                    Height = 3 * MainWindow.GridCellSize,
+                                    Width = 2 * MainWindow.GridCellSize,
+                                    Height = 2 * MainWindow.GridCellSize,
                                     Stroke = Brushes.Black,
-                                    IsVisible = false
+                                    IsVisible = false,
+                                    StrokeThickness = 1
                                 };
             Canvas.Children.Add(_previewComponent);
             Components = new List<Component>();
@@ -147,18 +148,8 @@ namespace BetterHades.Frontend
             var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
             if (_previewComponent.IsVisible)
             {
-                Canvas.Children.Remove(_previewComponent);
-                _previewComponent = new Rectangle
-                                    {
-                                        Width = 2 * MainWindow.GridCellSize,
-                                        Height = 2 * MainWindow.GridCellSize,
-                                        Stroke = Brushes.Black,
-                                        StrokeThickness = 1
-                                    };
-                Canvas.Children.Add(_previewComponent);
                 Canvas.SetLeft(_previewComponent, pos.X - MainWindow.GridCellSize);
                 Canvas.SetTop(_previewComponent, pos.Y - MainWindow.GridCellSize);
-                Console.WriteLine(_previewComponent);
             }
 
             if (_previewConnection == null || _previewConnection.Points[^1] == pos) return;
