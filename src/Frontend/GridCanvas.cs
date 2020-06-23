@@ -113,7 +113,6 @@ namespace BetterHades.Frontend
             Canvas.Children.Remove(_previewConnection);
             _previewConnection = new Polyline {Points = _previewConnection.Points, Stroke = Brushes.Black};
             Canvas.Children.Add(_previewConnection);
-            //TODO fix this polyline
         }
 
         // Helper Methods:
