@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Input;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class Component : IObservable<Component>
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Type
         {
             Connection = 0,
@@ -28,34 +28,32 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
-        protected readonly GridCanvas GridCanvas;
-        public readonly Ellipse OutPoint;
+        protected readonly Ellipse OutPointCircle;
         protected readonly Polygon Polygon;
-        public bool IsClicked;
-        public double X;
-        public double Y;
+        public Point Pos;
 
-        protected Component(GridCanvas gridCanvas, double x, double y, bool isActive, Point outPoint)
+        protected Component(Point position, bool isActive)
         {
-            GridCanvas = gridCanvas;
             _outputs = new List<Connection>();
+            Pos = position;
             Polygon = new Polygon
                       {
                           Width = 100,
                           Height = 100,
                           Fill = Brushes.Gray,
-                          Points = GetPoints(X = x, Y = y)
+                          Points = GetPoints()
                       };
-            GridCanvas.Canvas.Children.Add(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
 
-            const double diameter = 10.0;
-            OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            GridCanvas.Canvas.Children.Add(OutPoint);
-            Canvas.SetTop(OutPoint, y - diameter / 2);
-            Canvas.SetLeft(OutPoint, x - diameter / 2);
-            OutPoint.PointerPressed += SetClicked;
+            const double diameter = MainWindow.GridCellSize / 2.0;
+            OutPointCircle = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(OutPointCircle);
+            Canvas.SetLeft(OutPointCircle, OutPoint.X - diameter / 2);
+            Canvas.SetTop(OutPointCircle, OutPoint.Y - diameter / 2);
             IsActive = isActive;
         }
+
+        public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
 
         public bool IsActive { get; set; }
 
@@ -69,8 +67,7 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
-        public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
+        public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
         public static Dictionary<string, List<Type>> ToDictionary()
@@ -83,6 +80,6 @@ namespace BetterHades.Components
                    };
         }
 
-        protected abstract List<Point> GetPoints(double x, double y);
+        protected abstract List<Point> GetPoints();
     }
 }

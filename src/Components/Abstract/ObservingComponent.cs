@@ -4,38 +4,34 @@ using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Input;
 using Avalonia.Media;
 using BetterHades.Exceptions;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        public readonly Ellipse InPoint;
+        private readonly Ellipse InPointCircle;
         protected readonly ObservableCollection<Connection> Inputs;
 
-        protected ObservingComponent(GridCanvas parent, double x, double y, bool isActive, Point outPoint,
-                                     Point inPoint) : base(
-            parent, x, y, isActive, outPoint)
+        protected ObservingComponent(Point pos, bool isActive) : base(pos, isActive)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
 
-            const double diameter = 10.0;
-            InPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            parent.Canvas.Children.Add(InPoint);
-            Canvas.SetTop(InPoint, y - diameter / 2);
-            Canvas.SetLeft(InPoint, x - diameter / 2);
-            InPoint.PointerPressed += SetClicked;
+            const double diameter = MainWindow.GridCellSize / 2.0;
+            InPointCircle = new Ellipse {Fill = Brushes.Blue, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(InPointCircle);
+            Canvas.SetTop(InPointCircle, InPoint.Y - diameter / 2);
+            Canvas.SetLeft(InPointCircle, InPoint.X - diameter / 2);
         }
+
+        public Point InPoint => Pos.WithX(Pos.X - MainWindow.GridCellSize);
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }
         public void OnError(Exception error) { Console.WriteLine(error); }
         public void OnNext(Connection value) { Update(); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this); }
 
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }

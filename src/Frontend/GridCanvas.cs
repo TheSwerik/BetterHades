@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Controls.Shapes;
+using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonia.Visuals.Media.Imaging;
 using BetterHades.Components;
 using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
@@ -15,21 +19,25 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
-        public const int Width = 5000;
         private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
+        private Polyline _previewConnection;
 
         public GridCanvas(ZoomBorder parent)
         {
             _zoomBorder = parent;
-            Canvas = new Canvas {Background = Brushes.LightGray, Width = Width, Height = Width};
-            for (var i = 100; i < Width; i += 100)
-            for (var j = 100; j < Width; j += 100)
-                Canvas.Children.Add(Cross(i, j));
-
+            Canvas = new Canvas
+                     {
+                         Background = Brushes.White,
+                         Width = MainWindow.GridSize,
+                         Height = MainWindow.GridSize
+                     };
+            Canvas.PointerMoved += MoveHandler;
+            Canvas.PointerPressed += ClickHandler;
+            DrawGrid();
 
             _zoomBorder.Child = Canvas;
             Dispatcher.UIThread.InvokeAsync
@@ -37,7 +45,8 @@ namespace BetterHades.Frontend
                 () =>
                 {
                     _zoomBorder.StartPan(0, 0);
-                    _zoomBorder.PanTo(-(Width - App.MainWindow.Width) / 2, -(Width - App.MainWindow.Height) / 2);
+                    _zoomBorder.PanTo(-(MainWindow.GridSize - App.MainWindow.Width) / 2,
+                                      -(MainWindow.GridSize - App.MainWindow.Height) / 2);
                 },
                 DispatcherPriority.Render
             );
@@ -46,64 +55,109 @@ namespace BetterHades.Frontend
         }
 
         // Handlers:
-
-        public void OnComponentInClick(ObservingComponent sender)
+        public void OnComponentClick(Component sender, PointerPressedEventArgs e)
         {
             if (_buffer == null)
             {
                 _buffer = sender;
+                _previewConnection =
+                    new Polyline {Points = new List<Point> {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)}};
+                Canvas.Children.Add(_previewConnection);
             }
             else
             {
-                if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, sender, Canvas));
+                if (sender is ObservingComponent observingSender)
+                {
+                    if (!(_buffer is Output))
+                        Connections.Add(new Connection(_buffer, observingSender, _previewConnection));
+                }
+                else
+                {
+                    Connections.Add(new Connection(sender, _buffer as ObservingComponent, _previewConnection));
+                }
+
                 _buffer = null;
+                Canvas.Children.Remove(_previewConnection);
+                _previewConnection = null;
                 FileHandler.Changed();
             }
         }
 
-        public void OnComponentOutClick(Component sender)
+        private void ClickHandler(object sender, PointerPressedEventArgs e)
         {
-            if (_buffer == null)
+            var point = e.GetCurrentPoint(App.MainWindow);
+            var pos = point.Position;
+            if (point.Properties.IsRightButtonPressed) App.MainWindow.RightClickContextMenu.Show(pos.X, pos.Y);
+            else if (point.Properties.IsLeftButtonPressed) App.MainWindow.RightClickContextMenu.Hide();
+
+            point = e.GetCurrentPoint(Canvas);
+            pos = ToGridCoordinates(point.Position);
+            if (point.Properties.IsLeftButtonPressed)
             {
-                _buffer = sender;
+                if (Components.Any(c => c.OutPoint == pos))
+                    OnComponentClick(Components.First(c => c.OutPoint == pos), e);
+                else if (Components.Any(c => c is ObservingComponent oc && oc.InPoint == pos))
+                    OnComponentClick(Components.First(c => c is ObservingComponent oc && oc.InPoint == pos), e);
+
+
+                _previewConnection?.Points.Add(pos);
             }
-            else
+            else if (point.Properties.IsRightButtonPressed)
             {
-                Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
                 _buffer = null;
-                FileHandler.Changed();
+                if (_previewConnection != null)
+                {
+                    Canvas.Children.Remove(_previewConnection);
+                    _previewConnection = null;
+                    App.MainWindow.RightClickContextMenu.Hide();
+                }
             }
+        }
+
+        private void MoveHandler(object sender, PointerEventArgs e)
+        {
+            var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
+            if (_previewConnection == null || _previewConnection.Points[^1] == pos) return;
+            _previewConnection.Points[^1] = pos;
+            Canvas.Children.Remove(_previewConnection);
+            _previewConnection = new Polyline {Points = _previewConnection.Points, Stroke = Brushes.Black};
+            Canvas.Children.Add(_previewConnection);
         }
 
         // Helper Methods:
-        public void AddComponent(string group, string type, double x, double y)
+        public void AddComponent(string group, string type, Point pos)
         {
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
-            Components.Add((Component) Activator.CreateInstance(t, this, x, y, false) ??
+            Components.Add((Component) Activator.CreateInstance(t, pos, false) ??
                            throw new ComponentNotFoundException(type));
             FileHandler.Changed();
         }
 
-        private Polyline Cross(double x, double y)
+        private void DrawGrid()
         {
-            var middle = new Point(x, y);
-            return new Polyline
-                   {
-                       Stroke = Brushes.Black,
-                       Points = new List<Point>
-                                {
-                                    middle,
-                                    middle.WithX(x + 10),
-                                    middle,
-                                    middle.WithX(x - 10),
-                                    middle,
-                                    middle.WithY(y + 10),
-                                    middle,
-                                    middle.WithY(y - 10)
-                                }
-                   };
+            var bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid-small.png");
+            const double width = 50.0 / MainWindow.GridCellSize;
+            for (var i = 0; i < width * MainWindow.GridSize / 1000; i++)
+            for (var j = 0; j < width * MainWindow.GridSize / 1000; j++)
+            {
+                var img = new Image {Source = bitmap, Width = 1000.0, Height = 1000.0};
+                RenderOptions.SetBitmapInterpolationMode(img, BitmapInterpolationMode.Default);
+                Canvas.Children.Add(img);
+                Canvas.SetLeft(img, i * 1000 / width);
+                Canvas.SetTop(img, j * 1000 / width);
+            }
+        }
+
+        public static double ToGridCoordinates(double value)
+        {
+            return Math.Round(value / MainWindow.GridCellSize) * MainWindow.GridCellSize;
+        }
+
+        public static Point ToGridCoordinates(Point point)
+        {
+            return new Point(ToGridCoordinates(point.X), ToGridCoordinates(point.Y));
         }
     }
 }

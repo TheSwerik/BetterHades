@@ -1,13 +1,13 @@
 ﻿// ReSharper disable InconsistentNaming
 
 using System.Linq;
-using BetterHades.Frontend;
+using Avalonia;
 
 namespace BetterHades.Components.Implementations.Gates
 {
     public class INVGate : Gate
     {
-        public INVGate(GridCanvas parent, double x, double y, bool isActive) : base(parent, x, y, isActive) { }
+        public INVGate(Point pos, bool isActive) : base(pos, isActive) { }
 
         protected override bool Check() { return Inputs.Count > 0 && !Inputs.First().IsActive; }
 

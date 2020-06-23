@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using BetterHades.Exceptions;
@@ -14,7 +11,7 @@ namespace BetterHades.Components
         public readonly Component Input;
         public ObservingComponent Output;
 
-        public Connection(Component input, ObservingComponent output, IPanel parent)
+        public Connection(Component input, ObservingComponent output, Polyline line)
         {
             Input = input;
             Input.Subscribe(this);
@@ -22,12 +19,11 @@ namespace BetterHades.Components
             Output.AddInput(this);
             _line = new Polyline
                     {
-                        Points = new List<Point> {Input.OutPoint.Bounds.Center, Output.InPoint.Bounds.Center},
+                        Points = line.Points,
                         Stroke = IsActive ? Brushes.Red : Brushes.Gray,
                         ZIndex = int.MinValue
-                        // ZIndex = parent.ZIndex + 1,
                     };
-            parent.Children.Add(_line);
+            App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
         }
 
         public bool IsActive => Input.IsActive;

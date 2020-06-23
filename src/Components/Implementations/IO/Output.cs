@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.IO
 {
@@ -11,11 +10,13 @@ namespace BetterHades.Components.Implementations.IO
     {
         private Connection _inConnection;
 
-        public Output(GridCanvas parent, double x, double y, bool isActive)
-            : base(parent, x, y, isActive, new Point(-999999, -999999), new Point(x, y))
+        public Output(Point pos, bool isActive) : base(pos, isActive)
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
         }
+
+        public override Point OutPoint => new Point(-9999999, -9999999);
 
         protected sealed override void Update()
         {
@@ -24,15 +25,15 @@ namespace BetterHades.Components.Implementations.IO
 
         public override void AddInput(Connection connection) { _inConnection = connection; }
 
-        protected override List<Point> GetPoints(double x, double y)
+        protected override List<Point> GetPoints()
         {
             return new List<Point>
                    {
-                       new Point(x, y),
-                       new Point(x + 10, y - 10),
-                       new Point(x + 20, y - 10),
-                       new Point(x + 20, y + 10),
-                       new Point(x + 10, y + 10)
+                       InPoint,
+                       Pos.WithY(Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
+                       Pos.WithY(Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }
