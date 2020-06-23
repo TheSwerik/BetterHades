@@ -73,7 +73,14 @@ namespace BetterHades.Frontend
             {
                 _buffer = sender;
                 _previewConnection =
-                    new Polyline {Points = new List<Point> {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)}};
+                    new Polyline
+                    {
+                        Points = new List<Point>
+                                 {
+                                     ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
+                                     ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)
+                                 }
+                    };
                 Canvas.Children.Add(_previewConnection);
             }
             else
