@@ -134,14 +134,15 @@ namespace BetterHades.Frontend
         private void DrawGrid()
         {
             var bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + @"res\Grid-small.png");
-            for (var i = 0; i < MainWindow.GridSize / 1000; i++)
-            for (var j = 0; j < MainWindow.GridSize / 1000; j++)
+            const double width = 50.0 / MainWindow.GridCellSize;
+            for (var i = 0; i < width * MainWindow.GridSize / 1000; i++)
+            for (var j = 0; j < width * MainWindow.GridSize / 1000; j++)
             {
-                var img = new Image {Source = bitmap};
+                var img = new Image {Source = bitmap, Width = 1000.0, Height = 1000.0};
                 RenderOptions.SetBitmapInterpolationMode(img, BitmapInterpolationMode.Default);
                 Canvas.Children.Add(img);
-                Canvas.SetLeft(img, i * 1000);
-                Canvas.SetTop(img, j * 1000);
+                Canvas.SetLeft(img, i * 1000 / width);
+                Canvas.SetTop(img, j * 1000 / width);
             }
         }
 

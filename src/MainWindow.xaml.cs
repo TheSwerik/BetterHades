@@ -19,7 +19,7 @@ namespace BetterHades
     public class MainWindow : Window
     {
         public const int GridSize = 5000;
-        public const int GridCellSize = 100;
+        public const int GridCellSize = 25;
         private readonly List<FileDialogFilter> _filters;
         private readonly MenuItem _saveButton;
         private readonly ZoomBorder _zoomBorder;
