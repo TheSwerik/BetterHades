@@ -27,7 +27,6 @@ namespace BetterHades.Components
             parent.Canvas.Children.Add(InPoint);
             Canvas.SetTop(InPoint, y - diameter / 2);
             Canvas.SetLeft(InPoint, x - diameter / 2);
-            InPoint.PointerPressed += SetClicked;
         }
 
         // Implemented:

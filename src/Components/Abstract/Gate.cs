@@ -14,14 +14,14 @@ namespace BetterHades.Components
         protected abstract bool Check();
         protected override void Update() { Notify(IsActive = Check()); }
 
-        protected override List<Point> GetPoints(double x, double y)
+        protected override List<Point> GetPoints()
         {
             return new List<Point>
                    {
-                       new Point(x - 10, y - 10),
-                       new Point(x + 10, y - 10),
-                       new Point(x + 10, y + 10),
-                       new Point(x - 10, y + 10)
+                       new Point(Pos.X - 10, Pos.Y - 10),
+                       new Point(Pos.X + 10, Pos.Y - 10),
+                       new Point(Pos.X + 10, Pos.Y + 10),
+                       new Point(Pos.X - 10, Pos.Y + 10)
                    };
         }
     }

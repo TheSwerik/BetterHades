@@ -44,7 +44,7 @@ namespace BetterHades.Util
         {
             using var file = new StreamWriter(_currentFile.FullName);
             foreach (var c in App.MainWindow.GridCanvas.Components)
-                file.WriteLine($"{c.GetType()}; {c.X}; {c.Y}; {c.IsActive}");
+                file.WriteLine($"{c.GetType()}; {c.Pos.X}; {c.Pos.Y}; {c.IsActive}");
             file.WriteLine("--------------------------------------");
             foreach (var c in App.MainWindow.GridCanvas.Connections)
                 file.WriteLine(

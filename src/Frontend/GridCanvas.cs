@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
@@ -54,7 +55,6 @@ namespace BetterHades.Frontend
         }
 
         // Handlers:
-
         public void OnComponentClick(Component sender, PointerPressedEventArgs e)
         {
             if (_buffer == null)
@@ -90,18 +90,23 @@ namespace BetterHades.Frontend
             if (point.Properties.IsRightButtonPressed) App.MainWindow.RightClickContextMenu.Show(pos.X, pos.Y);
             else if (point.Properties.IsLeftButtonPressed) App.MainWindow.RightClickContextMenu.Hide();
 
-            if (_previewConnection == null) return;
             point = e.GetCurrentPoint(Canvas);
+            pos = ToGridCoordinates(point.Position);
             if (point.Properties.IsLeftButtonPressed)
             {
-                _previewConnection.Points.Add(ToGridCoordinates(point.Position));
+                Components.ForEach(c => Console.WriteLine(pos + "   " + c.Pos));
+                if (Components.Any(c => c.Pos == pos)) OnComponentClick(Components.First(c => c.Pos == pos), e);
+                _previewConnection?.Points.Add(pos);
             }
             else if (point.Properties.IsRightButtonPressed)
             {
                 _buffer = null;
-                Canvas.Children.Remove(_previewConnection);
-                _previewConnection = null;
-                App.MainWindow.RightClickContextMenu.Hide();
+                if (_previewConnection != null)
+                {
+                    Canvas.Children.Remove(_previewConnection);
+                    _previewConnection = null;
+                    App.MainWindow.RightClickContextMenu.Hide();
+                }
             }
         }
 

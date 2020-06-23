@@ -23,15 +23,15 @@ namespace BetterHades.Components.Implementations.IO
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
-        protected override List<Point> GetPoints(double x, double y)
+        protected override List<Point> GetPoints()
         {
             return new List<Point>
                    {
-                       new Point(x, y),
-                       new Point(x - 10, y - 10),
-                       new Point(x - 20, y - 10),
-                       new Point(x - 20, y + 10),
-                       new Point(x - 10, y + 10)
+                       Pos,
+                       new Point(Pos.X - 10, Pos.Y - 10),
+                       new Point(Pos.X - 20, Pos.Y - 10),
+                       new Point(Pos.X - 20, Pos.Y + 10),
+                       new Point(Pos.X - 10, Pos.Y + 10)
                    };
         }
     }

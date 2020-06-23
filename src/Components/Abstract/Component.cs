@@ -4,7 +4,6 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Input;
 using Avalonia.Media;
 using BetterHades.Frontend;
 
@@ -31,20 +30,19 @@ namespace BetterHades.Components
         protected readonly GridCanvas GridCanvas;
         public readonly Ellipse OutPoint;
         protected readonly Polygon Polygon;
-        public bool IsClicked;
-        public double X;
-        public double Y;
+        public Point Pos;
 
         protected Component(GridCanvas gridCanvas, double x, double y, bool isActive, Point outPoint)
         {
             GridCanvas = gridCanvas;
             _outputs = new List<Connection>();
+            Pos = new Point(x, y);
             Polygon = new Polygon
                       {
                           Width = 100,
                           Height = 100,
                           Fill = Brushes.Gray,
-                          Points = GetPoints(X = x, Y = y)
+                          Points = GetPoints()
                       };
             GridCanvas.Canvas.Children.Add(Polygon);
 
@@ -53,7 +51,6 @@ namespace BetterHades.Components
             GridCanvas.Canvas.Children.Add(OutPoint);
             Canvas.SetTop(OutPoint, y - diameter / 2);
             Canvas.SetLeft(OutPoint, x - diameter / 2);
-            OutPoint.PointerPressed += SetClicked;
             IsActive = isActive;
         }
 
@@ -69,8 +66,7 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        protected void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentClick(this, e); }
-        public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
+        public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
         public static Dictionary<string, List<Type>> ToDictionary()
@@ -83,6 +79,6 @@ namespace BetterHades.Components
                    };
         }
 
-        protected abstract List<Point> GetPoints(double x, double y);
+        protected abstract List<Point> GetPoints();
     }
 }
