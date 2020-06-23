@@ -15,6 +15,7 @@ namespace BetterHades.Util
         private static bool _hasChanged = true;
         private static FileInfo _currentFile = new FileInfo(Unnamed);
         public static string FullPath => _currentFile.FullName;
+        public static DirectoryInfo CurrentDirectory => _currentFile.Directory;
 
         public static string CurrentFile
         {

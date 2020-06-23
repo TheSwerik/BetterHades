@@ -43,18 +43,19 @@ namespace BetterHades
             _saveButton.IsEnabled = false;
             RightClickContextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
             GridCanvas = new GridCanvas(_zoomBorder);
+            Config.Init();
         }
 
         private static void SetDirectory()
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades";
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades/Projects";
             try
             {
                 Directory.CreateDirectory(path);
             }
             catch (UnauthorizedAccessException)
             {
-                path = "/BetterHades";
+                path = "/BetterHades/Projects";
                 Directory.CreateDirectory(path);
             }
 
