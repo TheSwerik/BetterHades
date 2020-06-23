@@ -45,7 +45,7 @@ namespace BetterHades.Components
                       };
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
 
-            const double diameter = 10.0;
+            const double diameter = MainWindow.GridCellSize / 5.0;
             OutPointCircle = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
             App.MainWindow.GridCanvas.Canvas.Children.Add(OutPointCircle);
             Canvas.SetLeft(OutPointCircle, OutPoint.X - diameter / 2);

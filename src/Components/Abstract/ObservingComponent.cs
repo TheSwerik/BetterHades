@@ -19,7 +19,7 @@ namespace BetterHades.Components
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
 
-            const double diameter = MainWindow.GridCellSize / 10.0;
+            const double diameter = MainWindow.GridCellSize / 5.0;
             InPointCircle = new Ellipse {Fill = Brushes.Blue, Width = diameter, Height = diameter};
             App.MainWindow.GridCanvas.Canvas.Children.Add(InPointCircle);
             Canvas.SetTop(InPointCircle, InPoint.Y - diameter / 2);

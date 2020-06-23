@@ -25,11 +25,11 @@ namespace BetterHades.Components.Implementations.IO
         {
             return new List<Point>
                    {
-                       Pos,
-                       new Point(Pos.X - 10, Pos.Y - 10),
-                       new Point(Pos.X - 20, Pos.Y - 10),
-                       new Point(Pos.X - 20, Pos.Y + 10),
-                       new Point(Pos.X - 10, Pos.Y + 10)
+                       OutPoint,
+                       new Point(Pos.X, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
+                       new Point(Pos.X, Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }
