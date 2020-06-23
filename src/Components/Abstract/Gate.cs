@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Avalonia;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class Gate : ObservingComponent
     {
-        protected Gate(GridCanvas parent, double x, double y, bool isActive) :
-            base(parent, x, y, isActive, new Point(x + 10, y + 5), new Point(x - 10, y + 5))
+        protected Gate(double x, double y, bool isActive)
+            : base(x, y, isActive, new Point(x + 10, y + 5), new Point(x - 10, y + 5))
         {
         }
 

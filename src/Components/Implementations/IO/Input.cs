@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public Input(GridCanvas parent, double x, double y, bool isActive) : base(
-            parent, x, y, isActive, new Point(x, y))
+        public Input(double x, double y, bool isActive)
+            : base(x, y, isActive, new Point(x, y))
         {
             Polygon.PointerPressed += OnClick;
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;

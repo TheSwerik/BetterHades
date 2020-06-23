@@ -32,9 +32,9 @@ namespace BetterHades.Components
         protected readonly Polygon Polygon;
         public Point Pos;
 
-        protected Component(GridCanvas gridCanvas, double x, double y, bool isActive, Point outPoint)
+        protected Component(double x, double y, bool isActive, Point outPoint)
         {
-            GridCanvas = gridCanvas;
+            GridCanvas = App.MainWindow.GridCanvas;
             _outputs = new List<Connection>();
             Pos = new Point(x, y);
             Polygon = new Polygon

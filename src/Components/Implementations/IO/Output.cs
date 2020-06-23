@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.IO
 {
@@ -11,8 +10,8 @@ namespace BetterHades.Components.Implementations.IO
     {
         private Connection _inConnection;
 
-        public Output(GridCanvas parent, double x, double y, bool isActive)
-            : base(parent, x, y, isActive, new Point(-999999, -999999), new Point(x, y))
+        public Output(double x, double y, bool isActive)
+            : base(x, y, isActive, new Point(-999999, -999999), new Point(x, y))
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
