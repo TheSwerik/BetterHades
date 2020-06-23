@@ -8,7 +8,6 @@ namespace BetterHades.Components.Implementations.Gates
     public class ORGate : Gate
     {
         public ORGate(Point pos, bool isActive) : base(pos, isActive) { }
-
         protected override bool Check() { return Inputs.Any(c => c.IsActive); }
     }
 }

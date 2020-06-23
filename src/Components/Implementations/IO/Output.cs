@@ -16,13 +16,14 @@ namespace BetterHades.Components.Implementations.IO
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
         }
 
-        public override Point OutPoint => new Point(-9999999, -9999999);
+        public override Point OutPoint => new Point(double.MinValue, double.MinValue);
 
         protected sealed override void Update()
         {
             Polygon.Fill = (IsActive = _inConnection.IsActive) ? Brushes.Red : Brushes.Gray;
         }
 
+        //TODO remove connection
         public override void AddInput(Connection connection) { _inConnection = connection; }
 
         protected override List<Point> GetPoints()

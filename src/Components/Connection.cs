@@ -17,12 +17,7 @@ namespace BetterHades.Components
             Input.Subscribe(this);
             Subscribe(output);
             Output.AddInput(this);
-            _line = new Polyline
-                    {
-                        Points = line.Points,
-                        Stroke = IsActive ? Brushes.Red : Brushes.Gray,
-                        ZIndex = int.MinValue
-                    };
+            _line = new Polyline {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
         }
 
@@ -39,7 +34,6 @@ namespace BetterHades.Components
 
         // Observer-Stuff
         public void OnCompleted() { throw new CompletedException(); }
-
         public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}", error); }
 
         public void OnNext(Component input)

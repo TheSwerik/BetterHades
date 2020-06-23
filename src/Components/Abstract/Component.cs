@@ -70,6 +70,7 @@ namespace BetterHades.Components
         private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
         public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
 
+        // Helper Methods
         protected static Ellipse GenerateIOPort(Point pos, ISolidColorBrush color)
         {
             const double diameter = MainWindow.GridCellSize / 2.0;

@@ -14,6 +14,7 @@ namespace BetterHades.Components.Implementations.Gates
         // Inverse always has only one output.
         public override void AddInput(Connection connection)
         {
+            //TODO remove connection
             Inputs.Clear();
             Inputs.Add(connection);
         }
