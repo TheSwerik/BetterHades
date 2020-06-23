@@ -120,9 +120,9 @@ namespace BetterHades.Frontend
                         return;
                     }
                 }
-                else if (Components.Any(c => c != _buffer && c.Polygon.IsPointerOver))
+                else if (Components.Any(c => c != _buffer && IsPointInShape(c.Polygon, pos)))
                 {
-                    OnComponentClick(Components.First(c => c != _buffer && c.Polygon.IsPointerOver), e);
+                    OnComponentClick(Components.First(c => c != _buffer && IsPointInShape(c.Polygon, pos)), e);
                     return;
                 }
 
@@ -200,6 +200,11 @@ namespace BetterHades.Frontend
         {
             return new Point(Math.Round(point.X / MainWindow.GridCellSize) * MainWindow.GridCellSize,
                              Math.Round(point.Y / MainWindow.GridCellSize) * MainWindow.GridCellSize);
+        }
+
+        private static bool IsPointInShape(Shape shape, Point point)
+        {
+            return shape.DefiningGeometry?.FillContains(point) ?? throw new Exception("DefiningGeometry is null.");
         }
     }
 }
