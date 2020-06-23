@@ -21,7 +21,6 @@ namespace BetterHades.Frontend
     {
         private readonly Rectangle _previewComponent;
         private readonly string[] _previewComponentData;
-        private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
@@ -30,7 +29,6 @@ namespace BetterHades.Frontend
 
         public GridCanvas(ZoomBorder parent)
         {
-            _zoomBorder = parent;
             Canvas = new Canvas
                      {
                          Background = Brushes.White,
@@ -39,31 +37,32 @@ namespace BetterHades.Frontend
                      };
             Canvas.PointerMoved += MoveHandler;
             Canvas.PointerPressed += ClickHandler;
+            parent.Child = Canvas;
+
             DrawGrid();
 
-            _zoomBorder.Child = Canvas;
             Dispatcher.UIThread.InvokeAsync
             (
                 () =>
                 {
-                    _zoomBorder.StartPan(0, 0);
-                    _zoomBorder.PanTo(-(MainWindow.GridSize - App.MainWindow.Width) / 2,
-                                      -(MainWindow.GridSize - App.MainWindow.Height) / 2);
+                    parent.StartPan(0, 0);
+                    parent.PanTo(-(MainWindow.GridSize - App.MainWindow.Width) / 2,
+                                 -(MainWindow.GridSize - App.MainWindow.Height) / 2);
                 },
                 DispatcherPriority.Render
             );
-            _previewComponentData = new string[2];
-            _previewComponent = new Rectangle
-                                {
-                                    Width = 2 * MainWindow.GridCellSize,
-                                    Height = 2 * MainWindow.GridCellSize,
-                                    Stroke = Brushes.Black,
-                                    IsVisible = false,
-                                    StrokeThickness = 1
-                                };
-            Canvas.Children.Add(_previewComponent);
+
             Components = new List<Component>();
             Connections = new List<Connection>();
+            _previewComponentData = new string[2];
+            Canvas.Children.Add(_previewComponent = new Rectangle
+                                                    {
+                                                        Width = 2 * MainWindow.GridCellSize,
+                                                        Height = 2 * MainWindow.GridCellSize,
+                                                        Stroke = Brushes.Black,
+                                                        IsVisible = false,
+                                                        StrokeThickness = 1
+                                                    });
         }
 
         // Handlers:
@@ -72,29 +71,15 @@ namespace BetterHades.Frontend
             if (_buffer == null)
             {
                 _buffer = sender;
-                _previewConnection =
-                    new Polyline
-                    {
-                        Points = new List<Point>
-                                 {
-                                     ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
-                                     ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)
-                                 }
-                    };
-                Canvas.Children.Add(_previewConnection);
+                var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
+                Canvas.Children.Add(_previewConnection = new Polyline {Points = new List<Point> {pos, pos}});
             }
             else
             {
-                if (sender is ObservingComponent observingSender)
-                {
-                    if (!(_buffer is Output))
-                        Connections.Add(new Connection(_buffer, observingSender, _previewConnection));
-                }
-                else
-                {
-                    Connections.Add(new Connection(sender, _buffer as ObservingComponent, _previewConnection));
-                }
-
+                if (!(sender is ObservingComponent))
+                    Connections.Add(new Connection(sender, (ObservingComponent) _buffer, _previewConnection));
+                else if (!(_buffer is Output))
+                    Connections.Add(new Connection(_buffer, (ObservingComponent) sender, _previewConnection));
                 _buffer = null;
                 Canvas.Children.Remove(_previewConnection);
                 _previewConnection = null;
@@ -174,7 +159,7 @@ namespace BetterHades.Frontend
             _previewComponent.IsVisible = true;
         }
 
-        public void AddComponent(string group, string type, Point pos)
+        private void AddComponent(string group, string type, Point pos)
         {
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
@@ -199,14 +184,10 @@ namespace BetterHades.Frontend
             }
         }
 
-        public static double ToGridCoordinates(double value)
-        {
-            return Math.Round(value / MainWindow.GridCellSize) * MainWindow.GridCellSize;
-        }
-
         public static Point ToGridCoordinates(Point point)
         {
-            return new Point(ToGridCoordinates(point.X), ToGridCoordinates(point.Y));
+            return new Point(Math.Round(point.X / MainWindow.GridCellSize) * MainWindow.GridCellSize,
+                             Math.Round(point.Y / MainWindow.GridCellSize) * MainWindow.GridCellSize);
         }
     }
 }

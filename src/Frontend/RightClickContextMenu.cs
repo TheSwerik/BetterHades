@@ -16,13 +16,13 @@ namespace BetterHades.Frontend
         {
             _contextMenu = contextMenu;
             _contextMenu.Items = MenuItems();
-            _contextMenu.PointerPressed += OnClick;
-            _contextMenu.KeyDown += OnClick;
+            _contextMenu.PointerPressed += OnSelect;
+            _contextMenu.KeyDown += OnSelect;
             Hide();
         }
 
         // Handlers:
-        private void OnClick(object sender, RoutedEventArgs e)
+        private void OnSelect(object sender, RoutedEventArgs e)
         {
             if (!(e is PointerPressedEventArgs mouseArgs &&
                   mouseArgs.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed ||
