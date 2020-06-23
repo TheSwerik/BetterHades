@@ -94,7 +94,6 @@ namespace BetterHades.Frontend
             pos = ToGridCoordinates(point.Position);
             if (point.Properties.IsLeftButtonPressed)
             {
-                Components.ForEach(c => Console.WriteLine(pos + "   " + c.Pos));
                 if (Components.Any(c => c.OutPoint == pos))
                     OnComponentClick(Components.First(c => c.OutPoint == pos), e);
                 else if (Components.Any(c => c is ObservingComponent oc && oc.InPoint == pos))
