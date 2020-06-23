@@ -132,6 +132,13 @@ namespace BetterHades.Frontend
                     _previewConnection = null;
                     App.MainWindow.RightClickContextMenu.Hide();
                 }
+
+                if (_previewComponent.IsVisible)
+                {
+                    _previewComponent.IsVisible = false;
+                    _previewComponentData[0] = _previewComponentData[1] = null;
+                    App.MainWindow.RightClickContextMenu.Hide();
+                }
             }
         }
 
