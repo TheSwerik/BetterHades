@@ -121,12 +121,12 @@ namespace BetterHades.Frontend
         }
 
         // Helper Methods:
-        public void AddComponent(string group, string type, double x, double y)
+        public void AddComponent(string group, string type, Point pos)
         {
             if (group.Equals("Gates")) type += "Gate";
             var t = Type.GetType($"BetterHades.Components.Implementations.{group}.{type}");
             if (t == null) throw new ComponentNotFoundException(type);
-            Components.Add((Component) Activator.CreateInstance(t, this, x, y, false) ??
+            Components.Add((Component) Activator.CreateInstance(t, pos, false) ??
                            throw new ComponentNotFoundException(type));
             FileHandler.Changed();
         }
