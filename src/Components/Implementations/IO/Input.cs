@@ -26,10 +26,10 @@ namespace BetterHades.Components.Implementations.IO
             return new List<Point>
                    {
                        OutPoint,
-                       new Point(Pos.X, Pos.Y - MainWindow.GridCellSize),
+                       Pos.WithY(Pos.Y - MainWindow.GridCellSize),
                        new Point(Pos.X - MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
                        new Point(Pos.X - MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
-                       new Point(Pos.X, Pos.Y + MainWindow.GridCellSize)
+                       Pos.WithY(Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }

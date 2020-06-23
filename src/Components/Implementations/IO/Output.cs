@@ -13,7 +13,10 @@ namespace BetterHades.Components.Implementations.IO
         public Output(Point pos, bool isActive) : base(pos, isActive)
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
         }
+
+        public override Point OutPoint => new Point(-9999999, -9999999);
 
         protected sealed override void Update()
         {
@@ -26,11 +29,11 @@ namespace BetterHades.Components.Implementations.IO
         {
             return new List<Point>
                    {
-                       Pos,
-                       new Point(Pos.X + 10, Pos.Y - 10),
-                       new Point(Pos.X + 20, Pos.Y - 10),
-                       new Point(Pos.X + 20, Pos.Y + 10),
-                       new Point(Pos.X + 10, Pos.Y + 10)
+                       InPoint,
+                       Pos.WithY(Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
+                       Pos.WithY(Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }

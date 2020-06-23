@@ -28,7 +28,7 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
-        private readonly Ellipse OutPointCircle;
+        protected readonly Ellipse OutPointCircle;
         protected readonly Polygon Polygon;
         public Point Pos;
 
@@ -45,7 +45,7 @@ namespace BetterHades.Components
                       };
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
 
-            const double diameter = MainWindow.GridCellSize / 5.0;
+            const double diameter = MainWindow.GridCellSize / 2.0;
             OutPointCircle = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
             App.MainWindow.GridCanvas.Canvas.Children.Add(OutPointCircle);
             Canvas.SetLeft(OutPointCircle, OutPoint.X - diameter / 2);
@@ -53,7 +53,7 @@ namespace BetterHades.Components
             IsActive = isActive;
         }
 
-        public Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
+        public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
 
         public bool IsActive { get; set; }
 
