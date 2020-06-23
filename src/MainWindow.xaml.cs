@@ -39,13 +39,13 @@ namespace BetterHades
                            }
                        };
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
-            GridCanvas = new GridCanvas(_zoomBorder);
-            RightClickContextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
             _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
+            RightClickContextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
+            GridCanvas = new GridCanvas(_zoomBorder);
         }
 
-        private void SetDirectory()
+        private static void SetDirectory()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades";
             try
@@ -93,7 +93,7 @@ namespace BetterHades
             _saveButton.IsEnabled = true;
         }
 
-        private void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
+        private static void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
 
         private async void SaveAs(object sender, RoutedEventArgs args)
         {

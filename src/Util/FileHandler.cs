@@ -14,18 +14,17 @@ namespace BetterHades.Util
         private const string Unnamed = "Unnamed.bhds";
         private static bool _hasChanged = true;
         private static FileInfo _currentFile = new FileInfo(Unnamed);
+        public static string FullPath => _currentFile.FullName;
 
         public static string CurrentFile
         {
             get => _currentFile.Name.Replace(_currentFile.Extension, "");
-            set
+            private set
             {
                 _currentFile = new FileInfo(value);
                 Environment.CurrentDirectory = _currentFile.DirectoryName!;
             }
         }
-
-        public static string FullPath => _currentFile.FullName;
 
         // File Handling:
         public static void New()
@@ -42,13 +41,13 @@ namespace BetterHades.Util
 
         public static void Save()
         {
+            var components = App.MainWindow.GridCanvas.Components;
             using var file = new StreamWriter(_currentFile.FullName);
-            foreach (var c in App.MainWindow.GridCanvas.Components)
-                file.WriteLine($"{c.GetType()}; {c.Pos.X}; {c.Pos.Y}; {c.IsActive}");
-            file.WriteLine("--------------------------------------");
-            foreach (var c in App.MainWindow.GridCanvas.Connections)
-                file.WriteLine(
-                    $"{c.GetType()}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Input)}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Output)}");
+            foreach (var component in components)
+                file.WriteLine($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+            file.WriteLine(new string('-', 100));
+            foreach (var con in App.MainWindow.GridCanvas.Connections)
+                file.WriteLine($"{con.GetType()}; {components.IndexOf(con.Input)}; {components.IndexOf(con.Output)}");
             Changed(false);
         }
 
@@ -57,10 +56,10 @@ namespace BetterHades.Util
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
             App.MainWindow.New(null, null);
-            LoadComponents(lines.TakeWhile(l => !l.Contains("---------")));
+            LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
             (
-                () => LoadConnections(lines.SkipWhile(l => !l.Contains("---------")).Skip(1)),
+                () => LoadConnections(lines.SkipWhile(l => !l.Contains("----------")).Skip(1)),
                 DispatcherPriority.Render
             );
             Changed(false);

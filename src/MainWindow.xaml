@@ -3,8 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:panAndZoom="clr-namespace:Avalonia.Controls.PanAndZoom;assembly=Avalonia.Controls.PanAndZoom"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="720"
         x:Class="BetterHades.MainWindow"
+        mc:Ignorable="d"
+        d:DesignWidth="800" d:DesignHeight="720"
         Title="BetterHades - Unnamed*">
     <Canvas>
         <DockPanel>

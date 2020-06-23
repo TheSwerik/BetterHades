@@ -26,8 +26,7 @@ namespace BetterHades.Util
             foreach (var component in App.MainWindow.GridCanvas.Components) file.WriteLine(component.ToHadesString());
             file.WriteLine("[end components]");
             file.WriteLine("[signals]");
-            foreach (var connection in App.MainWindow.GridCanvas.Connections)
-                file.WriteLine(connection.ToHadesString());
+            foreach (var con in App.MainWindow.GridCanvas.Connections) file.WriteLine(con.ToHadesString());
             file.WriteLine("[end signals]");
             file.WriteLine("[end]");
         }
