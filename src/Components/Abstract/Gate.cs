@@ -14,10 +14,10 @@ namespace BetterHades.Components
         {
             return new List<Point>
                    {
-                       new Point(Pos.X - 10, Pos.Y - 10),
-                       new Point(Pos.X + 10, Pos.Y - 10),
-                       new Point(Pos.X + 10, Pos.Y + 10),
-                       new Point(Pos.X - 10, Pos.Y + 10)
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }

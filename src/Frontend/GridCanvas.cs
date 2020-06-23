@@ -95,7 +95,12 @@ namespace BetterHades.Frontend
             if (point.Properties.IsLeftButtonPressed)
             {
                 Components.ForEach(c => Console.WriteLine(pos + "   " + c.Pos));
-                if (Components.Any(c => c.Pos == pos)) OnComponentClick(Components.First(c => c.Pos == pos), e);
+                if (Components.Any(c => c.OutPoint == pos))
+                    OnComponentClick(Components.First(c => c.OutPoint == pos), e);
+                else if (Components.Any(c => c is ObservingComponent oc && oc.InPoint == pos))
+                    OnComponentClick(Components.First(c => c is ObservingComponent oc && oc.InPoint == pos), e);
+
+
                 _previewConnection?.Points.Add(pos);
             }
             else if (point.Properties.IsRightButtonPressed)

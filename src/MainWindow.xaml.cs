@@ -1,5 +1,6 @@
 ﻿// ReSharper disable UnusedParameter.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedParameter.Local
 
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
 using BetterHades.Util;
-
-// ReSharper disable UnusedParameter.Local
 
 namespace BetterHades
 {
