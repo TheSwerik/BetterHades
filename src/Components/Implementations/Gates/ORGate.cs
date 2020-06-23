@@ -1,12 +1,13 @@
 ﻿// ReSharper disable InconsistentNaming
 
 using System.Linq;
+using Avalonia;
 
 namespace BetterHades.Components.Implementations.Gates
 {
     public class ORGate : Gate
     {
-        public ORGate(double x, double y, bool isActive) : base(x, y, isActive) { }
+        public ORGate(Point pos, bool isActive) : base(pos, isActive) { }
 
         protected override bool Check() { return Inputs.Any(c => c.IsActive); }
     }

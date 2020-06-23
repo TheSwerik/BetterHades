@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class Component : IObservable<Component>
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Type
         {
             Connection = 0,
@@ -27,16 +28,14 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
-        protected readonly GridCanvas GridCanvas;
-        public readonly Ellipse OutPoint;
+        private readonly Ellipse OutPointCircle;
         protected readonly Polygon Polygon;
         public Point Pos;
 
-        protected Component(double x, double y, bool isActive, Point outPoint)
+        protected Component(Point position, bool isActive)
         {
-            GridCanvas = App.MainWindow.GridCanvas;
             _outputs = new List<Connection>();
-            Pos = new Point(x, y);
+            Pos = position;
             Polygon = new Polygon
                       {
                           Width = 100,
@@ -44,15 +43,17 @@ namespace BetterHades.Components
                           Fill = Brushes.Gray,
                           Points = GetPoints()
                       };
-            GridCanvas.Canvas.Children.Add(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
 
             const double diameter = 10.0;
-            OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            GridCanvas.Canvas.Children.Add(OutPoint);
-            Canvas.SetTop(OutPoint, y - diameter / 2);
-            Canvas.SetLeft(OutPoint, x - diameter / 2);
+            OutPointCircle = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(OutPointCircle);
+            Canvas.SetLeft(OutPointCircle, OutPoint.X - diameter / 2);
+            Canvas.SetTop(OutPointCircle, OutPoint.Y - diameter / 2);
             IsActive = isActive;
         }
+
+        public Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
 
         public bool IsActive { get; set; }
 

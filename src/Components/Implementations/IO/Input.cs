@@ -9,8 +9,7 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public Input(double x, double y, bool isActive)
-            : base(x, y, isActive, new Point(x, y))
+        public Input(Point pos, bool isActive) : base(pos, isActive)
         {
             Polygon.PointerPressed += OnClick;
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;

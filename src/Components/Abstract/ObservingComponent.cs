@@ -11,21 +11,22 @@ namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        public readonly Ellipse InPoint;
+        private readonly Ellipse InPointCircle;
         protected readonly ObservableCollection<Connection> Inputs;
 
-        protected ObservingComponent(double x, double y, bool isActive, Point outPoint, Point inPoint)
-            : base(x, y, isActive, outPoint)
+        protected ObservingComponent(Point pos, bool isActive) : base(pos, isActive)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
 
             const double diameter = MainWindow.GridCellSize / 10.0;
-            InPoint = new Ellipse {Fill = Brushes.Blue, Width = diameter, Height = diameter};
-            App.MainWindow.GridCanvas.Canvas.Children.Add(InPoint);
-            Canvas.SetTop(InPoint, y - diameter / 2);
-            Canvas.SetLeft(InPoint, x - diameter / 2);
+            InPointCircle = new Ellipse {Fill = Brushes.Blue, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(InPointCircle);
+            Canvas.SetTop(InPointCircle, InPoint.Y - diameter / 2);
+            Canvas.SetLeft(InPointCircle, InPoint.X - diameter / 2);
         }
+
+        public Point InPoint => Pos.WithX(Pos.X - MainWindow.GridCellSize);
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }

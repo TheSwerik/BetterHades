@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading;
+using Avalonia;
 using Avalonia.Threading;
 
 namespace BetterHades.Components.Implementations.IO
@@ -10,10 +11,9 @@ namespace BetterHades.Components.Implementations.IO
 
         // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global
-        public InputClock(double x, double y, bool isActive) : this(x, y, isActive, 1000) { }
+        public InputClock(Point pos, bool isActive) : this(pos, isActive, 1000) { }
 
-        public InputClock(double x, double y, bool isActive, long duration)
-            : base(x, y, isActive)
+        public InputClock(Point pos, bool isActive, long duration) : base(pos, isActive)
         {
             //TODO Popup when Constructing
             _duration = duration;

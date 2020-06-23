@@ -10,8 +10,7 @@ namespace BetterHades.Components.Implementations.IO
     {
         private Connection _inConnection;
 
-        public Output(double x, double y, bool isActive)
-            : base(x, y, isActive, new Point(-999999, -999999), new Point(x, y))
+        public Output(Point pos, bool isActive) : base(pos, isActive)
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }

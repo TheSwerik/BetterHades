@@ -1,12 +1,13 @@
 ﻿// ReSharper disable InconsistentNaming
 
 using System.Linq;
+using Avalonia;
 
 namespace BetterHades.Components.Implementations.Gates
 {
     public class XNORGate : Gate
     {
-        public XNORGate(double x, double y, bool isActive) : base(x, y, isActive) { }
+        public XNORGate(Point pos, bool isActive) : base(pos, isActive) { }
 
         protected override bool Check() { return Inputs.All(c => c == Inputs[0].IsActive); }
     }
