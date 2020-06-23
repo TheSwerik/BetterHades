@@ -150,9 +150,10 @@ namespace BetterHades.Frontend
                 Canvas.Children.Remove(_previewComponent);
                 _previewComponent = new Rectangle
                                     {
-                                        Width = 3 * MainWindow.GridCellSize,
-                                        Height = 3 * MainWindow.GridCellSize,
-                                        Stroke = Brushes.Black
+                                        Width = 2 * MainWindow.GridCellSize,
+                                        Height = 2 * MainWindow.GridCellSize,
+                                        Stroke = Brushes.Black,
+                                        StrokeThickness = 1
                                     };
                 Canvas.Children.Add(_previewComponent);
                 Canvas.SetLeft(_previewComponent, pos.X - MainWindow.GridCellSize);
