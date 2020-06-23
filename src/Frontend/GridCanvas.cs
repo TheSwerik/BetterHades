@@ -106,18 +106,23 @@ namespace BetterHades.Frontend
                     return;
                 }
 
-                if (Components.Any(c => c != _buffer && c.OutPoint == pos))
+                if (_buffer == null)
                 {
-                    OnComponentClick(Components.First(c => c != _buffer && c.OutPoint == pos), e);
-                    return;
-                }
+                    if (Components.Any(c => c.OutPoint == pos))
+                    {
+                        OnComponentClick(Components.First(c => c.OutPoint == pos), e);
+                        return;
+                    }
 
-                if (Components.Any(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos))
+                    if (Components.Any(c => c is ObservingComponent oc && oc.InPoint == pos))
+                    {
+                        OnComponentClick(Components.First(c => c is ObservingComponent oc && oc.InPoint == pos), e);
+                        return;
+                    }
+                }
+                else if (Components.Any(c => c != _buffer && c.Polygon.IsPointerOver))
                 {
-                    OnComponentClick(
-                        Components
-                            .First(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos)
-                        , e);
+                    OnComponentClick(Components.First(c => c != _buffer && c.Polygon.IsPointerOver), e);
                     return;
                 }
 

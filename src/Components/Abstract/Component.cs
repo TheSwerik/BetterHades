@@ -27,7 +27,7 @@ namespace BetterHades.Components
 
         private readonly List<Connection> _outputs;
         protected readonly Ellipse OutPointCircle;
-        protected readonly Polygon Polygon;
+        public readonly Polygon Polygon;
         public Point Pos;
 
         protected Component(Point position, bool isActive)
