@@ -35,6 +35,7 @@ namespace BetterHades.Frontend
                          Height = MainWindow.GridSize
                      };
             Canvas.PointerMoved += MoveHandler;
+            Canvas.PointerPressed += ClickHandler;
             DrawGrid();
 
             _zoomBorder.Child = Canvas;
@@ -61,12 +62,9 @@ namespace BetterHades.Frontend
                 _buffer = sender;
                 _previewConnection = new Polyline
                                      {
-                                         Stroke = Brushes.Black,
-                                         Points = new List<Point>()
-                                                  {
-                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
-                                                      ToGridCoordinates(e.GetCurrentPoint(Canvas).Position),
-                                                  }
+                                         Points = new List<Point>() {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)},
+                                         Stroke = Brushes.Brown,
+                                         ZIndex = int.MinValue
                                      };
                 Canvas.Children.Add(_previewConnection);
             }
@@ -74,12 +72,34 @@ namespace BetterHades.Frontend
             {
                 if (sender is ObservingComponent observingSender)
                 {
-                    if (!(_buffer is Output)) Connections.Add(new Connection(_buffer, observingSender, Canvas));
+                    if (!(_buffer is Output))
+                        Connections.Add(new Connection(_buffer, observingSender, _previewConnection));
                 }
-                else Connections.Add(new Connection(sender, _buffer as ObservingComponent, Canvas));
+                else Connections.Add(new Connection(sender, _buffer as ObservingComponent, _previewConnection));
+
                 _buffer = null;
+                Canvas.Children.Remove(_previewConnection);
                 _previewConnection = null;
                 FileHandler.Changed();
+            }
+        }
+
+        private void ClickHandler(object sender, PointerPressedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(App.MainWindow);
+            var pos = point.Position;
+            if (point.Properties.IsRightButtonPressed) App.MainWindow.RightClickContextMenu.Show(pos.X, pos.Y);
+            else if (point.Properties.IsLeftButtonPressed) App.MainWindow.RightClickContextMenu.Hide();
+            
+            if (_previewConnection == null) return;
+            point = e.GetCurrentPoint(Canvas);
+            if (point.Properties.IsLeftButtonPressed) _previewConnection.Points.Add(ToGridCoordinates(point.Position));
+            else if (point.Properties.IsRightButtonPressed)
+            {
+                _buffer = null;
+                Canvas.Children.Remove(_previewConnection);
+                _previewConnection = null;
+                App.MainWindow.RightClickContextMenu.Hide();
             }
         }
 
@@ -87,8 +107,9 @@ namespace BetterHades.Frontend
         {
             if (_previewConnection == null) return;
             _previewConnection.Points[^1] = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
-            Console.WriteLine(string.Join(" ", _previewConnection.Points));
-            //TODO fix this line
+            Console.WriteLine(string.Join("\t", _previewConnection.Points));
+            Console.WriteLine( _previewConnection.Bounds);
+            //TODO fix this polyline
         }
 
         // Helper Methods:

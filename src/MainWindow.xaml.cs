@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
 using BetterHades.Util;
+// ReSharper disable UnusedParameter.Local
 
 namespace BetterHades
 {
@@ -18,11 +19,10 @@ namespace BetterHades
     {
         public const int GridSize = 5000;
         public const int GridCellSize = 100;
-        private readonly Canvas _backgroundCanvas;
-        private readonly RightClickContextMenu _contextMenu;
         private readonly List<FileDialogFilter> _filters;
         private readonly MenuItem _saveButton;
         private readonly ZoomBorder _zoomBorder;
+        public readonly RightClickContextMenu RightClickContextMenu;
         public GridCanvas GridCanvas;
 
         public MainWindow()
@@ -41,11 +41,9 @@ namespace BetterHades
                                Name = "BetterHades File"
                            }
                        };
-            _backgroundCanvas = (Canvas) LogicalChildren[0];
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             GridCanvas = new GridCanvas(_zoomBorder);
-            GridCanvas.Canvas.PointerPressed += ClickHandler;
-            _contextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
+            RightClickContextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
             _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
         }
@@ -75,14 +73,6 @@ namespace BetterHades
                 else SaveAs(null, null);
         }
 
-        private void ClickHandler(object sender, PointerPressedEventArgs e)
-        {
-            var pos = e.GetCurrentPoint(_backgroundCanvas).Position;
-            // Console.WriteLine(pos.ToString());
-            if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed) _contextMenu.Show(pos.X, pos.Y);
-            else if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) _contextMenu.Hide();
-        }
-
         // Title Bar Buttons:
         public void New(object sender, RoutedEventArgs args)
         {
@@ -106,9 +96,11 @@ namespace BetterHades
             _saveButton.IsEnabled = true;
         }
 
-        public void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
+        
+        private void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
 
-        public async void SaveAs(object sender, RoutedEventArgs args)
+        
+        private async void SaveAs(object sender, RoutedEventArgs args)
         {
             var dialog = new SaveFileDialog
                          {
