@@ -19,6 +19,7 @@ namespace BetterHades.Components
             Output.AddInput(this);
             _line = new Polyline {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+            Notify();
         }
 
         public bool IsActive => Input.IsActive;
