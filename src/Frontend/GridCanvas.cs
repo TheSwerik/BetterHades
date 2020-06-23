@@ -94,11 +94,14 @@ namespace BetterHades.Frontend
             pos = ToGridCoordinates(point.Position);
             if (point.Properties.IsLeftButtonPressed)
             {
-                if (Components.Any(c => c.OutPoint == pos))
-                    OnComponentClick(Components.First(c => c.OutPoint == pos), e);
-                else if (Components.Any(c => c is ObservingComponent oc && oc.InPoint == pos))
-                    OnComponentClick(Components.First(c => c is ObservingComponent oc && oc.InPoint == pos), e);
-
+                if (Components.Any(c => c != _buffer && c.OutPoint == pos))
+                    OnComponentClick(Components.First(c => c != _buffer && c.OutPoint == pos), e);
+                else if (Components.Any(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos))
+                    OnComponentClick(
+                        Components
+                            .First(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos),
+                        e
+                    );
 
                 _previewConnection?.Points.Add(pos);
             }
