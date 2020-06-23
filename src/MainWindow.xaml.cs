@@ -88,7 +88,7 @@ namespace BetterHades
                              AllowMultiple = false
                          };
             var result = await dialog.ShowAsync(this);
-            if (result == null) return;
+            if (result == null || result.Length <= 0) return;
             FileHandler.Load(result[0]);
             _saveButton.IsEnabled = true;
         }

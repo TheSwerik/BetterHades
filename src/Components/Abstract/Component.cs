@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,7 +10,6 @@ namespace BetterHades.Components
 {
     public abstract class Component : IObservable<Component>
     {
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Type
         {
             Connection = 0,
@@ -36,27 +34,17 @@ namespace BetterHades.Components
         {
             _outputs = new List<Connection>();
             Pos = position;
-            Polygon = new Polygon
-                      {
-                          Width = 100,
-                          Height = 100,
-                          Fill = Brushes.Gray,
-                          Points = GetPoints()
-                      };
+            Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
-
-            const double diameter = MainWindow.GridCellSize / 2.0;
-            OutPointCircle = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            App.MainWindow.GridCanvas.Canvas.Children.Add(OutPointCircle);
-            Canvas.SetLeft(OutPointCircle, OutPoint.X - diameter / 2);
-            Canvas.SetTop(OutPointCircle, OutPoint.Y - diameter / 2);
+            OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             IsActive = isActive;
         }
 
+        // Properties
         public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
-
         public bool IsActive { get; set; }
 
+        // Observable
         /**
         * Subscribes the Observer to this Connection.
         */
@@ -67,9 +55,8 @@ namespace BetterHades.Components
         }
 
         public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
-        private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
 
+        // Converters
         public static Dictionary<string, List<Type>> ToDictionary()
         {
             var list = ToList();
@@ -80,6 +67,20 @@ namespace BetterHades.Components
                    };
         }
 
+        private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
+        public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
+
+        protected static Ellipse GenerateIOPort(Point pos, ISolidColorBrush color)
+        {
+            const double diameter = MainWindow.GridCellSize / 2.0;
+            var result = new Ellipse {Fill = color, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(result);
+            Canvas.SetLeft(result, pos.X - diameter / 2);
+            Canvas.SetTop(result, pos.Y - diameter / 2);
+            return result;
+        }
+
+        // Abstract
         protected abstract List<Point> GetPoints();
     }
 }
