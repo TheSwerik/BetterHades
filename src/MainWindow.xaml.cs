@@ -28,9 +28,6 @@ namespace BetterHades
         public MainWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
             SetDirectory();
             KeyDown += KeyPressed;
             _filters = new List<FileDialogFilter>

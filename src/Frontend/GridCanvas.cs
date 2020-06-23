@@ -60,12 +60,8 @@ namespace BetterHades.Frontend
             if (_buffer == null)
             {
                 _buffer = sender;
-                _previewConnection = new Polyline
-                                     {
-                                         Points = new List<Point>() {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)},
-                                         Stroke = Brushes.Brown,
-                                         ZIndex = int.MinValue
-                                     };
+                _previewConnection =
+                    new Polyline {Points = new List<Point>() {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)}};
                 Canvas.Children.Add(_previewConnection);
             }
             else
@@ -90,7 +86,7 @@ namespace BetterHades.Frontend
             var pos = point.Position;
             if (point.Properties.IsRightButtonPressed) App.MainWindow.RightClickContextMenu.Show(pos.X, pos.Y);
             else if (point.Properties.IsLeftButtonPressed) App.MainWindow.RightClickContextMenu.Hide();
-            
+
             if (_previewConnection == null) return;
             point = e.GetCurrentPoint(Canvas);
             if (point.Properties.IsLeftButtonPressed) _previewConnection.Points.Add(ToGridCoordinates(point.Position));
@@ -105,10 +101,12 @@ namespace BetterHades.Frontend
 
         private void MoveHandler(object sender, PointerEventArgs e)
         {
-            if (_previewConnection == null) return;
-            _previewConnection.Points[^1] = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
-            Console.WriteLine(string.Join("\t", _previewConnection.Points));
-            Console.WriteLine( _previewConnection.Bounds);
+            var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
+            if (_previewConnection == null || _previewConnection.Points[^1] == pos) return;
+            _previewConnection.Points[^1] = pos;
+            Canvas.Children.Remove(_previewConnection);
+            _previewConnection = new Polyline() {Points = _previewConnection.Points, Stroke = Brushes.Black,};
+            Canvas.Children.Add(_previewConnection);
             //TODO fix this polyline
         }
 
