@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
 using BetterHades.Util;
+
 // ReSharper disable UnusedParameter.Local
 
 namespace BetterHades
@@ -93,10 +94,8 @@ namespace BetterHades
             _saveButton.IsEnabled = true;
         }
 
-        
         private void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
 
-        
         private async void SaveAs(object sender, RoutedEventArgs args)
         {
             var dialog = new SaveFileDialog

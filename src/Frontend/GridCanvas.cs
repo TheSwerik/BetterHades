@@ -19,11 +19,11 @@ namespace BetterHades.Frontend
     public class GridCanvas
     {
         private readonly ZoomBorder _zoomBorder;
-        private Polyline _previewConnection;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
+        private Polyline _previewConnection;
 
         public GridCanvas(ZoomBorder parent)
         {
@@ -61,7 +61,7 @@ namespace BetterHades.Frontend
             {
                 _buffer = sender;
                 _previewConnection =
-                    new Polyline {Points = new List<Point>() {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)}};
+                    new Polyline {Points = new List<Point> {ToGridCoordinates(e.GetCurrentPoint(Canvas).Position)}};
                 Canvas.Children.Add(_previewConnection);
             }
             else
@@ -71,7 +71,10 @@ namespace BetterHades.Frontend
                     if (!(_buffer is Output))
                         Connections.Add(new Connection(_buffer, observingSender, _previewConnection));
                 }
-                else Connections.Add(new Connection(sender, _buffer as ObservingComponent, _previewConnection));
+                else
+                {
+                    Connections.Add(new Connection(sender, _buffer as ObservingComponent, _previewConnection));
+                }
 
                 _buffer = null;
                 Canvas.Children.Remove(_previewConnection);
@@ -89,7 +92,10 @@ namespace BetterHades.Frontend
 
             if (_previewConnection == null) return;
             point = e.GetCurrentPoint(Canvas);
-            if (point.Properties.IsLeftButtonPressed) _previewConnection.Points.Add(ToGridCoordinates(point.Position));
+            if (point.Properties.IsLeftButtonPressed)
+            {
+                _previewConnection.Points.Add(ToGridCoordinates(point.Position));
+            }
             else if (point.Properties.IsRightButtonPressed)
             {
                 _buffer = null;
@@ -105,7 +111,7 @@ namespace BetterHades.Frontend
             if (_previewConnection == null || _previewConnection.Points[^1] == pos) return;
             _previewConnection.Points[^1] = pos;
             Canvas.Children.Remove(_previewConnection);
-            _previewConnection = new Polyline() {Points = _previewConnection.Points, Stroke = Brushes.Black,};
+            _previewConnection = new Polyline {Points = _previewConnection.Points, Stroke = Brushes.Black};
             Canvas.Children.Add(_previewConnection);
             //TODO fix this polyline
         }
