@@ -19,11 +19,13 @@ namespace BetterHades.Frontend
 {
     public class GridCanvas
     {
+        private readonly string[] _previewComponentData;
         private readonly ZoomBorder _zoomBorder;
         public readonly Canvas Canvas;
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
+        private Rectangle _previewComponent;
         private Polyline _previewConnection;
 
         public GridCanvas(ZoomBorder parent)
@@ -50,6 +52,15 @@ namespace BetterHades.Frontend
                 },
                 DispatcherPriority.Render
             );
+            _previewComponentData = new string[2];
+            _previewComponent = new Rectangle
+                                {
+                                    Width = 3 * MainWindow.GridCellSize,
+                                    Height = 3 * MainWindow.GridCellSize,
+                                    Stroke = Brushes.Black,
+                                    IsVisible = false
+                                };
+            Canvas.Children.Add(_previewComponent);
             Components = new List<Component>();
             Connections = new List<Connection>();
         }
@@ -94,14 +105,28 @@ namespace BetterHades.Frontend
             pos = ToGridCoordinates(point.Position);
             if (point.Properties.IsLeftButtonPressed)
             {
+                if (_previewComponent.IsVisible)
+                {
+                    _previewComponent.IsVisible = false;
+                    AddComponent(_previewComponentData[0], _previewComponentData[1], pos);
+                    _previewComponentData[0] = _previewComponentData[1] = null;
+                    return;
+                }
+
                 if (Components.Any(c => c != _buffer && c.OutPoint == pos))
+                {
                     OnComponentClick(Components.First(c => c != _buffer && c.OutPoint == pos), e);
-                else if (Components.Any(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos))
+                    return;
+                }
+
+                if (Components.Any(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos))
+                {
                     OnComponentClick(
                         Components
-                            .First(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos),
-                        e
-                    );
+                            .First(c => c != _buffer && c is ObservingComponent oc && oc.InPoint == pos)
+                        , e);
+                    return;
+                }
 
                 _previewConnection?.Points.Add(pos);
             }
@@ -120,6 +145,21 @@ namespace BetterHades.Frontend
         private void MoveHandler(object sender, PointerEventArgs e)
         {
             var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
+            if (_previewComponent.IsVisible)
+            {
+                Canvas.Children.Remove(_previewComponent);
+                _previewComponent = new Rectangle
+                                    {
+                                        Width = 3 * MainWindow.GridCellSize,
+                                        Height = 3 * MainWindow.GridCellSize,
+                                        Stroke = Brushes.Black
+                                    };
+                Canvas.Children.Add(_previewComponent);
+                Canvas.SetLeft(_previewComponent, pos.X - MainWindow.GridCellSize);
+                Canvas.SetTop(_previewComponent, pos.Y - MainWindow.GridCellSize);
+                Console.WriteLine(_previewComponent);
+            }
+
             if (_previewConnection == null || _previewConnection.Points[^1] == pos) return;
             _previewConnection.Points[^1] = pos;
             Canvas.Children.Remove(_previewConnection);
@@ -128,6 +168,13 @@ namespace BetterHades.Frontend
         }
 
         // Helper Methods:
+        public void StartComponentPriview(string group, string type)
+        {
+            _previewComponentData[0] = group;
+            _previewComponentData[1] = type;
+            _previewComponent.IsVisible = true;
+        }
+
         public void AddComponent(string group, string type, Point pos)
         {
             if (group.Equals("Gates")) type += "Gate";

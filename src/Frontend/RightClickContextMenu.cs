@@ -33,11 +33,7 @@ namespace BetterHades.Frontend
                 new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
                 App.MainWindow.GridCanvas.Canvas
             )!.Value;
-            App.MainWindow.GridCanvas.AddComponent(
-                group,
-                selected.SelectedItem.ToString(),
-                GridCanvas.ToGridCoordinates(translatedPoint)
-            );
+            App.MainWindow.GridCanvas.StartComponentPriview(group, selected.SelectedItem.ToString());
             Hide();
         }
 
