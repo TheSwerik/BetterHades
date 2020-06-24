@@ -24,8 +24,20 @@ namespace BetterHades.Util
 
         public static void AddFileToHistory(string file)
         {
-            if (_fileHistory.Count >= 5) _fileHistory.Dequeue();
-            _fileHistory.Enqueue(file);
+            if (_fileHistory.Contains(file))
+            {
+                var list = _fileHistory.ToList();
+                list[list.IndexOf(file)] = list[^1];
+                list[^1] = file;
+                _fileHistory.Clear();
+                foreach (var f in list) _fileHistory.Enqueue(f);
+            }
+            else
+            {
+                if (_fileHistory.Count >= 5) _fileHistory.Dequeue();
+                _fileHistory.Enqueue(file);
+            }
+
             App.MainWindow.UpdateFileHistory();
         }
 
