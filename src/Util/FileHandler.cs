@@ -54,9 +54,9 @@ namespace BetterHades.Util
 
         public static void Load(string fileName)
         {
-            CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
             App.MainWindow.New(null, null);
+            CurrentFile = fileName;
             LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
             (
