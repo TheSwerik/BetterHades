@@ -15,6 +15,7 @@ namespace BetterHades.Util
         private static bool _hasChanged = true;
         private static FileInfo _currentFile = new FileInfo(Unnamed);
         public static string FullPath => _currentFile.FullName;
+        public static DirectoryInfo CurrentDirectory => _currentFile.Directory;
 
         public static string CurrentFile
         {
@@ -53,9 +54,9 @@ namespace BetterHades.Util
 
         public static void Load(string fileName)
         {
-            CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
             App.MainWindow.New(null, null);
+            CurrentFile = fileName;
             LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
             (

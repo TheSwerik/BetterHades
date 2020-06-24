@@ -4,7 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
@@ -38,23 +40,41 @@ namespace BetterHades
                                Name = "BetterHades File"
                            }
                        };
+            Closing += OnClose;
             _zoomBorder = this.Find<ZoomBorder>("zoomBorder");
             _saveButton = this.Find<MenuItem>("saveButton");
             _saveButton.IsEnabled = false;
             RightClickContextMenu = new RightClickContextMenu(this.Find<ContextMenu>("contextMenu"));
             GridCanvas = new GridCanvas(_zoomBorder);
+            Config.Init();
+            UpdateFileHistory();
+        }
+
+        public void UpdateFileHistory()
+        {
+            var fileMenu = this.Find<MenuItem>("FileMenu");
+            var items = new List<MenuItem>();
+            items.AddRange(fileMenu.Items.Cast<MenuItem>().TakeWhile(i => !i.Header.Equals("-")));
+            items.Add(new MenuItem {Header = "-"});
+            foreach (var item in Config.FileHistory.Select(file => new MenuItem {Header = file}))
+            {
+                item.Click += FileHistoryClick;
+                items.Add(item);
+            }
+
+            fileMenu.Items = items;
         }
 
         private static void SetDirectory()
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades";
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/BetterHades/Projects";
             try
             {
                 Directory.CreateDirectory(path);
             }
             catch (UnauthorizedAccessException)
             {
-                path = "/BetterHades";
+                path = "/BetterHades/Projects";
                 Directory.CreateDirectory(path);
             }
 
@@ -63,11 +83,26 @@ namespace BetterHades
 
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
+        // Handlers
         private void KeyPressed(object sender, KeyEventArgs e)
         {
             if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
                 if (_saveButton.IsEnabled) Save(null, null);
                 else SaveAs(null, null);
+        }
+
+        private void OnClose(object? sender, CancelEventArgs e)
+        {
+            //TODO save prompt
+            Config.Save();
+        }
+
+        private void FileHistoryClick(object sender, RoutedEventArgs e)
+        {
+            var item = ((MenuItem) sender).Header as string;
+            FileHandler.Load(item);
+            _saveButton.IsEnabled = true;
+            Config.AddFileToHistory(item);
         }
 
         // Title Bar Buttons:
@@ -91,6 +126,7 @@ namespace BetterHades
             if (result == null || result.Length <= 0) return;
             FileHandler.Load(result[0]);
             _saveButton.IsEnabled = true;
+            Config.AddFileToHistory(result[0]);
         }
 
         private static void Save(object sender, RoutedEventArgs args) { FileHandler.Save(); }
@@ -109,6 +145,7 @@ namespace BetterHades
             if (result == null) return;
             FileHandler.Save(result);
             _saveButton.IsEnabled = true;
+            Config.AddFileToHistory(result);
         }
 
         public void Exit(object sender, RoutedEventArgs args) { Close(); }
