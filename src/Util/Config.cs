@@ -10,17 +10,28 @@ namespace BetterHades.Util
     {
         private const string FileName = "config.cfg";
         private static string _fullPath;
-        public static List<string> FileHistory;
-
+        private static Queue<string> _fileHistory;
         private static readonly string[] Headers = {"Better Hades Config File\n", "[FileHistory]\n"};
+        public static IEnumerable<string> FileHistory => _fileHistory.Reverse();
 
         public static void Init()
         {
-            FileHistory = new List<string>();
+            _fileHistory = new Queue<string>();
             _fullPath = FileHandler.CurrentDirectory.Parent + "\\" + FileName;
             if (!File.Exists(_fullPath)) File.WriteAllLines(_fullPath, Headers);
-            FileHistory.AddRange(ReadProperty("FileHistory"));
-            Console.WriteLine(string.Join("\n", FileHistory));
+            foreach (var file in ReadProperty("FileHistory")) _fileHistory.Enqueue(file);
+        }
+
+        public static void AddFileToHistory(string file)
+        {
+            if (_fileHistory.Count >= 5) _fileHistory.Dequeue();
+            _fileHistory.Enqueue(file);
+            App.MainWindow.UpdateFileHistory();
+        }
+
+        public static void Save()
+        {
+            File.WriteAllLines(_fullPath, WriteProperty("FileHistory", FileHistory.ToArray()));
         }
 
         private static IEnumerable<string> ReadProperty(string property)
@@ -30,6 +41,25 @@ namespace BetterHades.Util
             return lines.SkipWhile(l => !l.Contains(property, StringComparison.InvariantCultureIgnoreCase))
                         .Skip(1)
                         .TakeWhile(l => !Regex.IsMatch(l, "\\[.*\\]"));
+        }
+
+        private static IEnumerable<string> WriteProperty(string property, IReadOnlyList<string> writeLines)
+        {
+            if (!property.Contains("[")) property = "[" + property + "]";
+            var lines = File.ReadLines(_fullPath).ToList();
+            for (int i = 0, j = 0, index = -1; i < lines.Count; i++)
+            {
+                if (index != -1)
+                {
+                    if (Regex.IsMatch(lines[i], @"\[.*\]")) break;
+                    if (j < writeLines.Count) lines[i] = writeLines[j++];
+                    else lines.RemoveAt(i);
+                }
+
+                if (lines[i].Contains(property)) index = i;
+            }
+
+            return lines;
         }
     }
 }

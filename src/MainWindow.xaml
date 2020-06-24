@@ -10,12 +10,13 @@
     <Canvas>
         <DockPanel>
             <Menu DockPanel.Dock="Top" ZIndex="2147483647" Background="White">
-                <MenuItem Header="_File">
+                <MenuItem Header="_File" Name="FileMenu">
                     <MenuItem Header="_New" Click="New" />
                     <MenuItem Header="_Open..." Click="Open" />
                     <MenuItem Header="_Save" Click="Save" Name="saveButton" />
                     <MenuItem Header="_Save As..." Click="SaveAs" />
                     <MenuItem Header="_Exit" Click="Exit" />
+                    <MenuItem Header="-" />
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About..." Click="AboutOnClick" />
