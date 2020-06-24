@@ -75,7 +75,6 @@ namespace BetterHades.Util
 
         private static void LoadConnections(IEnumerable<string> lines)
         {
-            Console.WriteLine("load");
             foreach (var line in lines)
             {
                 var vars = line.Split(";");
@@ -93,7 +92,6 @@ namespace BetterHades.Util
             }
 
             Changed(false);
-            Console.WriteLine("test- " + App.MainWindow.GridCanvas.Connections.Count);
         }
 
         private static void LoadComponents(IEnumerable<string> lines)
