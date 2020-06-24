@@ -7,8 +7,8 @@ namespace BetterHades.Components
 {
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
-        private readonly Polyline _line;
         public readonly Component Input;
+        private Polyline _line;
         public ObservingComponent Output;
 
         public Connection(Component input, ObservingComponent output, Polyline line)
@@ -68,5 +68,15 @@ namespace BetterHades.Components
         }
 
         public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
+
+        public void UpdateLine()
+        {
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
+            _line.Points[0] = Input.OutPoint;
+            _line.Points[^1] = Output.InPoint;
+            _line = new Polyline
+                    {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+        }
     }
 }

@@ -89,6 +89,7 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            _outputs.ForEach(c => c.UpdateLine());
         }
 
         // Abstract

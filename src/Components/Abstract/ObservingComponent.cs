@@ -32,6 +32,7 @@ namespace BetterHades.Components
             base.MoveTo(pos);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
             InPointCircle = GenerateIOPort(InPoint, Brushes.Orange);
+            foreach (var c in Inputs) c.UpdateLine();
         }
 
         // Abstract:

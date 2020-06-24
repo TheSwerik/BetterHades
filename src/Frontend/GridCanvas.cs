@@ -106,7 +106,6 @@ namespace BetterHades.Frontend
                     if (_moveBuffer != null)
                     {
                         _moveBuffer.MoveTo(pos);
-                        Console.WriteLine($"MOVE {IsMoving} {_moveBuffer}");
                         _moveBuffer = null;
                         IsMoving = false;
                     }
