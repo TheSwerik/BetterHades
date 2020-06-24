@@ -28,12 +28,21 @@ namespace BetterHades.Frontend
                   mouseArgs.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed ||
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
-            var group = (string) selected.Header;
-            var translatedPoint = _contextMenu.Parent.TranslatePoint(
-                new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
-                App.MainWindow.GridCanvas.Canvas
-            )!.Value;
-            App.MainWindow.GridCanvas.StartComponentPriview(group, selected.SelectedItem.ToString());
+            if (selected.Header.Equals("Move"))
+            {
+                //TODO MOVE
+            }
+            else
+            {
+                selected = (MenuItem) selected.SelectedItem;
+                var group = (string) selected.Header;
+                var translatedPoint = _contextMenu.Parent.TranslatePoint(
+                    new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
+                    App.MainWindow.GridCanvas.Canvas
+                )!.Value;
+                App.MainWindow.GridCanvas.StartComponentPriview(group, selected.SelectedItem.ToString());
+            }
+
             Hide();
         }
 
@@ -57,9 +66,20 @@ namespace BetterHades.Frontend
         // Helper Methods:
         private static IEnumerable<MenuItem> MenuItems()
         {
-            return Component.ToDictionary()
-                            .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
-                            .ToList();
+            var move = new MenuItem {Header = "Move"};
+            var result = new List<MenuItem>
+                         {
+                             new MenuItem
+                             {
+                                 Header = "Create",
+                                 Items = Component
+                                         .ToDictionary()
+                                         .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
+                                         .ToList()
+                             },
+                             move
+                         };
+            return result;
         }
     }
 }
