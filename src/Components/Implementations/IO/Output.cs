@@ -29,9 +29,9 @@ namespace BetterHades.Components.Implementations.IO
             Polygon.Fill = (IsActive = Inputs.All(c => c.IsActive)) ? Brushes.Red : Brushes.Gray;
         }
 
-        //TODO remove connection
         public override void AddInput(Connection connection)
         {
+            //TODO remove connection
             Inputs.Clear();
             Inputs.Add(connection);
         }
