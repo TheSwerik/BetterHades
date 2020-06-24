@@ -10,8 +10,8 @@ namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        private readonly Ellipse InPointCircle;
         protected readonly ObservableCollection<Connection> Inputs;
+        private Ellipse InPointCircle;
 
         protected ObservingComponent(Point pos, bool isActive) : base(pos, isActive)
         {
@@ -26,6 +26,13 @@ namespace BetterHades.Components
         public void OnCompleted() { throw new CompletedException(); }
         public void OnError(Exception error) { Console.WriteLine(error); }
         public void OnNext(Connection value) { Update(); }
+
+        public override void MoveTo(Point pos)
+        {
+            base.MoveTo(pos);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
+            InPointCircle = GenerateIOPort(InPoint, Brushes.Orange);
+        }
 
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }

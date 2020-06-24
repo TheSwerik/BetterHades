@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using Avalonia;
-using Avalonia.Interactivity;
+using Avalonia.Input;
 using Avalonia.Media;
 
 namespace BetterHades.Components.Implementations.IO
@@ -15,8 +15,16 @@ namespace BetterHades.Components.Implementations.IO
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
-        protected void OnClick(object sender, RoutedEventArgs e)
+        public override void MoveTo(Point pos)
         {
+            base.MoveTo(pos);
+            Polygon.PointerPressed += OnClick;
+            Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+        }
+
+        protected void OnClick(object sender, PointerPressedEventArgs e)
+        {
+            if (!e.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed) return;
             Notify(IsActive = !IsActive);
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }

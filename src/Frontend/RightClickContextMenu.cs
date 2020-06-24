@@ -28,19 +28,22 @@ namespace BetterHades.Frontend
                   mouseArgs.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed ||
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
+            if (selected == null) return;
             if (selected.Header.Equals("Move"))
             {
-                //TODO MOVE
+                App.MainWindow.GridCanvas.IsMoving = true;
             }
             else
             {
+                if (selected.SelectedItem == null) return;
                 selected = (MenuItem) selected.SelectedItem;
+                if (selected.SelectedItem == null) return;
                 var group = (string) selected.Header;
                 var translatedPoint = _contextMenu.Parent.TranslatePoint(
                     new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
                     App.MainWindow.GridCanvas.Canvas
                 )!.Value;
-                App.MainWindow.GridCanvas.StartComponentPriview(group, selected.SelectedItem.ToString());
+                App.MainWindow.GridCanvas.StartComponentPreview(group, selected.SelectedItem.ToString());
             }
 
             Hide();

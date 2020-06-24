@@ -25,7 +25,9 @@ namespace BetterHades.Frontend
         public readonly List<Component> Components;
         public readonly List<Connection> Connections;
         private Component _buffer;
+        private Component _moveBuffer;
         private Polyline _previewConnection;
+        public bool IsMoving;
 
         public GridCanvas(ZoomBorder parent)
         {
@@ -35,7 +37,7 @@ namespace BetterHades.Frontend
                          Width = MainWindow.GridSize,
                          Height = MainWindow.GridSize
                      };
-            Canvas.PointerMoved += MoveHandler;
+            Canvas.PointerMoved += MouseMoveHandler;
             Canvas.PointerPressed += ClickHandler;
             parent.Child = Canvas;
 
@@ -101,8 +103,19 @@ namespace BetterHades.Frontend
                 if (_previewComponent.IsVisible)
                 {
                     _previewComponent.IsVisible = false;
-                    AddComponent(_previewComponentData[0], _previewComponentData[1], pos);
-                    _previewComponentData[0] = _previewComponentData[1] = null;
+                    if (_moveBuffer != null)
+                    {
+                        _moveBuffer.MoveTo(pos);
+                        Console.WriteLine($"MOVE {IsMoving} {_moveBuffer}");
+                        _moveBuffer = null;
+                        IsMoving = false;
+                    }
+                    else
+                    {
+                        AddComponent(_previewComponentData[0], _previewComponentData[1], pos);
+                        _previewComponentData[0] = _previewComponentData[1] = null;
+                    }
+
                     return;
                 }
 
@@ -130,7 +143,8 @@ namespace BetterHades.Frontend
             }
             else if (point.Properties.IsRightButtonPressed)
             {
-                _buffer = null;
+                _buffer = _moveBuffer = null;
+                IsMoving = false;
                 if (_previewConnection != null)
                 {
                     Canvas.Children.Remove(_previewConnection);
@@ -144,11 +158,16 @@ namespace BetterHades.Frontend
                     _previewComponentData[0] = _previewComponentData[1] = null;
                     App.MainWindow.RightClickContextMenu.Hide();
                 }
+
+
+                if (Components.Any(c => c != _buffer && IsPointInShape(c.Polygon, pos)))
+                    _moveBuffer = Components.First(c => c != _buffer && IsPointInShape(c.Polygon, pos));
             }
         }
 
-        private void MoveHandler(object sender, PointerEventArgs e)
+        private void MouseMoveHandler(object sender, PointerEventArgs e)
         {
+            if (IsMoving && _moveBuffer != null) _previewComponent.IsVisible = true;
             var pos = ToGridCoordinates(e.GetCurrentPoint(Canvas).Position);
             if (_previewComponent.IsVisible)
             {
@@ -164,7 +183,7 @@ namespace BetterHades.Frontend
         }
 
         // Helper Methods:
-        public void StartComponentPriview(string group, string type)
+        public void StartComponentPreview(string group, string type)
         {
             _previewComponentData[0] = group;
             _previewComponentData[1] = type;

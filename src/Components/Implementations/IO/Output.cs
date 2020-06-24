@@ -18,6 +18,13 @@ namespace BetterHades.Components.Implementations.IO
 
         public override Point OutPoint => new Point(double.MinValue, double.MinValue);
 
+        public override void MoveTo(Point pos)
+        {
+            base.MoveTo(pos);
+            Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+        }
+
         protected sealed override void Update()
         {
             Polygon.Fill = (IsActive = _inConnection.IsActive) ? Brushes.Red : Brushes.Gray;
