@@ -83,13 +83,14 @@ namespace BetterHades.Components
 
         public virtual void MoveTo(Point pos)
         {
+            var oldOut = OutPoint;
             Pos = pos;
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
             Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
-            _outputs.ForEach(c => c.UpdateLine(true));
+            _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
         }
 
         // Abstract

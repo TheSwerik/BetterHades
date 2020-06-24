@@ -72,13 +72,11 @@ namespace BetterHades.Components
 
         public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
 
-        public void UpdateLine(bool input)
+        public void UpdateLine(Point oldPoint, Point newPoint)
         {
             App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
-            if (input) _line.Points[0] = Input.OutPoint;
-            else _line.Points[^1] = Output.InPoint;
-            _line = new Polyline
-                    {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
+            _line.Points[_line.Points.IndexOf(oldPoint)] = newPoint;
+            _line = new Polyline {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
         }
     }

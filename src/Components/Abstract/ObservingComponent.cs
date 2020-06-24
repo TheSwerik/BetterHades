@@ -29,10 +29,11 @@ namespace BetterHades.Components
 
         public override void MoveTo(Point pos)
         {
+            var oldIn = InPoint;
             base.MoveTo(pos);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
             InPointCircle = GenerateIOPort(InPoint, Brushes.Orange);
-            foreach (var c in Inputs) c.UpdateLine(false);
+            foreach (var c in Inputs) c.UpdateLine(oldIn, InPoint);
         }
 
         // Abstract:
