@@ -19,7 +19,10 @@ namespace BetterHades.Util
             _fileHistory = new Queue<string>();
             _fullPath = FileHandler.CurrentDirectory.Parent + "\\" + FileName;
             if (!File.Exists(_fullPath)) File.WriteAllLines(_fullPath, Headers);
-            foreach (var file in ReadProperty("FileHistory").Reverse()) _fileHistory.Enqueue(file);
+            foreach (var file in ReadProperty("FileHistory").Reverse())
+                if (File.Exists(file))
+                    _fileHistory.Enqueue(file);
+            Save();
         }
 
         public static void AddFileToHistory(string file)
@@ -65,7 +68,7 @@ namespace BetterHades.Util
                 {
                     if (Regex.IsMatch(lines[i], @"\[.*\]")) break;
                     if (j < writeLines.Count) lines[i] = writeLines[j++];
-                    else lines.RemoveAt(i);
+                    else lines.RemoveAt(i--);
                 }
 
                 if (lines[i].Contains(property)) index = i;
