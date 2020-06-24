@@ -26,18 +26,18 @@ namespace BetterHades.Components
         }
 
         private readonly List<Connection> _outputs;
-        protected readonly Ellipse OutPointCircle;
-        public readonly Polygon Polygon;
+        protected Ellipse OutPointCircle;
+        public Polygon Polygon;
         public Point Pos;
 
         protected Component(Point position, bool isActive)
         {
             _outputs = new List<Connection>();
+            IsActive = isActive;
             Pos = position;
             Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
-            IsActive = isActive;
         }
 
         // Properties
@@ -79,6 +79,18 @@ namespace BetterHades.Components
             Canvas.SetLeft(result, pos.X - diameter / 2);
             Canvas.SetTop(result, pos.Y - diameter / 2);
             return result;
+        }
+
+        public virtual void MoveTo(Point pos)
+        {
+            var oldOut = OutPoint;
+            Pos = pos;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
+            Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
         }
 
         // Abstract

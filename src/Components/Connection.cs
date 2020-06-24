@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using BetterHades.Exceptions;
@@ -7,8 +9,8 @@ namespace BetterHades.Components
 {
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
-        private readonly Polyline _line;
         public readonly Component Input;
+        private Polyline _line;
         public ObservingComponent Output;
 
         public Connection(Component input, ObservingComponent output, Polyline line)
@@ -23,6 +25,7 @@ namespace BetterHades.Components
         }
 
         public bool IsActive => Input.IsActive;
+        public IEnumerable<Point> Points => _line.Points;
 
         /**
         * Subscribes the Observer to this Connection.
@@ -68,5 +71,13 @@ namespace BetterHades.Components
         }
 
         public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
+
+        public void UpdateLine(Point oldPoint, Point newPoint)
+        {
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
+            _line.Points[_line.Points.IndexOf(oldPoint)] = newPoint;
+            _line = new Polyline {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+        }
     }
 }

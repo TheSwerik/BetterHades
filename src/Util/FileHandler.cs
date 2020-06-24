@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Avalonia;
+using Avalonia.Controls.Shapes;
 using Avalonia.Threading;
 using BetterHades.Components;
 using BetterHades.Exceptions;
@@ -47,13 +49,18 @@ namespace BetterHades.Util
             foreach (var component in components)
                 file.WriteLine($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
             file.WriteLine(new string('-', 100));
-            foreach (var con in App.MainWindow.GridCanvas.Connections)
-                file.WriteLine($"{con.GetType()}; {components.IndexOf(con.Input)}; {components.IndexOf(con.Output)}");
+            foreach (var c in App.MainWindow.GridCanvas.Connections)
+            {
+                var pts = string.Join("; ", c.Points);
+                file.WriteLine($"{c.GetType()}; {components.IndexOf(c.Input)}; {components.IndexOf(c.Output)}; {pts}");
+            }
+
             Changed(false);
         }
 
         public static void Load(string fileName)
         {
+            CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
             App.MainWindow.New(null, null);
             CurrentFile = fileName;
@@ -79,7 +86,7 @@ namespace BetterHades.Util
                         t,
                         App.MainWindow.GridCanvas.Components[int.Parse(vars[1])],
                         (ObservingComponent) App.MainWindow.GridCanvas.Components[int.Parse(vars[2])],
-                        App.MainWindow.GridCanvas.Canvas
+                        new Polyline {Points = vars.Skip(3).Select(Point.Parse).ToList()}
                     ) ?? throw new ComponentNotFoundException(vars[0])
                 );
             }
@@ -98,9 +105,8 @@ namespace BetterHades.Util
                 (
                     (Component) Activator.CreateInstance
                     (
-                        t, App.MainWindow.GridCanvas,
-                        double.Parse(vars[1]),
-                        double.Parse(vars[2]),
+                        t,
+                        new Point(double.Parse(vars[1]), double.Parse(vars[2])),
                         bool.Parse(vars[3])
                     ) ?? throw new ComponentNotFoundException(vars[0])
                 );

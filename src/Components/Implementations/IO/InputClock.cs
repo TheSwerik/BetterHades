@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Threading;
 
 namespace BetterHades.Components.Implementations.IO
@@ -23,7 +24,11 @@ namespace BetterHades.Components.Implementations.IO
                            stopwatch.Start();
                            while (stopwatch.ElapsedMilliseconds < 10_000)
                            {
-                               Dispatcher.UIThread.InvokeAsync(() => { OnClick(null, null); });
+                               Dispatcher.UIThread.InvokeAsync(() =>
+                                                               {
+                                                                   Notify(IsActive = !IsActive);
+                                                                   Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+                                                               });
                                Thread.Sleep(1000);
                            }
                        }).Start();

@@ -62,16 +62,11 @@ namespace BetterHades.Util
         {
             if (!property.Contains("[")) property = "[" + property + "]";
             var lines = File.ReadLines(_fullPath).ToList();
-            for (int i = 0, j = 0, index = -1; i < lines.Count; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
-                if (index != -1)
-                {
-                    if (Regex.IsMatch(lines[i], @"\[.*\]")) break;
-                    if (j < writeLines.Count) lines[i] = writeLines[j++];
-                    else lines.RemoveAt(i--);
-                }
-
-                if (lines[i].Contains(property)) index = i;
+                if (!lines[i].Contains(property)) continue;
+                while (i < lines.Count && !Regex.IsMatch(lines[i], @"\[.*\]")) lines.RemoveAt(i);
+                lines.InsertRange(i + 1, writeLines);
             }
 
             return lines;

@@ -1,6 +1,7 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
 
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Media;
 
@@ -8,8 +9,6 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Output : ObservingComponent
     {
-        private Connection _inConnection;
-
         public Output(Point pos, bool isActive) : base(pos, isActive)
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
@@ -18,13 +17,24 @@ namespace BetterHades.Components.Implementations.IO
 
         public override Point OutPoint => new Point(double.MinValue, double.MinValue);
 
-        protected sealed override void Update()
+        public override void MoveTo(Point pos)
         {
-            Polygon.Fill = (IsActive = _inConnection.IsActive) ? Brushes.Red : Brushes.Gray;
+            base.MoveTo(pos);
+            Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
         }
 
-        //TODO remove connection
-        public override void AddInput(Connection connection) { _inConnection = connection; }
+        protected sealed override void Update()
+        {
+            Polygon.Fill = (IsActive = Inputs.All(c => c.IsActive)) ? Brushes.Red : Brushes.Gray;
+        }
+
+        public override void AddInput(Connection connection)
+        {
+            //TODO remove connection
+            Inputs.Clear();
+            Inputs.Add(connection);
+        }
 
         protected override List<Point> GetPoints()
         {
