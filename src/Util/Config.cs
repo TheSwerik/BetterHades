@@ -65,8 +65,10 @@ namespace BetterHades.Util
             for (var i = 0; i < lines.Count; i++)
             {
                 if (!lines[i].Contains(property)) continue;
+                ++i;
                 while (i < lines.Count && !Regex.IsMatch(lines[i], @"\[.*\]")) lines.RemoveAt(i);
-                lines.InsertRange(i + 1, writeLines);
+                lines.InsertRange(i, writeLines);
+                break;
             }
 
             return lines;
