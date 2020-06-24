@@ -19,7 +19,7 @@ namespace BetterHades.Util
             _fileHistory = new Queue<string>();
             _fullPath = FileHandler.CurrentDirectory.Parent + "\\" + FileName;
             if (!File.Exists(_fullPath)) File.WriteAllLines(_fullPath, Headers);
-            foreach (var file in ReadProperty("FileHistory")) _fileHistory.Enqueue(file);
+            foreach (var file in ReadProperty("FileHistory").Reverse()) _fileHistory.Enqueue(file);
         }
 
         public static void AddFileToHistory(string file)

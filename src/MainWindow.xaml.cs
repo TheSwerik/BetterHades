@@ -97,10 +97,12 @@ namespace BetterHades
             Config.Save();
         }
 
-        private static void FileHistoryClick(object sender, RoutedEventArgs e)
+        private void FileHistoryClick(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuItem;
-            Console.WriteLine(item?.Header);
+            var item = ((MenuItem) sender).Header as string;
+            FileHandler.Load(item);
+            _saveButton.IsEnabled = true;
+            Config.AddFileToHistory(item);
         }
 
         // Title Bar Buttons:
