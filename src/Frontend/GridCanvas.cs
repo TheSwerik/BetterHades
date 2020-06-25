@@ -26,6 +26,7 @@ namespace BetterHades.Frontend
         public readonly List<Connection> Connections;
         private Component _buffer;
         private Component _moveBuffer;
+        private Connection _removeConnection;
         private Polyline _previewConnection;
         public bool IsMoving;
 
@@ -161,6 +162,8 @@ namespace BetterHades.Frontend
 
                 if (Components.Any(c => c != _buffer && IsPointInShape(c.Polygon, pos)))
                     _moveBuffer = Components.First(c => c != _buffer && IsPointInShape(c.Polygon, pos));
+                else if (Connections.Any(c => IsPointInShape(c.Polyline, pos)))
+                    _removeConnection = Connections.First(c => IsPointInShape(c.Polyline, pos));
             }
         }
 
@@ -222,13 +225,24 @@ namespace BetterHades.Frontend
 
         private static bool IsPointInShape(Shape shape, Point point)
         {
-            return shape.DefiningGeometry?.FillContains(point) ?? throw new Exception("DefiningGeometry is null.");
+            return (shape.DefiningGeometry?.FillContains(point) ?? throw new Exception("DefiningGeometry is null.")) ||
+                   (shape.DefiningGeometry?.StrokeContains(new Pen(), point) ??
+                    throw new Exception("DefiningGeometry is null."));
         }
 
         public void Remove()
         {
-            Components.Remove(_moveBuffer);
-            _moveBuffer.Remove();
+            if (_moveBuffer != null)
+            {
+                Components.Remove(_moveBuffer);
+                _moveBuffer.Remove();
+                _moveBuffer = null;
+            }
+            else if (_removeConnection != null)
+            {
+                _removeConnection.Remove();
+                _removeConnection = null;
+            }
         }
     }
 }

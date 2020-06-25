@@ -10,8 +10,8 @@ namespace BetterHades.Components
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
         public readonly Component Input;
-        private Polyline _line;
         public ObservingComponent Output;
+        public Polyline Polyline { get; private set; }
 
         public Connection(Component input, ObservingComponent output, Polyline line)
         {
@@ -19,13 +19,13 @@ namespace BetterHades.Components
             Input.Subscribe(this);
             Subscribe(output);
             Output.AddInput(this);
-            _line = new Polyline {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
-            App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+            Polyline = new Polyline {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
             Notify();
         }
 
         public bool IsActive => Input.IsActive;
-        public IEnumerable<Point> Points => _line.Points;
+        public IEnumerable<Point> Points => Polyline.Points;
 
         /**
         * Subscribes the Observer to this Connection.
@@ -43,7 +43,7 @@ namespace BetterHades.Components
         public void OnNext(Component input)
         {
             Notify();
-            _line.Stroke = IsActive ? Brushes.Red : Brushes.Gray;
+            Polyline.Stroke = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
         private void Notify() { Output.OnNext(this); }
@@ -59,18 +59,19 @@ namespace BetterHades.Components
             return connection?.IsActive != comparator;
         }
 
-        public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
+        public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", Polyline.Points)}"; }
 
         public void UpdateLine(Point oldPoint, Point newPoint)
         {
-            App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
-            _line.Points[_line.Points.IndexOf(oldPoint)] = newPoint;
-            _line = new Polyline {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
-            App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polyline);
+            Polyline.Points[Polyline.Points.IndexOf(oldPoint)] = newPoint;
+            Polyline = new Polyline {Points = Polyline.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
         }
+
         public void Remove()
         {
-            App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polyline);
             Input.Remove(this);
             Output.Remove(this);
         }
