@@ -36,6 +36,19 @@ namespace BetterHades.Components
             foreach (var c in Inputs) c.UpdateLine(oldIn, InPoint);
         }
 
+        public override void Remove()
+        {
+            base.Remove();
+            for (var i = 0; i < Inputs.Count; i++) Inputs[i--].Remove();
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
+        }
+
+        public override void Remove(Connection connection)
+        {
+            base.Remove(connection);
+            if (Inputs.Contains(connection)) Inputs.Remove(connection);
+        }
+
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }
         private void Update(object sender, NotifyCollectionChangedEventArgs e) { Update(); }

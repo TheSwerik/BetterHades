@@ -33,6 +33,10 @@ namespace BetterHades.Frontend
             {
                 App.MainWindow.GridCanvas.IsMoving = true;
             }
+            else if (selected.Header.Equals("Delete"))
+            {
+                App.MainWindow.GridCanvas.Remove();
+            }
             else
             {
                 if (selected.SelectedItem == null) return;
@@ -70,6 +74,7 @@ namespace BetterHades.Frontend
         private static IEnumerable<MenuItem> MenuItems()
         {
             var move = new MenuItem {Header = "Move"};
+            var delete = new MenuItem {Header = "Delete"};
             var result = new List<MenuItem>
                          {
                              new MenuItem
@@ -80,7 +85,8 @@ namespace BetterHades.Frontend
                                          .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
                                          .ToList()
                              },
-                             move
+                             move,
+                             delete,
                          };
             return result;
         }

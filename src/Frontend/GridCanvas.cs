@@ -224,5 +224,11 @@ namespace BetterHades.Frontend
         {
             return shape.DefiningGeometry?.FillContains(point) ?? throw new Exception("DefiningGeometry is null.");
         }
+
+        public void Remove()
+        {
+            Components.Remove(_moveBuffer);
+            _moveBuffer.Remove();
+        }
     }
 }

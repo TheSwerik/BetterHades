@@ -26,7 +26,7 @@ namespace BetterHades.Components.Implementations.IO
 
         protected sealed override void Update()
         {
-            Polygon.Fill = (IsActive = Inputs.All(c => c.IsActive)) ? Brushes.Red : Brushes.Gray;
+            Polygon.Fill = (IsActive = Inputs.Count > 0 && Inputs.All(c => c.IsActive)) ? Brushes.Red : Brushes.Gray;
         }
 
         public override void AddInput(Connection connection)

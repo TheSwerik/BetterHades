@@ -49,8 +49,6 @@ namespace BetterHades.Components
         private void Notify() { Output.OnNext(this); }
 
         // Overrides
-        public override int GetHashCode() { return IsActive.GetHashCode(); }
-
         public static bool operator ==(Connection connection, bool comparator)
         {
             return connection?.IsActive == comparator;
@@ -61,15 +59,6 @@ namespace BetterHades.Components
             return connection?.IsActive != comparator;
         }
 
-        private bool Equals(Connection other) { return IsActive == other.IsActive; }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Connection) obj);
-        }
-
         public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
 
         public void UpdateLine(Point oldPoint, Point newPoint)
@@ -78,6 +67,12 @@ namespace BetterHades.Components
             _line.Points[_line.Points.IndexOf(oldPoint)] = newPoint;
             _line = new Polyline {Points = _line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(_line);
+        }
+        public void Remove()
+        {
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(_line);
+            Input.Remove(this);
+            Output.Remove(this);
         }
     }
 }

@@ -93,6 +93,18 @@ namespace BetterHades.Components
             _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
         }
 
+        public virtual void Remove()
+        {
+            for (var i = 0; i < _outputs.Count; i++) _outputs[i--].Remove();
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+        }
+
+        public virtual void Remove(Connection connection)
+        {
+            if (_outputs.Contains(connection)) _outputs.Remove(connection);
+        }
+
         // Abstract
         protected abstract List<Point> GetPoints();
     }
