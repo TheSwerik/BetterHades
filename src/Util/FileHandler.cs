@@ -14,7 +14,7 @@ namespace BetterHades.Util
     {
         private const string Title = "BetterHades - ";
         private const string Unnamed = "Unnamed.bhds";
-        private static bool _hasChanged = true;
+        public static bool HasChanged;
         private static FileInfo _currentFile = new FileInfo(Unnamed);
         public static string FullPath => _currentFile.FullName;
         public static DirectoryInfo CurrentDirectory => _currentFile.Directory;
@@ -116,10 +116,10 @@ namespace BetterHades.Util
         // Helper Methods:
         public static void Changed(bool changed = true)
         {
-            _hasChanged = changed;
+            HasChanged = changed;
             UpdateTitle();
         }
 
-        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(_hasChanged ? "*" : "")}"; }
+        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(HasChanged ? "*" : "")}"; }
     }
 }

@@ -11,7 +11,6 @@ namespace BetterHades.Components
     {
         public readonly Component Input;
         public ObservingComponent Output;
-        public Polyline Polyline { get; private set; }
 
         public Connection(Component input, ObservingComponent output, Polyline line)
         {
@@ -19,10 +18,13 @@ namespace BetterHades.Components
             Input.Subscribe(this);
             Subscribe(output);
             Output.AddInput(this);
-            Polyline = new Polyline {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
+            Polyline = new Polyline
+                       {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
             Notify();
         }
+
+        public Polyline Polyline { get; private set; }
 
         public bool IsActive => Input.IsActive;
         public IEnumerable<Point> Points => Polyline.Points;
@@ -65,7 +67,8 @@ namespace BetterHades.Components
         {
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Polyline);
             Polyline.Points[Polyline.Points.IndexOf(oldPoint)] = newPoint;
-            Polyline = new Polyline {Points = Polyline.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
+            Polyline = new Polyline
+                       {Points = Polyline.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
         }
 

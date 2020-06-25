@@ -86,7 +86,7 @@ namespace BetterHades.Frontend
                                          .ToList()
                              },
                              move,
-                             delete,
+                             delete
                          };
             return result;
         }

@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
@@ -52,6 +50,8 @@ namespace BetterHades
             UpdateFileHistory();
         }
 
+        public bool CanSave => _saveButton.IsEnabled;
+
         public void UpdateFileHistory()
         {
             var fileMenu = this.Find<MenuItem>("FileMenu");
@@ -86,10 +86,10 @@ namespace BetterHades
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
         // Handlers
-        private void KeyPressed(object sender, KeyEventArgs e)
+        public void KeyPressed(object sender, KeyEventArgs e)
         {
             if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
-                if (_saveButton.IsEnabled) Save(null, null);
+                if (CanSave) Save(null, null);
                 else SaveAs(null, null);
         }
 
@@ -152,16 +152,21 @@ namespace BetterHades
 
         public async void Exit(object sender, RoutedEventArgs args)
         {
-            var dialog = new Dialog(
-                "About",
-                string.Join("\n", File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"res\about.txt")),
-                Dialog.ButtonType.OkCancel,
-                220,
-                120
-            );
-
-            var result = await dialog.Show(this);
-            if(result) Close();
+            if (!FileHandler.HasChanged)
+            {
+                Close();
+            }
+            else
+            {
+                var dialog = new Dialog(
+                    "Exit?",
+                    "You have unsaved changes.",
+                    Dialog.ButtonType.Save,
+                    220,
+                    120
+                );
+                if (await dialog.Show(this)) Close();
+            }
         }
 
         public async void AboutOnClick(object sender, RoutedEventArgs args)

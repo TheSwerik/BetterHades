@@ -26,8 +26,8 @@ namespace BetterHades.Frontend
         public readonly List<Connection> Connections;
         private Component _buffer;
         private Component _moveBuffer;
-        private Connection _removeConnection;
         private Polyline _previewConnection;
+        private Connection _removeConnection;
         public bool IsMoving;
 
         public GridCanvas(ZoomBorder parent)
