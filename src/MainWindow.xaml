@@ -18,6 +18,21 @@
                     <MenuItem Header="_Exit" Click="Exit" />
                     <MenuItem Header="-" />
                 </MenuItem>
+                <MenuItem Header="_Options">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Window opening behaviour" />
+                        <ComboBox Grid.Column="2" Name="WindowOpenBox" SelectedIndex="0" BorderThickness="0">
+                            <ComboBoxItem Content="Always ask" />
+                            <ComboBoxItem Content="Always open new window" />
+                            <ComboBoxItem Content="Never open new window" />
+                        </ComboBox>
+                    </Grid>
+                </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About..." Click="AboutOnClick" />
                 </MenuItem>

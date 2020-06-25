@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BetterHades.Util.Enums;
 
 namespace BetterHades.Util
 {
@@ -10,8 +11,17 @@ namespace BetterHades.Util
     {
         private const string FileName = "config.cfg";
         private static string _fullPath;
+        public static OpeningBehaviour OpeningBehaviour = OpeningBehaviour.AlwaysAsk;
         private static Queue<string> _fileHistory;
-        private static readonly string[] Headers = {"Better Hades Config File\n", "[FileHistory]\n"};
+
+        private static readonly string[] Headers =
+        {
+            "Better Hades Config File\n",
+            "[FileHistory]\n",
+            "[WindowOpeningBehaviour] (Valid Options are \"AlwaysAsk\", \"AlwaysOpen\", \"NeverOpen\",\n",
+            "Always ask"
+        };
+
         public static IEnumerable<string> FileHistory => _fileHistory.Reverse();
 
         public static void Init()
@@ -23,6 +33,7 @@ namespace BetterHades.Util
                 if (File.Exists(file))
                     _fileHistory.Enqueue(file);
             Save();
+            //TODO Window opening weitermachen
         }
 
         public static void AddFileToHistory(string file)
@@ -46,7 +57,9 @@ namespace BetterHades.Util
 
         public static void Save()
         {
-            File.WriteAllLines(_fullPath, WriteProperty("FileHistory", FileHistory.ToArray()));
+            File.WriteAllLines(_fullPath, WriteProperty(ConfigHeader.FileHistory, FileHistory.ToArray()));
+            File.WriteAllLines(
+                _fullPath, WriteProperty(ConfigHeader.WindowOpeningBehaviour, OpeningBehaviour.ToString()));
         }
 
         private static IEnumerable<string> ReadProperty(string property)
@@ -58,13 +71,13 @@ namespace BetterHades.Util
                         .TakeWhile(l => !Regex.IsMatch(l, "\\[.*\\]"));
         }
 
-        private static IEnumerable<string> WriteProperty(string property, IReadOnlyList<string> writeLines)
+        private static IEnumerable<string> WriteProperty(ConfigHeader property, params string[] writeLines)
         {
-            if (!property.Contains("[")) property = "[" + property + "]";
+            var propertyText = "[" + property + "]";
             var lines = File.ReadLines(_fullPath).ToList();
             for (var i = 0; i < lines.Count; i++)
             {
-                if (!lines[i].Contains(property)) continue;
+                if (!lines[i].Contains(propertyText)) continue;
                 i++;
                 while (i < lines.Count && !Regex.IsMatch(lines[i], @"\[.*\]")) lines.RemoveAt(i);
                 lines.InsertRange(i, writeLines);
