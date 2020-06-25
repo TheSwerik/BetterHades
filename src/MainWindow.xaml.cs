@@ -93,10 +93,20 @@ namespace BetterHades
                 else SaveAs(null, null);
         }
 
-        private void OnClose(object? sender, CancelEventArgs e)
+        private async void OnClose(object sender, CancelEventArgs e)
         {
-            //TODO save prompt
-            Config.Save();
+            if (!FileHandler.HasChanged) return;
+            e.Cancel = true;
+            var dialog = new Dialog(
+                "Exit?",
+                "You have unsaved changes.",
+                Dialog.ButtonType.Save,
+                220,
+                120
+            );
+            if (!await dialog.Show(this)) return;
+            FileHandler.HasChanged = false;
+            Close();
         }
 
         private void FileHistoryClick(object sender, RoutedEventArgs e)
@@ -150,24 +160,7 @@ namespace BetterHades
             Config.AddFileToHistory(result);
         }
 
-        public async void Exit(object sender, RoutedEventArgs args)
-        {
-            if (!FileHandler.HasChanged)
-            {
-                Close();
-            }
-            else
-            {
-                var dialog = new Dialog(
-                    "Exit?",
-                    "You have unsaved changes.",
-                    Dialog.ButtonType.Save,
-                    220,
-                    120
-                );
-                if (await dialog.Show(this)) Close();
-            }
-        }
+        public async void Exit(object sender, RoutedEventArgs args) => Close();
 
         public async void AboutOnClick(object sender, RoutedEventArgs args)
         {
