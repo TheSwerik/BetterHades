@@ -21,8 +21,7 @@ namespace BetterHades.Frontend
             Save = 22
         }
 
-        public bool Result;
-        private readonly IBrush standardColor;
+        private readonly IBrush _standardColor;
 
         public Dialog() : this("") { }
 
@@ -37,7 +36,7 @@ namespace BetterHades.Frontend
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             this.Find<TextBlock>("Message").Text = message;
             InitButtons(buttonType);
-            standardColor = this.Find<Button>("Ok").Background;
+            _standardColor = this.Find<Button>("Ok").Background;
         }
 
         private void InitButtons(ButtonType buttonType)
@@ -55,21 +54,20 @@ namespace BetterHades.Frontend
             okButton.Content = "Yes";
             cancelButton.Content = "No";
         }
+        public Task<bool> Show(Window owner) { return ShowDialog<bool>(owner); }
 
+        // Handler
         private void OnHover(object sender, PointerEventArgs e)
         {
             var button = (Button) sender;
             button.Background = Brushes.LightBlue;
         }
-
         private void NotHover(object sender, PointerEventArgs e)
         {
             var button = (Button) sender;
-            button.Background = standardColor;
+            button.Background = _standardColor;
         }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e) { Close(Result = true); }
-
+        private void OkButton_Click(object sender, RoutedEventArgs e) { Close(true); }
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (!App.MainWindow.CanSave)
@@ -95,11 +93,8 @@ namespace BetterHades.Frontend
                 Config.AddFileToHistory(result);
             }
 
-            Close(Result = true);
+            Close(true);
         }
-
-        public Task<bool> Show(Window owner) { return ShowDialog<bool>(owner); }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e) { Close(Result); }
+        private void CancelButton_Click(object sender, RoutedEventArgs e) { Close(false); }
     }
 }
