@@ -12,6 +12,9 @@
         <AvaloniaResource Include="**\*.xaml">
             <SubType>Designer</SubType>
         </AvaloniaResource>
+        <Compile Update="src\Frontend\MainWindow.xaml.cs">
+          <DependentUpon>Dialog.xaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

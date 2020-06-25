@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
@@ -148,24 +150,29 @@ namespace BetterHades
             Config.AddFileToHistory(result);
         }
 
-        public void Exit(object sender, RoutedEventArgs args) { Close(); }
-
-        public void AboutOnClick(object sender, RoutedEventArgs args)
+        public async void Exit(object sender, RoutedEventArgs args)
         {
-            var window = new Window
-                         {
-                             Title = "About",
-                             CanResize = false,
-                             ShowInTaskbar = false,
-                             Width = 300,
-                             Height = 100,
-                             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                             Content = string.Join(
-                                 "\n",
-                                 File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"res\about.txt")
-                             )
-                         };
-            window.ShowDialog(App.MainWindow);
+            var dialog = new Dialog(
+                "About",
+                string.Join("\n", File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"res\about.txt")),
+                Dialog.ButtonType.OkCancel,
+                220,
+                120
+            );
+
+            var result = await dialog.Show(this);
+            if(result) Close();
+        }
+
+        public async void AboutOnClick(object sender, RoutedEventArgs args)
+        {
+            var x = new Dialog(
+                "About",
+                string.Join("\n", File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"res\about.txt")),
+                Dialog.ButtonType.Ok,
+                220,
+                120
+            ).Show(this);
         }
     }
 }
