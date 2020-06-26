@@ -83,6 +83,8 @@ namespace BetterHades.Frontend
                     Connections.Add(new Connection(sender, (ObservingComponent) _buffer, _previewConnection));
                 else if (!(_buffer is Output))
                     Connections.Add(new Connection(_buffer, (ObservingComponent) sender, _previewConnection));
+                else
+                    Connections.Add(new Connection((ObservingComponent) sender, (Output) _buffer, _previewConnection));
                 _buffer = null;
                 Canvas.Children.Remove(_previewConnection);
                 _previewConnection = null;
