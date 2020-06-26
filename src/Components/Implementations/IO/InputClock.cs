@@ -8,19 +8,13 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class InputClock : Input
     {
-        private readonly long _duration;
+        private const long Duration = 1000;
 
-        // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global
-        public InputClock(Point pos, bool isActive) : this(pos, isActive, 1000) { }
-        public InputClock(Point pos, bool isActive, string name) : this(pos, isActive, name, 1000) { }
+        public InputClock(Point pos, bool isActive) : this(pos, isActive, null) { }
 
-        public InputClock(Point pos, bool isActive, long duration) : this(pos, isActive, null) { }
-
-        public InputClock(Point pos, bool isActive, string name, long duration) : base(pos, isActive, name)
+        public InputClock(Point pos, bool isActive, string name) : base(pos, isActive, name)
         {
-            //TODO Popup when Constructing
-            _duration = duration;
             new Thread(() =>
                        {
                            var stopwatch = new Stopwatch();
@@ -37,6 +31,6 @@ namespace BetterHades.Components.Implementations.IO
                        }).Start();
         }
 
-        public double MsToSec() { return (double) _duration / 1000; }
+        public double MsToSec() { return (double) Duration / 1000; }
     }
 }
