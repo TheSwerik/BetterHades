@@ -3,6 +3,8 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>8</LangVersion>
+        <ProjectGuid>{33AC4948-50B8-43FB-9CB9-3DB33EEE8780}</ProjectGuid>
+        <AssemblyName>BetterHades</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

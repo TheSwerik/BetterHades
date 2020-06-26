@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Avalonia.Controls;
@@ -124,7 +125,7 @@ namespace BetterHades
         {
             if (Config.OpeningBehaviour == OpeningBehaviour.AlwaysOpen)
             {
-                //TODO new Window
+                OpenInANewWindow();
                 return;
             }
 
@@ -150,7 +151,7 @@ namespace BetterHades
             if (result[1])
             {
                 if (dialog.Checkbox) Config.OpeningBehaviour = OpeningBehaviour.AlwaysOpen;
-                //TODO new Window
+                OpenInANewWindow();
             }
             else
             {
@@ -196,9 +197,9 @@ namespace BetterHades
             Config.AddFileToHistory(result);
         }
 
-        public async void Exit(object sender, RoutedEventArgs args) { Close(); }
+        public void Exit(object sender, RoutedEventArgs args) { Close(); }
 
-        public async void AboutOnClick(object sender, RoutedEventArgs args)
+        public void AboutOnClick(object sender, RoutedEventArgs args)
         {
             var x = new Dialog(
                 "About",
@@ -207,6 +208,15 @@ namespace BetterHades
                 220,
                 120
             ).Show(this);
+        }
+
+        private void OpenInANewWindow(string args = "")
+        {
+            Process.Start(new ProcessStartInfo
+                          {
+                              FileName = AppDomain.CurrentDomain.BaseDirectory + "BetterHades",
+                              Arguments = args
+                          });
         }
     }
 }
