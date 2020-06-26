@@ -96,6 +96,7 @@ namespace BetterHades
 
         private async void OnClose(object sender, CancelEventArgs e)
         {
+            Config.Save();
             if (!FileHandler.HasChanged) return;
             e.Cancel = true;
             var dialog = new Dialog(
@@ -121,6 +122,20 @@ namespace BetterHades
         // Title Bar Buttons:
         public async void New(object sender, RoutedEventArgs args)
         {
+            if (Config.OpeningBehaviour == OpeningBehaviour.AlwaysOpen)
+            {
+                //TODO new Window
+                return;
+            }
+
+            if (Config.OpeningBehaviour == OpeningBehaviour.NeverOpen)
+            {
+                GridCanvas = new GridCanvas(_zoomBorder);
+                FileHandler.New();
+                _saveButton.IsEnabled = false;
+                return;
+            }
+
             var dialog = new Dialog(
                 new[] {"New Window", "This Window", "Cancel"},
                 "Remember my decision.",
@@ -130,7 +145,6 @@ namespace BetterHades
                 300,
                 100
             );
-
             var result = await dialog.ShowDialog<bool[]>(this);
             if (result == null || !result[0]) return;
             if (result[1])
