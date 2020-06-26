@@ -9,6 +9,8 @@ namespace BetterHades.Util
 {
     public static class HadesFileHandler
     {
+        private static int _n = 1;
+
         // File Handling:
         public static void ExportToHades()
         {
@@ -36,19 +38,25 @@ namespace BetterHades.Util
         {
             return component switch
                    {
-                       ANDGate and => $"hades.models.gatter.And_NUMBER_ {and.Pos.X} {and.Pos.Y} @N 1001 1.0E-8",
-                       INVGate inv => $"hades.models.gatter.Inv _NAME_ {inv.Pos.X} {inv.Pos.Y} @N 1001 5.0E-9",
-                       NANDGate nand => $"hades.models.gatter.Nand_NUMBER_ {nand.Pos.X} {nand.Pos.Y} @N 1001 1.0E-8",
-                       NORGate nor => $"hades.models.gatter.Nor_NUMBER_ _NAME_ {nor.Pos.X} {nor.Pos.Y} @N 1001 1.0E-8",
-                       ORGate or => $"hades.models.gatter.Or_NUMBER_ _NAME_ {or.Pos.X} {or.Pos.Y} @N 1001 1.0E-8",
+                       ANDGate and =>
+                       $"hades.models.gatter.And{and.NumberOfInputs} i{_n++} {and.Pos.X} {and.Pos.Y} @N 1001 1.0E-8",
+                       INVGate inv => $"hades.models.gatter.Inv i{_n++} {inv.Pos.X} {inv.Pos.Y} @N 1001 5.0E-9",
+                       NANDGate nand =>
+                       $"hades.models.gatter.Nand{nand.NumberOfInputs} i{_n++} {nand.Pos.X} {nand.Pos.Y} @N 1001 1.0E-8",
+                       NORGate nor =>
+                       $"hades.models.gatter.Nor{nor.NumberOfInputs} i{_n++} {nor.Pos.X} {nor.Pos.Y} @N 1001 1.0E-8",
+                       ORGate or =>
+                       $"hades.models.gatter.Or{or.NumberOfInputs} i{_n++} {or.Pos.X} {or.Pos.Y} @N 1001 1.0E-8",
                        XNORGate xnor =>
-                       $"hades.models.gatter.Xnor_NUMBER_ _NAME_ {xnor.Pos.X} {xnor.Pos.Y} @N 1001 1.0E-8",
-                       XORGate xor => $"hades.models.gatter.Xor_NUMBER_ _NAME_ {xor.Pos.X} {xor.Pos.Y} @N 1001 1.0E-8",
-                       // InputPulse ip => $"hades.models.io.PulseSwitch _NAME_ {ip.Pos.X} {ip.Pos.Y} @N 1001 _PULSE_DURATION_ null",
+                       $"hades.models.gatter.Xnor{xnor.NumberOfInputs} i{_n++} {xnor.Pos.X} {xnor.Pos.Y} @N 1001 1.0E-8",
+                       XORGate xor =>
+                       $"hades.models.gatter.Xor{xor.NumberOfInputs} i{_n++} {xor.Pos.X} {xor.Pos.Y} @N 1001 1.0E-8",
+                       InputPulse ip =>
+                       $"hades.models.io.PulseSwitch {ip.Name} {ip.Pos.X} {ip.Pos.Y} @N 1001 0.1 null",
                        InputClock ic =>
-                       $"hades.models.io.ClockGen _NAME_ {ic.Pos.X} {ic.Pos.Y} @N 1001 {InputClock.MsToSec()} 0.5 0.0",
-                       Input i => $"hades.models.io.Ipin _NAME_ {i.Pos.X} {i.Pos.Y} @N 1001  {i.IsActive}",
-                       Output o => $"hades.models.io.Opin _NAME_ {o.Pos.X} {o.Pos.Y} @N 1001 5.0E-9",
+                       $"hades.models.io.ClockGen {ic.Name} {ic.Pos.X} {ic.Pos.Y} @N 1001 {InputClock.MsToSec()} 0.5 0.0",
+                       Input i => $"hades.models.io.Ipin {i.Name} {i.Pos.X} {i.Pos.Y} @N 1001  {i.IsActive}",
+                       Output o => $"hades.models.io.Opin {o.Name} {o.Pos.X} {o.Pos.Y} @N 1001 5.0E-9",
                        _ => throw new ComponentNotFoundException(component.GetType().ToString())
                    };
         }

@@ -21,6 +21,7 @@ namespace BetterHades.Components
         }
 
         public Point InPoint => Pos.WithX(Pos.X - MainWindow.GridCellSize);
+        public int NumberOfInputs => Inputs.Count;
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }
