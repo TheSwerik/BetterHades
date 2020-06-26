@@ -16,15 +16,28 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Name="Message" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" />
+        <TextBlock Name="Message"
+                   Grid.Column="1"
+                   Grid.Row="1"
+                   Grid.ColumnSpan="3"
+                   HorizontalAlignment="Center" />
+        <CheckBox Name="CheckBox"
+                  Grid.Column="1"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="3"
+                  IsVisible="False"
+                  Content="Test"
+                  Margin="10"
+                  HorizontalAlignment="Center" />
         <Button Name="Save"
-                Margin="0 10 10 10"
+                Margin="0 10 0 10"
                 Grid.Column="1"
-                Grid.Row="3"
+                Grid.Row="4"
                 Content="Save"
                 Click="SaveButton_Click"
                 PointerEnter="OnHover"
@@ -32,15 +45,15 @@
         <Button Name="Ok"
                 Margin="10 10 10 10"
                 Grid.Column="2"
-                Grid.Row="3"
+                Grid.Row="4"
                 Content="Ok"
                 Click="OkButton_Click"
                 PointerEnter="OnHover"
                 PointerLeave="NotHover" />
         <Button Name="Cancel"
-                Margin="10 10 0 10"
+                Margin="0 10 0 10"
                 Grid.Column="3"
-                Grid.Row="3"
+                Grid.Row="4"
                 Content="Cancel"
                 Click="CancelButton_Click"
                 PointerEnter="OnHover"

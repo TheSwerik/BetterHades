@@ -14,6 +14,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using BetterHades.Frontend;
 using BetterHades.Util;
+using BetterHades.Util.Enums;
 
 namespace BetterHades
 {
@@ -118,11 +119,32 @@ namespace BetterHades
         }
 
         // Title Bar Buttons:
-        public void New(object sender, RoutedEventArgs args)
+        public async void New(object sender, RoutedEventArgs args)
         {
-            GridCanvas = new GridCanvas(_zoomBorder);
-            FileHandler.New();
-            _saveButton.IsEnabled = false;
+            var dialog = new Dialog(
+                new[] {"New Window", "This Window", "Cancel"},
+                "Remember my decision.",
+                "New...",
+                "Open in a new Window?",
+                Dialog.ButtonType.Save,
+                300,
+                100
+            );
+
+            var result = await dialog.ShowDialog<bool[]>(this);
+            if (result == null || !result[0]) return;
+            if (result[1])
+            {
+                if (dialog.Checkbox) Config.OpeningBehaviour = OpeningBehaviour.AlwaysOpen;
+                //TODO new Window
+            }
+            else
+            {
+                if (dialog.Checkbox) Config.OpeningBehaviour = OpeningBehaviour.NeverOpen;
+                GridCanvas = new GridCanvas(_zoomBorder);
+                FileHandler.New();
+                _saveButton.IsEnabled = false;
+            }
         }
 
         public async void Open(object sender, RoutedEventArgs args)
@@ -160,7 +182,7 @@ namespace BetterHades
             Config.AddFileToHistory(result);
         }
 
-        public async void Exit(object sender, RoutedEventArgs args) => Close();
+        public async void Exit(object sender, RoutedEventArgs args) { Close(); }
 
         public async void AboutOnClick(object sender, RoutedEventArgs args)
         {
