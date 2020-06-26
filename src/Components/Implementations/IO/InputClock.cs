@@ -1,39 +1,36 @@
 ﻿using System.Diagnostics;
 using System.Threading;
+using Avalonia;
+using Avalonia.Media;
 using Avalonia.Threading;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components.Implementations.IO
 {
     public class InputClock : Input
     {
-        private readonly long _duration;
-        private readonly GridCanvas _parent;
+        private const long Duration = 1000;
 
-        // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global
-        public InputClock(GridCanvas parent, double x, double y, bool isActive) : this(parent, x, y, isActive, 1000)
-        {
-            _parent = parent;
-        }
+        public InputClock(Point pos, bool isActive) : this(pos, isActive, null) { }
 
-        public InputClock(GridCanvas parent, double x, double y, bool isActive, long duration) : base(
-            parent, x, y, isActive)
+        public InputClock(Point pos, bool isActive, string name) : base(pos, isActive, name)
         {
-            //TODO Popup when Constructing
-            _duration = duration;
             new Thread(() =>
                        {
                            var stopwatch = new Stopwatch();
                            stopwatch.Start();
                            while (stopwatch.ElapsedMilliseconds < 10_000)
                            {
-                               Dispatcher.UIThread.InvokeAsync(() => { OnClick(null, null); });
+                               Dispatcher.UIThread.InvokeAsync(() =>
+                                                               {
+                                                                   Notify(IsActive = !IsActive);
+                                                                   Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+                                                               });
                                Thread.Sleep(1000);
                            }
                        }).Start();
         }
 
-        public double MsToSec() { return (double) _duration / 1000; }
+        public static double MsToSec() { return (double) Duration / 1000; }
     }
 }

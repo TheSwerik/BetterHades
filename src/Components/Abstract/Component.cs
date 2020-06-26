@@ -4,9 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Input;
 using Avalonia.Media;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
@@ -24,55 +22,62 @@ namespace BetterHades.Components
             XOR = 106,
             Input = 200,
             InputClock = 201,
-            Output = 202
+            InputPulse = 202,
+            Output = 203
         }
 
-        private readonly List<Connection> _outputs;
-        protected readonly GridCanvas GridCanvas;
-        public readonly Ellipse OutPoint;
-        protected readonly Polygon Polygon;
-        public bool IsClicked;
-        public double X;
-        public double Y;
+        private static int _nameCounter = 1;
+        public readonly string Name;
 
-        protected Component(GridCanvas gridCanvas, double x, double y, bool isActive, Point outPoint)
+        public readonly List<Connection> Outputs;
+        protected readonly TextBlock Text;
+        protected Ellipse OutPointCircle;
+        public Polygon Polygon;
+        public Point Pos;
+
+        protected Component(Point position, bool isActive, string text)
         {
-            GridCanvas = gridCanvas;
-            _outputs = new List<Connection>();
-            Polygon = new Polygon
-                      {
-                          Width = 100,
-                          Height = 100,
-                          Fill = Brushes.Gray,
-                          Points = GetPoints(X = x, Y = y)
-                      };
-            GridCanvas.Canvas.Children.Add(Polygon);
-
-            const double diameter = 10.0;
-            OutPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            GridCanvas.Canvas.Children.Add(OutPoint);
-            Canvas.SetTop(OutPoint, y - diameter / 2);
-            Canvas.SetLeft(OutPoint, x - diameter / 2);
-            OutPoint.PointerPressed += SetClicked;
+            Outputs = new List<Connection>();
             IsActive = isActive;
+            Pos = position;
+            Polygon = new Polygon {Fill = Brushes.Gray, Points = GetPoints()};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
+            OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            Text = new TextBlock
+                   {
+                       ZIndex = int.MaxValue,
+                       Text = text,
+                       Width = 2 * MainWindow.GridCellSize,
+                       TextAlignment = TextAlignment.Center,
+                       FontSize = MainWindow.GridCellSize,
+                       IsEnabled = false,
+                       TextWrapping = TextWrapping.Wrap
+                   };
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
+            Name = "i" + _nameCounter++;
         }
 
+        protected virtual double PositionMultiplier => 1;
+
+        // Properties
+        public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
         public bool IsActive { get; set; }
 
+        // Observable
         /**
         * Subscribes the Observer to this Connection.
         */
         public IDisposable Subscribe(IObserver<Component> observer)
         {
-            _outputs.Add((Connection) observer);
+            Outputs.Add((Connection) observer);
             return (observer as IDisposable)!;
         }
 
-        public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentOutClick(this); }
-        public override string ToString() { return $"{{{GetType()}, {X}, {Y}, {IsActive}}}"; }
-        private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
+        public void Notify(bool b) { Outputs.ForEach(o => o.OnNext(this)); }
 
+        // Converters
         public static Dictionary<string, List<Type>> ToDictionary()
         {
             var list = ToList();
@@ -83,6 +88,48 @@ namespace BetterHades.Components
                    };
         }
 
-        protected abstract List<Point> GetPoints(double x, double y);
+        private static List<Type> ToList() { return Enum.GetValues(typeof(Type)).Cast<Type>().ToList(); }
+        public override string ToString() { return $"{{{GetType()}, {Pos.X}, {Pos.Y}, {IsActive}}}"; }
+
+        // Helper Methods
+        protected static Ellipse GenerateIOPort(Point pos, ISolidColorBrush color)
+        {
+            const double diameter = MainWindow.GridCellSize / 2.0;
+            var result = new Ellipse {Fill = color, Width = diameter, Height = diameter};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(result);
+            Canvas.SetLeft(result, pos.X - diameter / 2);
+            Canvas.SetTop(result, pos.Y - diameter / 2);
+            return result;
+        }
+
+        public virtual void MoveTo(Point pos)
+        {
+            var oldOut = OutPoint;
+            Pos = pos;
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
+            Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            Outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
+        }
+
+        public virtual void Remove()
+        {
+            for (var i = 0; i < Outputs.Count; i++) Outputs[i--].Remove();
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Text);
+        }
+
+        public virtual void Remove(Connection connection)
+        {
+            if (Outputs.Contains(connection)) Outputs.Remove(connection);
+        }
+
+        // Abstract
+        protected abstract List<Point> GetPoints();
     }
 }

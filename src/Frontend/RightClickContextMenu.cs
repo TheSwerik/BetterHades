@@ -1,44 +1,55 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using BetterHades.Components;
 
 namespace BetterHades.Frontend
 {
     public class RightClickContextMenu
     {
-        private readonly GridCanvas _canvas;
         private readonly ContextMenu _contextMenu;
 
-        public RightClickContextMenu(IPanel parent, GridCanvas canvas)
+        public RightClickContextMenu(ContextMenu contextMenu)
         {
-            _contextMenu = new ContextMenu
-                           {
-                               Background = Brushes.White,
-                               Items = MenuItems(),
-                               IsVisible = false
-                           };
-            _contextMenu.PointerPressed += OnClick;
-            _contextMenu.KeyDown += OnClick;
-            parent.Children.Add(_contextMenu);
-            _canvas = canvas;
+            _contextMenu = contextMenu;
+            _contextMenu.Items = MenuItems();
+            _contextMenu.PointerPressed += OnSelect;
+            _contextMenu.KeyDown += OnSelect;
             Hide();
         }
 
         // Handlers:
-        private void OnClick(object sender, RoutedEventArgs e)
+        private void OnSelect(object sender, RoutedEventArgs e)
         {
-            if (!(e is PointerPressedEventArgs mouseArgs && mouseArgs.MouseButton == MouseButton.Left ||
+            if (!(e is PointerPressedEventArgs mouseArgs &&
+                  mouseArgs.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed ||
                   e is KeyEventArgs keyArgs && keyArgs.Key == Key.Return)) return;
             var selected = (MenuItem) _contextMenu.SelectedItem;
-            var group = (string) selected.Header;
-            _canvas.AddComponent(group,
-                                 selected.SelectedItem.ToString(),
-                                 Canvas.GetLeft(_contextMenu),
-                                 Canvas.GetTop(_contextMenu));
+            if (selected == null) return;
+            if (selected.Header.Equals("Move"))
+            {
+                App.MainWindow.GridCanvas.IsMoving = true;
+            }
+            else if (selected.Header.Equals("Delete"))
+            {
+                App.MainWindow.GridCanvas.Remove();
+            }
+            else
+            {
+                if (selected.SelectedItem == null) return;
+                selected = (MenuItem) selected.SelectedItem;
+                if (selected.SelectedItem == null) return;
+                var group = (string) selected.Header;
+                var translatedPoint = _contextMenu.Parent.TranslatePoint(
+                    new Point(Canvas.GetLeft(_contextMenu), Canvas.GetTop(_contextMenu)),
+                    App.MainWindow.GridCanvas.Canvas
+                )!.Value;
+                App.MainWindow.GridCanvas.StartComponentPreview(group, selected.SelectedItem.ToString());
+            }
+
             Hide();
         }
 
@@ -62,9 +73,22 @@ namespace BetterHades.Frontend
         // Helper Methods:
         private static IEnumerable<MenuItem> MenuItems()
         {
-            return Component.ToDictionary()
-                            .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
-                            .ToList();
+            var move = new MenuItem {Header = "Move"};
+            var delete = new MenuItem {Header = "Delete"};
+            var result = new List<MenuItem>
+                         {
+                             new MenuItem
+                             {
+                                 Header = "Create",
+                                 Items = Component
+                                         .ToDictionary()
+                                         .Select(group => new MenuItem {Header = group.Key, Items = group.Value})
+                                         .ToList()
+                             },
+                             move,
+                             delete
+                         };
+            return result;
         }
     }
 }

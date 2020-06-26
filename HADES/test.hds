@@ -1,34 +1,15 @@
 # hades.models.Design file
 #  
-[name] unnamed
+[name] Test
 [components]
-hades.models.io.Opin i8 22800 4200 @N 1001 5.0E-9
-hades.models.io.Opin incremented_bit 24600 10800 @N 1001 5.0E-9
-hades.models.io.ClockGen i7 18600 3000 @N 1001 1.0 0.5 0.0 null
-hades.models.io.Ipin input_bit 8400 4200 @N 1001 s U
-hades.models.io.PulseSwitch i6 15600 4200 @N 1001 0.1 s
-hades.models.gatter.Or2 i5 19800 9600 @N 1001 1.0E-8
-hades.models.gatter.And2 i4 13200 13200 @N 1001 1.0E-8
-hades.models.gatter.Inv i3 10800 12000 @N 1001 5.0E-9
-hades.models.gatter.And2 i2 13200 10800 @N 1001 1.0E-8
-hades.models.gatter.Inv i1 10800 8400 @N 1001 5.0E-9
-hades.models.gatter.And2 i0 13200 8400 @N 1001 1.0E-8
-hades.models.io.Opin carry_out_\u0028next_increment\u0029 24600 14400 @N 1001 5.0E-9
-hades.models.gatter.Xnor2 i12 29400 6600 @N 1001 1.0E-8
-hades.models.gatter.Xor2 i11 18000 6600 @N 1001 1.0E-8
-hades.models.gatter.Nor2 i10 25800 3000 @N 1001 1.0E-8
-hades.models.io.Ipin carry_in_\u0028increment\u0029 8400 6600 @N 1001 null U
-hades.models.gatter.Nand2 i9 24000 6600 @N 1001 1.0E-8
+hades.models.io.Ipin i1 66000 68250 @N 1001  False
+hades.models.io.Ipin i2 66000 72000 @N 1001  False
+hades.models.gatter.And2 i3 72000 69750 @N 1001 1.0E-8
+hades.models.io.Opin o1 77250 69750 @N 1001 5.0E-9
 [end components]
 [signals]
-hades.signals.SignalStdLogic1164 n8 3 i7 clk i8 A i11 A 4 2 21000 4200 22800 4200 2 21000 4200 22200 4200 2 22200 4200 18000 6000 2 18000 6000 18000 7200 1 21000 4200 
-hades.signals.SignalStdLogic1164 n7 2 i4 Y carry_out_(next_increment) A 1 2 16800 14400 24600 14400 0 
-hades.signals.SignalStdLogic1164 n6 2 i5 Y incremented_bit A 1 2 23400 10800 24600 10800 0 
-hades.signals.SignalStdLogic1164 n5 2 i2 Y i5 B 3 2 16800 12000 18600 12000 2 18600 12000 18600 11400 2 18600 11400 19800 11400 0 
-hades.signals.SignalStdLogic1164 n4 4 input_bit Y i4 A i2 A i1 A 6 2 13200 13800 10800 13800 2 10800 13800 10800 11400 2 13200 11400 10800 11400 2 10800 11400 10800 9000 2 8400 4200 10800 4200 2 10800 4200 10800 9000 2 10800 11400 10800 9000 
-hades.signals.SignalStdLogic1164 n3 2 i0 Y i5 A 3 2 16800 9600 18600 9600 2 18600 9600 18600 10200 2 18600 10200 19800 10200 0 
-hades.signals.SignalStdLogic1164 n2 2 i3 Y i2 B 1 2 12600 12600 13200 12600 0 
-hades.signals.SignalStdLogic1164 n1 2 i1 Y i0 A 1 2 12600 9000 13200 9000 0 
-hades.signals.SignalStdLogic1164 n0 4 carry_in_(increment) Y i4 B i3 A i0 B 7 2 13200 15000 9600 15000 2 9600 15000 9600 12600 2 10800 12600 9600 12600 2 9600 12600 9600 10200 2 8400 6600 9600 6600 2 9600 6600 9600 10200 2 9600 10200 13200 10200 2 9600 10200 9600 12600 
+hades.signals.SignalStdLogic1164 n0 2 i1 Y i3 65 4 2 66750 68250 69750 68250 2 69750 68250 69750 69750 2 69750 69750 71250 69750 
+hades.signals.SignalStdLogic1164 n1 2 i2 Y i3 66 4 2 66750 72000 69750 72000 2 69750 72000 69750 69750 2 69750 69750 71250 69750 
+hades.signals.SignalStdLogic1164 n2 2 i3 Y i4 65 2 2 72750 69750 76500 69750 
 [end signals]
 [end]

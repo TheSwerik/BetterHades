@@ -1,27 +1,22 @@
 ﻿using System.Collections.Generic;
 using Avalonia;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class Gate : ObservingComponent
     {
-        protected Gate(GridCanvas parent, double x, double y, bool isActive) :
-            base(parent, x, y, isActive, new Point(x + 10, y + 5), new Point(x - 10, y + 5))
-        {
-        }
-
+        protected Gate(Point pos, bool isActive, string text) : base(pos, isActive, text) { }
         protected abstract bool Check();
         protected override void Update() { Notify(IsActive = Check()); }
 
-        protected override List<Point> GetPoints(double x, double y)
+        protected override List<Point> GetPoints()
         {
             return new List<Point>
                    {
-                       new Point(x - 10, y - 10),
-                       new Point(x + 10, y - 10),
-                       new Point(x + 10, y + 10),
-                       new Point(x - 10, y + 10)
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y - MainWindow.GridCellSize),
+                       new Point(Pos.X + MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize),
+                       new Point(Pos.X - MainWindow.GridCellSize, Pos.Y + MainWindow.GridCellSize)
                    };
         }
     }

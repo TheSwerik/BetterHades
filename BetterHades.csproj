@@ -2,6 +2,9 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <LangVersion>8</LangVersion>
+        <ProjectGuid>{33AC4948-50B8-43FB-9CB9-3DB33EEE8780}</ProjectGuid>
+        <AssemblyName>BetterHades</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,14 +14,20 @@
         <AvaloniaResource Include="**\*.xaml">
             <SubType>Designer</SubType>
         </AvaloniaResource>
+        <Compile Update="src\Frontend\MainWindow.xaml.cs">
+            <DependentUpon>Dialog.xaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.9.999-cibuild0008420-beta" />
+        <PackageReference Include="Avalonia.Controls.PanAndZoom" Version="2.3.3" />
         <PackageReference Include="Avalonia.Desktop" Version="0.9.999-cibuild0008420-beta" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)res\**" CopyToOutputDirectory="PreserveNewest" LinkBase="res" />
+        <None Include="$(SolutionDir)res\about.txt" CopyToOutputDirectory="PreserveNewest" LinkBase="res"/>
+        <None Include="$(SolutionDir)res\Grid2.png" CopyToOutputDirectory="PreserveNewest" LinkBase="res"/>
+        <None Include="$(SolutionDir)BetterHades.ico" CopyToOutputDirectory="PreserveNewest" Link=""/>
     </ItemGroup>
 </Project>

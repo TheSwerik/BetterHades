@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Avalonia;
+using Avalonia.Controls.Shapes;
 using Avalonia.Threading;
 using BetterHades.Components;
+using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
 
 namespace BetterHades.Util
@@ -12,13 +15,15 @@ namespace BetterHades.Util
     {
         private const string Title = "BetterHades - ";
         private const string Unnamed = "Unnamed.bhds";
-        private static bool _hasChanged = true;
-        private static FileInfo _currentFile;
+        public static bool HasChanged;
+        private static FileInfo _currentFile = new FileInfo(Unnamed);
+        public static string FullPath => _currentFile.FullName;
+        public static DirectoryInfo CurrentDirectory => _currentFile.Directory;
 
         public static string CurrentFile
         {
             get => _currentFile.Name.Replace(_currentFile.Extension, "");
-            set
+            private set
             {
                 _currentFile = new FileInfo(value);
                 Environment.CurrentDirectory = _currentFile.DirectoryName!;
@@ -29,6 +34,7 @@ namespace BetterHades.Util
         public static void New()
         {
             CurrentFile = Unnamed;
+            Input.Counter = Output.Counter = 1;
             Changed();
         }
 
@@ -40,13 +46,23 @@ namespace BetterHades.Util
 
         public static void Save()
         {
+            var components = App.MainWindow.GridCanvas.Components;
             using var file = new StreamWriter(_currentFile.FullName);
-            foreach (var c in App.MainWindow.GridCanvas.Components)
-                file.WriteLine($"{c.GetType()}; {c.X}; {c.Y}; {c.IsActive}");
-            file.WriteLine("--------------------------------------");
+            foreach (var component in components)
+            {
+                file.Write($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+                if (component is Input i) file.Write($"; {i.Name}");
+                if (component is Output o) file.Write($"; {o.Name}");
+                file.WriteLine("");
+            }
+
+            file.WriteLine(new string('-', 100));
             foreach (var c in App.MainWindow.GridCanvas.Connections)
-                file.WriteLine(
-                    $"{c.GetType()}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Input)}; {App.MainWindow.GridCanvas.Components.IndexOf(c.Output)}");
+            {
+                var pts = string.Join("; ", c.Points);
+                file.WriteLine($"{c.GetType()}; {components.IndexOf(c.Input)}; {components.IndexOf(c.Output)}; {pts}");
+            }
+
             Changed(false);
         }
 
@@ -54,10 +70,12 @@ namespace BetterHades.Util
         {
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
-            LoadComponents(lines.TakeWhile(l => !l.Contains("---------")));
+            App.MainWindow.New(null, null, true);
+            CurrentFile = fileName;
+            LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
             (
-                () => LoadConnections(lines.SkipWhile(l => !l.Contains("---------")).Skip(1)),
+                () => LoadConnections(lines.SkipWhile(l => !l.Contains("----------")).Skip(1)),
                 DispatcherPriority.Render
             );
             Changed(false);
@@ -76,7 +94,7 @@ namespace BetterHades.Util
                         t,
                         App.MainWindow.GridCanvas.Components[int.Parse(vars[1])],
                         (ObservingComponent) App.MainWindow.GridCanvas.Components[int.Parse(vars[2])],
-                        App.MainWindow.GridCanvas.Canvas
+                        new Polyline {Points = vars.Skip(3).Select(Point.Parse).ToList()}
                     ) ?? throw new ComponentNotFoundException(vars[0])
                 );
             }
@@ -91,26 +109,22 @@ namespace BetterHades.Util
                 var vars = line.Split(";");
                 var t = Type.GetType(vars[0]);
                 if (t == null) throw new ComponentNotFoundException(vars[0]);
-                App.MainWindow.GridCanvas.Components.Add
-                (
-                    (Component) Activator.CreateInstance
-                    (
-                        t, App.MainWindow.GridCanvas,
-                        double.Parse(vars[1]),
-                        double.Parse(vars[2]),
-                        bool.Parse(vars[3])
-                    ) ?? throw new ComponentNotFoundException(vars[0])
-                );
+                var args = new List<object>
+                           {new Point(double.Parse(vars[1]), double.Parse(vars[2])), bool.Parse(vars[3])};
+                if (vars.Length >= 5) args.Add(vars[4].Trim());
+                App.MainWindow.GridCanvas.Components.Add(
+                    (Component) Activator.CreateInstance(t, args.ToArray()) ??
+                    throw new ComponentNotFoundException(vars[0]));
             }
         }
 
         // Helper Methods:
         public static void Changed(bool changed = true)
         {
-            _hasChanged = changed;
+            HasChanged = changed;
             UpdateTitle();
         }
 
-        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(_hasChanged ? "*" : "")}"; }
+        private static void UpdateTitle() { App.MainWindow.Title = $"{Title}{CurrentFile}{(HasChanged ? "*" : "")}"; }
     }
 }

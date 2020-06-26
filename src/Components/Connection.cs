@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using BetterHades.Exceptions;
@@ -10,27 +9,25 @@ namespace BetterHades.Components
 {
     public class Connection : IObserver<Component>, IObservable<Connection>
     {
-        private readonly Polyline _line;
         public readonly Component Input;
         public ObservingComponent Output;
 
-        public Connection(Component input, ObservingComponent output, IPanel parent)
+        public Connection(Component input, ObservingComponent output, Polyline line)
         {
             Input = input;
             Input.Subscribe(this);
             Subscribe(output);
             Output.AddInput(this);
-            _line = new Polyline
-                    {
-                        Points = new List<Point> {Input.OutPoint.Bounds.Center, Output.InPoint.Bounds.Center},
-                        Stroke = IsActive ? Brushes.Red : Brushes.Gray,
-                        ZIndex = int.MinValue
-                        // ZIndex = parent.ZIndex + 1,
-                    };
-            parent.Children.Add(_line);
+            Polyline = new Polyline
+                       {Points = line.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -9999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
+            Notify();
         }
 
+        public Polyline Polyline { get; private set; }
+
         public bool IsActive => Input.IsActive;
+        public IEnumerable<Point> Points => Polyline.Points;
 
         /**
         * Subscribes the Observer to this Connection.
@@ -43,20 +40,17 @@ namespace BetterHades.Components
 
         // Observer-Stuff
         public void OnCompleted() { throw new CompletedException(); }
-
         public void OnError(Exception error) { Console.WriteLine("CONNECTION --- {0}", error); }
 
         public void OnNext(Component input)
         {
             Notify();
-            _line.Stroke = IsActive ? Brushes.Red : Brushes.Gray;
+            Polyline.Stroke = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
         private void Notify() { Output.OnNext(this); }
 
         // Overrides
-        public override int GetHashCode() { return IsActive.GetHashCode(); }
-
         public static bool operator ==(Connection connection, bool comparator)
         {
             return connection?.IsActive == comparator;
@@ -67,15 +61,22 @@ namespace BetterHades.Components
             return connection?.IsActive != comparator;
         }
 
-        private bool Equals(Connection other) { return IsActive == other.IsActive; }
+        public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", Polyline.Points)}"; }
 
-        public override bool Equals(object obj)
+        public void UpdateLine(Point oldPoint, Point newPoint)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Connection) obj);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polyline);
+            Polyline.Points[Polyline.Points.IndexOf(oldPoint)] = newPoint;
+            Polyline = new Polyline
+                       {Points = Polyline.Points, Stroke = IsActive ? Brushes.Red : Brushes.Gray, ZIndex = -999};
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Polyline);
         }
 
-        public override string ToString() { return $"{Input} {Output} {IsActive} {string.Join(",", _line.Points)}"; }
+        public void Remove()
+        {
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Polyline);
+            Input.Remove(this);
+            Output.Remove(this);
+        }
     }
 }

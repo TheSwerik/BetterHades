@@ -2,40 +2,53 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Input;
 using Avalonia.Media;
 using BetterHades.Exceptions;
-using BetterHades.Frontend;
 
 namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        public readonly Ellipse InPoint;
-        protected readonly ObservableCollection<Connection> Inputs;
+        public readonly ObservableCollection<Connection> Inputs;
+        private Ellipse InPointCircle;
 
-        protected ObservingComponent(GridCanvas parent, double x, double y, bool isActive, Point outPoint,
-                                     Point inPoint) : base(
-            parent, x, y, isActive, outPoint)
+        protected ObservingComponent(Point pos, bool isActive, string text) : base(pos, isActive, text)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;
-
-            const double diameter = 10.0;
-            InPoint = new Ellipse {Fill = Brushes.Coral, Width = diameter, Height = diameter};
-            parent.Canvas.Children.Add(InPoint);
-            Canvas.SetTop(InPoint, y - diameter / 2);
-            Canvas.SetLeft(InPoint, x - diameter / 2);
-            InPoint.PointerPressed += SetClicked;
+            InPointCircle = GenerateIOPort(InPoint, Brushes.Orange);
         }
+
+        public Point InPoint => Pos.WithX(Pos.X - MainWindow.GridCellSize);
+        public int NumberOfInputs => Inputs.Count;
 
         // Implemented:
         public void OnCompleted() { throw new CompletedException(); }
         public void OnError(Exception error) { Console.WriteLine(error); }
         public void OnNext(Connection value) { Update(); }
-        private void SetClicked(object sender, PointerPressedEventArgs e) { GridCanvas.OnComponentInClick(this); }
+
+        public override void MoveTo(Point pos)
+        {
+            var oldIn = InPoint;
+            base.MoveTo(pos);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
+            InPointCircle = GenerateIOPort(InPoint, Brushes.Orange);
+            foreach (var c in Inputs) c.UpdateLine(oldIn, InPoint);
+        }
+
+        public override void Remove()
+        {
+            base.Remove();
+            for (var i = 0; i < Inputs.Count; i++) Inputs[i--].Remove();
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(InPointCircle);
+        }
+
+        public override void Remove(Connection connection)
+        {
+            base.Remove(connection);
+            if (Inputs.Contains(connection)) Inputs.Remove(connection);
+        }
 
         // Abstract:
         public virtual void AddInput(Connection connection) { Inputs.Add(connection); }

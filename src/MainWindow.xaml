@@ -2,21 +2,52 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="720"
+        xmlns:panAndZoom="clr-namespace:Avalonia.Controls.PanAndZoom;assembly=Avalonia.Controls.PanAndZoom"
         x:Class="BetterHades.MainWindow"
+        mc:Ignorable="d"
+        d:DesignWidth="800" d:DesignHeight="720"
         Title="BetterHades - Unnamed*">
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New" Click="New" />
-                <MenuItem Header="_Open..." Click="Open" />
-                <MenuItem Header="_Save" Click="Save" />
-                <MenuItem Header="_Save As..." Click="SaveAs" />
-                <MenuItem Header="_Exit" Click="Exit" />
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="_About..." Click="AboutOnClick" />
-            </MenuItem>
-        </Menu>
-    </DockPanel>
+    <Canvas>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" ZIndex="2147483647" Background="White">
+                <MenuItem Header="_File" Name="FileMenu">
+                    <MenuItem Header="_New" Click="New" />
+                    <MenuItem Header="_Open..." Click="Open" />
+                    <MenuItem Header="_Save" Click="Save" Name="saveButton" />
+                    <MenuItem Header="Save _As..." Click="SaveAs" />
+                    <MenuItem Header="E_xport..." Click="Export" />
+                    <MenuItem Header="_Exit" Click="Exit" />
+                    <MenuItem Header="-" />
+                </MenuItem>
+                <MenuItem Header="_Options">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Window opening behaviour" />
+                        <ComboBox Grid.Column="2" Name="WindowOpenBox" SelectedIndex="0" BorderThickness="0">
+                            <ComboBoxItem Content="Always ask" />
+                            <ComboBoxItem Content="Always open new window" />
+                            <ComboBoxItem Content="Never open new window" />
+                        </ComboBox>
+                    </Grid>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_About..." Click="AboutOnClick" />
+                </MenuItem>
+            </Menu>
+            <panAndZoom:ZoomBorder
+                Name="zoomBorder"
+                Stretch="None"
+                ZoomSpeed="1.01"
+                Background="White"
+                ClipToBounds="True"
+                Focusable="True"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+        </DockPanel>
+        <ContextMenu Name="contextMenu" IsVisible="false" Background="White" />
+    </Canvas>
 </Window>
