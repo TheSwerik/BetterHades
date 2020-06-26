@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Threading;
 using BetterHades.Components;
+using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
 
 namespace BetterHades.Util
@@ -33,6 +34,7 @@ namespace BetterHades.Util
         public static void New()
         {
             CurrentFile = Unnamed;
+            Input.Counter = Output.Counter = 1;
             Changed();
         }
 
@@ -47,7 +49,13 @@ namespace BetterHades.Util
             var components = App.MainWindow.GridCanvas.Components;
             using var file = new StreamWriter(_currentFile.FullName);
             foreach (var component in components)
-                file.WriteLine($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+            {
+                file.Write($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+                if (component is Input i) file.Write($"; {i.Name}");
+                if (component is Output o) file.Write($"; {o.Name}");
+                file.WriteLine("");
+            }
+
             file.WriteLine(new string('-', 100));
             foreach (var c in App.MainWindow.GridCanvas.Connections)
             {
@@ -62,7 +70,7 @@ namespace BetterHades.Util
         {
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
-            App.MainWindow.New(null, null);
+            App.MainWindow.New(null, null, true);
             CurrentFile = fileName;
             LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
@@ -101,15 +109,12 @@ namespace BetterHades.Util
                 var vars = line.Split(";");
                 var t = Type.GetType(vars[0]);
                 if (t == null) throw new ComponentNotFoundException(vars[0]);
-                App.MainWindow.GridCanvas.Components.Add
-                (
-                    (Component) Activator.CreateInstance
-                    (
-                        t,
-                        new Point(double.Parse(vars[1]), double.Parse(vars[2])),
-                        bool.Parse(vars[3])
-                    ) ?? throw new ComponentNotFoundException(vars[0])
-                );
+                var args = new List<object>
+                           {new Point(double.Parse(vars[1]), double.Parse(vars[2])), bool.Parse(vars[3])};
+                if (vars.Length >= 5) args.Add(vars[4].Trim());
+                App.MainWindow.GridCanvas.Components.Add(
+                    (Component) Activator.CreateInstance(t, args.ToArray()) ??
+                    throw new ComponentNotFoundException(vars[0]));
             }
         }
 

@@ -29,16 +29,32 @@ namespace BetterHades.Components
         protected Ellipse OutPointCircle;
         public Polygon Polygon;
         public Point Pos;
+        public TextBlock Text;
 
-        protected Component(Point position, bool isActive)
+        protected Component(Point position, bool isActive, string text)
         {
             _outputs = new List<Connection>();
             IsActive = isActive;
             Pos = position;
-            Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
+            Polygon = new Polygon {Fill = Brushes.Gray, Points = GetPoints()};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            Text = new TextBlock
+                   {
+                       ZIndex = int.MaxValue,
+                       Text = text,
+                       Width = 2 * MainWindow.GridCellSize,
+                       TextAlignment = TextAlignment.Center,
+                       FontSize = MainWindow.GridCellSize,
+                       IsEnabled = false,
+                       TextWrapping = TextWrapping.Wrap
+                   };
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
+
+        protected virtual double PositionMultiplier => 1;
 
         // Properties
         public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
@@ -91,6 +107,8 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
         }
 
         public virtual void Remove()
@@ -98,6 +116,7 @@ namespace BetterHades.Components
             for (var i = 0; i < _outputs.Count; i++) _outputs[i--].Remove();
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Text);
         }
 
         public virtual void Remove(Connection connection)

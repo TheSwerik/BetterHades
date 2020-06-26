@@ -13,6 +13,7 @@ using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using BetterHades.Frontend;
 using BetterHades.Util;
 using BetterHades.Util.Enums;
@@ -50,6 +51,16 @@ namespace BetterHades
             GridCanvas = new GridCanvas(_zoomBorder);
             Config.Init();
             UpdateFileHistory();
+            Dispatcher.UIThread.InvokeAsync(
+                () =>
+                {
+                    var args = Environment.GetCommandLineArgs();
+                    if (args.Length <= 1) return;
+                    File.WriteAllText("test.txt", "test\n" + args[1]);
+                    FileHandler.Load(args[1]);
+                    _saveButton.IsEnabled = true;
+                    Config.AddFileToHistory(args[1]);
+                }, DispatcherPriority.Loaded);
         }
 
         public bool CanSave => _saveButton.IsEnabled;
@@ -88,7 +99,7 @@ namespace BetterHades
         private void InitializeComponent() { AvaloniaXamlLoader.Load(this); }
 
         // Handlers
-        public void KeyPressed(object sender, KeyEventArgs e)
+        private void KeyPressed(object sender, KeyEventArgs e)
         {
             if ((e.KeyModifiers & KeyModifiers.Control) != 0 && e.Key == Key.S)
                 if (CanSave) Save(null, null);
@@ -121,7 +132,9 @@ namespace BetterHades
         }
 
         // Title Bar Buttons:
-        public async void New(object sender, RoutedEventArgs args)
+        public void New(object sender, RoutedEventArgs args) { New(sender, args, false); }
+
+        public async void New(object sender, RoutedEventArgs args, bool sameWindow)
         {
             if (Config.OpeningBehaviour == OpeningBehaviour.AlwaysOpen)
             {
@@ -129,7 +142,7 @@ namespace BetterHades
                 return;
             }
 
-            if (Config.OpeningBehaviour == OpeningBehaviour.NeverOpen)
+            if (sameWindow || Config.OpeningBehaviour == OpeningBehaviour.NeverOpen)
             {
                 GridCanvas = new GridCanvas(_zoomBorder);
                 FileHandler.New();
