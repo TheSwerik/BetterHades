@@ -5,6 +5,7 @@
         <LangVersion>8</LangVersion>
         <ProjectGuid>{33AC4948-50B8-43FB-9CB9-3DB33EEE8780}</ProjectGuid>
         <AssemblyName>BetterHades</AssemblyName>
+        <ApplicationIcon>BetterHades.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>

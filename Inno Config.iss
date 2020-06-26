@@ -1,6 +1,6 @@
 ; Variables:
 #define MyAppName "BetterHades"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Swerik"
 #define MyAppURL "https://github.com/TheSwerik"   
 #define MyAppExeName "BetterHades.exe"
