@@ -102,6 +102,8 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
 
         public virtual void Remove()
@@ -109,6 +111,7 @@ namespace BetterHades.Components
             for (var i = 0; i < _outputs.Count; i++) _outputs[i--].Remove();
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            App.MainWindow.GridCanvas.Canvas.Children.Remove(Text);
         }
 
         public virtual void Remove(Connection connection)
