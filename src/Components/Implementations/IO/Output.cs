@@ -3,16 +3,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 
 namespace BetterHades.Components.Implementations.IO
 {
     public class Output : ObservingComponent
     {
-        public Output(Point pos, bool isActive) : base(pos, isActive)
+        private static int _counter = 1;
+        private string _name = $"o{_counter}";
+
+        public Output(Point pos, bool isActive) : base(pos, isActive, $"o{_counter++}")
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 0.8);
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => Text.Text = _name = value;
         }
 
         public override Point OutPoint => new Point(double.MinValue, double.MinValue);

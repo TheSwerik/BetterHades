@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
@@ -9,10 +10,20 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Input : Component
     {
-        public Input(Point pos, bool isActive) : base(pos, isActive)
+        private static int _counter = 1;
+        private string _name = $"i{_counter}";
+
+        public Input(Point pos, bool isActive) : base(pos, isActive, $"i{_counter++}")
         {
             Polygon.PointerPressed += OnClick;
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 1.2);
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => Text.Text = _name = value;
         }
 
         public override void MoveTo(Point pos)

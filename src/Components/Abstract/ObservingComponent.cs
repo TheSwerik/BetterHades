@@ -13,7 +13,7 @@ namespace BetterHades.Components
         protected readonly ObservableCollection<Connection> Inputs;
         private Ellipse InPointCircle;
 
-        protected ObservingComponent(Point pos, bool isActive) : base(pos, isActive)
+        protected ObservingComponent(Point pos, bool isActive, string text) : base(pos, isActive, text)
         {
             Inputs = new ObservableCollection<Connection>();
             Inputs.CollectionChanged += Update;

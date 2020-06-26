@@ -5,7 +5,7 @@ namespace BetterHades.Components
 {
     public abstract class Gate : ObservingComponent
     {
-        protected Gate(Point pos, bool isActive) : base(pos, isActive) { }
+        protected Gate(Point pos, bool isActive, string text) : base(pos, isActive, text) { }
         protected abstract bool Check();
         protected override void Update() { Notify(IsActive = Check()); }
 

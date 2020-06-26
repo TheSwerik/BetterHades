@@ -29,15 +29,26 @@ namespace BetterHades.Components
         protected Ellipse OutPointCircle;
         public Polygon Polygon;
         public Point Pos;
+        public TextBlock Text;
 
-        protected Component(Point position, bool isActive)
+        protected Component(Point position, bool isActive, string text)
         {
             _outputs = new List<Connection>();
             IsActive = isActive;
             Pos = position;
-            Polygon = new Polygon {Width = 100, Height = 100, Fill = Brushes.Gray, Points = GetPoints()};
+            Polygon = new Polygon {Fill = Brushes.Gray, Points = GetPoints()};
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
+            Text = new TextBlock
+                   {
+                       Text = text,
+                       Width = 2 * MainWindow.GridCellSize,
+                       TextAlignment = TextAlignment.Center,
+                       FontSize = MainWindow.GridCellSize
+                   };
+            App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
 
         // Properties

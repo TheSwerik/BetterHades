@@ -7,7 +7,7 @@ namespace BetterHades.Components.Implementations.Gates
 {
     public class INVGate : Gate
     {
-        public INVGate(Point pos, bool isActive) : base(pos, isActive) { }
+        public INVGate(Point pos, bool isActive) : base(pos, isActive, "!") { }
 
         protected override bool Check() { return Inputs.Count > 0 && !Inputs.First().IsActive; }
 
