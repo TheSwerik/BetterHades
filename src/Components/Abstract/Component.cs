@@ -41,15 +41,18 @@ namespace BetterHades.Components
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             Text = new TextBlock
                    {
+                       ZIndex = int.MaxValue,
                        Text = text,
                        Width = 2 * MainWindow.GridCellSize,
                        TextAlignment = TextAlignment.Center,
                        FontSize = MainWindow.GridCellSize
                    };
             App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
-            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
+
+        protected virtual float PositionMultiplier => 1;
 
         // Properties
         public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
@@ -102,7 +105,7 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
-            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize);
+            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
 

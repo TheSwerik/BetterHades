@@ -20,6 +20,8 @@ namespace BetterHades.Components.Implementations.IO
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 0.8);
         }
 
+        protected override float PositionMultiplier => 0.8f;
+
         public string Name
         {
             get => _name;

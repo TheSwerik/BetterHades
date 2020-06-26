@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
@@ -17,8 +16,9 @@ namespace BetterHades.Components.Implementations.IO
         {
             Polygon.PointerPressed += OnClick;
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
-            Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 1.2);
         }
+
+        protected override float PositionMultiplier => 1.2f;
 
         public string Name
         {
