@@ -33,19 +33,25 @@ CloseApplicationsFilter=*.*
 ; gets ignored if Specified in [Language]
 ;LicenseFile=
 ; Makes Explorer Refresh File Associations at the End of the Un-/Installation
-;ChangesAssociations=yes  
+ChangesAssociations=yes  
 ; Sets the Required Privileges to regular user (non-admin)
 ;PrivilegesRequired=lowest        
 ; Lets the user choose the Privileges (other option "console")
-;PrivilegesRequiredOverridesAllowed=dialog
-; specifies a different Icon for the Unsintaller (can be from .ico or .exe)
-;UninstallDisplayIcon={app}\{#MyAppIconName}   
+;PrivilegesRequiredOverridesAllowed=dialog    
 ; specify Icon for Setup
 ;SetupIconFile={#MyAppIconName}
+; specifies a different Icon for the Unsintaller (can be from .ico or .exe)
+;UninstallDisplayIcon={app}\{#MyAppIconName}   
 
 ; creates empty Folders
 ;[Dirs]
 ;Name: "{app}\bin"
+
+[Registry]
+Root: HKCR; Subkey: ".bhds";                            ValueData: "{#MyAppName}";          Flags: uninsdeletevalue;  ValueType: string;  ValueName: ""
+Root: HKCR; Subkey: "{#MyAppName}";                     ValueData: "Program {#MyAppName}";  Flags: uninsdeletekey;    ValueType: string;  ValueName: ""
+Root: HKCR; Subkey: "{#MyAppName}\DefaultIcon";         ValueData: "{app}\{#MyAppExeName},0";                         ValueType: string;  ValueName: ""
+Root: HKCR; Subkey: "{#MyAppName}\shell\open\command";  ValueData: """{app}\{#MyAppExeName}"" ""%1""";                ValueType: string;  ValueName: ""
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -71,5 +77,5 @@ Filename: "{app}\bin\64bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#S
 Filename: "{app}\bin\32bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: not IsWin64; Flags: nowait postinstall skipifsilent
 
 ; Defines any Files or Folders that should be deleted when uninstalling
-;[UninstallDelete]
-;Type: filesandordirs; Name: "{autodocs}\savefile.sav"
+[UninstallDelete]
+Type: filesandordirs; Name: "{autodocs}\{#MyAppName}"
