@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
@@ -18,12 +19,18 @@ namespace BetterHades.Components.Implementations.IO
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
-        protected override float PositionMultiplier => 1.2f;
+        protected override double PositionMultiplier => 1 + 0.2 * (Text.FontSize / MainWindow.GridCellSize * 1.4);
 
         public string Name
         {
             get => _name;
-            set => Text.Text = _name = value;
+            set
+            {
+                Text.Text = _name = value;
+                Text.FontSize = (double) MainWindow.GridCellSize * _name.Length / 27;
+                Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
+                Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            }
         }
 
         public override void MoveTo(Point pos)

@@ -45,14 +45,15 @@ namespace BetterHades.Components
                        Text = text,
                        Width = 2 * MainWindow.GridCellSize,
                        TextAlignment = TextAlignment.Center,
-                       FontSize = MainWindow.GridCellSize
+                       FontSize = MainWindow.GridCellSize,
+                       IsEnabled = false
                    };
             App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
         }
 
-        protected virtual float PositionMultiplier => 1;
+        protected virtual double PositionMultiplier => 1;
 
         // Properties
         public virtual Point OutPoint => Pos.WithX(Pos.X + MainWindow.GridCellSize);
@@ -106,7 +107,7 @@ namespace BetterHades.Components
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
             _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
-            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
+            Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
         }
 
         public virtual void Remove()

@@ -20,12 +20,18 @@ namespace BetterHades.Components.Implementations.IO
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 0.8);
         }
 
-        protected override float PositionMultiplier => 0.8f;
+        protected override double PositionMultiplier => 1 - 0.2 * (Text.FontSize / MainWindow.GridCellSize * 1.4);
 
         public string Name
         {
             get => _name;
-            set => Text.Text = _name = value;
+            set
+            {
+                Text.Text = _name = value;
+                Text.FontSize = (double) MainWindow.GridCellSize * _name.Length / 27;
+                Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
+                Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
+            }
         }
 
         public override Point OutPoint => new Point(double.MinValue, double.MinValue);
