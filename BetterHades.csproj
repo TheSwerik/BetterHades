@@ -15,7 +15,7 @@
             <SubType>Designer</SubType>
         </AvaloniaResource>
         <Compile Update="src\Frontend\MainWindow.xaml.cs">
-          <DependentUpon>Dialog.xaml</DependentUpon>
+            <DependentUpon>Dialog.xaml</DependentUpon>
         </Compile>
     </ItemGroup>
 
@@ -26,6 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)res\**" CopyToOutputDirectory="Always" LinkBase="res" />
+        <None Include="$(SolutionDir)res\about.txt" CopyToOutputDirectory="PreserveNewest" LinkBase="res"/>
+        <None Include="$(SolutionDir)res\Grid2.png" CopyToOutputDirectory="PreserveNewest" LinkBase="res"/>
+        <None Include="$(SolutionDir)BetterHades.ico" CopyToOutputDirectory="PreserveNewest" Link=""/>
     </ItemGroup>
 </Project>

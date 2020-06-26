@@ -4,7 +4,7 @@
 #define MyAppPublisher "Swerik"
 #define MyAppURL "https://github.com/TheSwerik"   
 #define MyAppExeName "BetterHades.exe"
-;#define MyAppIconName "BetterHades.ico"
+#define MyAppIconName "BetterHades.ico"
 
 [Setup]
 AppId={{D952D89A-F88F-42A8-8E3C-639CED1EE150}
@@ -33,19 +33,9 @@ CloseApplicationsFilter=*.*
 ; gets ignored if Specified in [Language]
 ;LicenseFile=
 ; Makes Explorer Refresh File Associations at the End of the Un-/Installation
-ChangesAssociations=yes  
-; Sets the Required Privileges to regular user (non-admin)
-;PrivilegesRequired=lowest        
-; Lets the user choose the Privileges (other option "console")
-;PrivilegesRequiredOverridesAllowed=dialog    
-; specify Icon for Setup
-;SetupIconFile={#MyAppIconName}
-; specifies a different Icon for the Unsintaller (can be from .ico or .exe)
-;UninstallDisplayIcon={app}\{#MyAppIconName}   
-
-; creates empty Folders
-;[Dirs]
-;Name: "{app}\bin"
+ChangesAssociations=yes      
+SetupIconFile={#MyAppIconName}
+UninstallDisplayIcon={app}\{#MyAppIconName}   
 
 [Registry]
 Root: HKCR; Subkey: ".bhds";                            ValueData: "{#MyAppName}";          Flags: uninsdeletevalue;  ValueType: string;  ValueName: ""
@@ -76,6 +66,5 @@ Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\32bit\{#MyAppExeName}"; Flags: 
 Filename: "{app}\bin\64bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: IsWin64; Flags: nowait postinstall skipifsilent
 Filename: "{app}\bin\32bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: not IsWin64; Flags: nowait postinstall skipifsilent
 
-; Defines any Files or Folders that should be deleted when uninstalling
 [UninstallDelete]
 Type: filesandordirs; Name: "{autodocs}\{#MyAppName}"
