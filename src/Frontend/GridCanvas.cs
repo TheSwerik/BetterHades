@@ -104,16 +104,16 @@ namespace BetterHades.Frontend
                 if (_previewComponent.IsVisible)
                 {
                     _previewComponent.IsVisible = false;
-                    if (_moveBuffer != null)
+                    if (_previewComponentData[0] != null)
+                    {
+                        AddComponent(_previewComponentData[0], _previewComponentData[1], pos);
+                        _previewComponentData[0] = _previewComponentData[1] = null;
+                    }
+                    else
                     {
                         _moveBuffer.MoveTo(pos);
                         _moveBuffer = null;
                         IsMoving = false;
-                    }
-                    else
-                    {
-                        AddComponent(_previewComponentData[0], _previewComponentData[1], pos);
-                        _previewComponentData[0] = _previewComponentData[1] = null;
                     }
 
                     return;
