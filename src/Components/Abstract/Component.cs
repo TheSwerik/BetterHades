@@ -22,7 +22,8 @@ namespace BetterHades.Components
             XOR = 106,
             Input = 200,
             InputClock = 201,
-            Output = 202
+            InputPulse = 202,
+            Output = 203
         }
 
         private readonly List<Connection> _outputs;

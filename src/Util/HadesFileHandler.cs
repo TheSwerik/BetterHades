@@ -46,7 +46,7 @@ namespace BetterHades.Util
                        XORGate xor => $"hades.models.gatter.Xor_NUMBER_ _NAME_ {xor.Pos.X} {xor.Pos.Y} @N 1001 1.0E-8",
                        // InputPulse ip => $"hades.models.io.PulseSwitch _NAME_ {ip.Pos.X} {ip.Pos.Y} @N 1001 _PULSE_DURATION_ null",
                        InputClock ic =>
-                       $"hades.models.io.ClockGen _NAME_ {ic.Pos.X} {ic.Pos.Y} @N 1001 {ic.MsToSec()} 0.5 0.0",
+                       $"hades.models.io.ClockGen _NAME_ {ic.Pos.X} {ic.Pos.Y} @N 1001 {InputClock.MsToSec()} 0.5 0.0",
                        Input i => $"hades.models.io.Ipin _NAME_ {i.Pos.X} {i.Pos.Y} @N 1001  {i.IsActive}",
                        Output o => $"hades.models.io.Opin _NAME_ {o.Pos.X} {o.Pos.Y} @N 1001 5.0E-9",
                        _ => throw new ComponentNotFoundException(component.GetType().ToString())

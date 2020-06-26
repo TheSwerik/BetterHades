@@ -13,6 +13,7 @@ namespace BetterHades.Components.Implementations.IO
         public static int Counter = 1;
         private string _name = $"i{Counter}";
 
+        // ReSharper disable once IntroduceOptionalParameters.Global
         public Input(Point pos, bool isActive) : this(pos, isActive, null) { }
 
         public Input(Point pos, bool isActive, string name) : base(pos, isActive, $"i{Counter++}")
@@ -45,7 +46,7 @@ namespace BetterHades.Components.Implementations.IO
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
         }
 
-        protected void OnClick(object sender, PointerPressedEventArgs e)
+        protected virtual void OnClick(object sender, PointerPressedEventArgs e)
         {
             if (!e.GetCurrentPoint(App.MainWindow).Properties.IsLeftButtonPressed) return;
             Notify(IsActive = !IsActive);

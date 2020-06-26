@@ -31,6 +31,6 @@ namespace BetterHades.Components.Implementations.IO
                        }).Start();
         }
 
-        public double MsToSec() { return (double) Duration / 1000; }
+        public static double MsToSec() { return (double) Duration / 1000; }
     }
 }
