@@ -55,8 +55,7 @@ namespace BetterHades.Components.Implementations.IO
 
         public override void AddInput(Connection connection)
         {
-            //TODO remove connection
-            Inputs.Clear();
+            if (Inputs.Count > 0) Inputs[0].Remove();
             Inputs.Add(connection);
         }
 
