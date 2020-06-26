@@ -12,6 +12,7 @@ configuration: Release
 before_build:
   - 'curl -H "Authorization: token %download_token%" -H "Accept: application/vnd.github.v3.raw" -O -L "%download_link%/developer-certificate.pfx"'
   - ps: nuget restore -Verbosity quiet
+  - ps: Move-Item res/BetterHades.ico ./
 
 build:
   verbosity: minimal
@@ -32,7 +33,6 @@ for:
       informational_version: '$(my_version_number)'
 
     after_test:
-      - ps: Move-Item res/BetterHades.ico ./
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\bin\64bit -v:m -r:win-x64   --self-contained:true -p:PublishSingleFile=false  -p:PublishTrimmed=true
       - ps: dotnet publish "-p:PublishProfile=$($env:project_name).csproj" -c:Release -o:Publish\Portable  -v:m -r:win-x64   --self-contained:true -p:PublishSingleFile=true   -p:PublishTrimmed=true
       - 'ren "publish\Portable\%project_name%.exe" "%project_name%-Portable-x64.exe"'
