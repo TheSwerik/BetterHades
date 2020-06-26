@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Threading;
 using BetterHades.Components;
+using BetterHades.Components.Implementations.IO;
 using BetterHades.Exceptions;
 
 namespace BetterHades.Util
@@ -47,7 +48,13 @@ namespace BetterHades.Util
             var components = App.MainWindow.GridCanvas.Components;
             using var file = new StreamWriter(_currentFile.FullName);
             foreach (var component in components)
-                file.WriteLine($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+            {
+                file.Write($"{component.GetType()}; {component.Pos.X}; {component.Pos.Y}; {component.IsActive}");
+                if (component is Input i) file.Write($"; {i.Name}");
+                if (component is Output o) file.Write($"; {o.Name}");
+                file.WriteLine("");
+            }
+
             file.WriteLine(new string('-', 100));
             foreach (var c in App.MainWindow.GridCanvas.Connections)
             {

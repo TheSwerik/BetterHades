@@ -46,7 +46,8 @@ namespace BetterHades.Components
                        Width = 2 * MainWindow.GridCellSize,
                        TextAlignment = TextAlignment.Center,
                        FontSize = MainWindow.GridCellSize,
-                       IsEnabled = false
+                       IsEnabled = false,
+                       TextWrapping = TextWrapping.Wrap
                    };
             App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
