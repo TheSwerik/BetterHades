@@ -34,6 +34,7 @@ namespace BetterHades.Util
         public static void New()
         {
             CurrentFile = Unnamed;
+            Input.Counter = Output.Counter = 1;
             Changed();
         }
 
@@ -69,7 +70,7 @@ namespace BetterHades.Util
         {
             CurrentFile = fileName;
             var lines = File.ReadAllLines(_currentFile.FullName);
-            App.MainWindow.New(null, null);
+            App.MainWindow.New(null, null, true);
             CurrentFile = fileName;
             LoadComponents(lines.TakeWhile(l => !l.Contains("----------")));
             Dispatcher.UIThread.InvokeAsync
@@ -108,15 +109,12 @@ namespace BetterHades.Util
                 var vars = line.Split(";");
                 var t = Type.GetType(vars[0]);
                 if (t == null) throw new ComponentNotFoundException(vars[0]);
-                App.MainWindow.GridCanvas.Components.Add
-                (
-                    (Component) Activator.CreateInstance
-                    (
-                        t,
-                        new Point(double.Parse(vars[1]), double.Parse(vars[2])),
-                        bool.Parse(vars[3])
-                    ) ?? throw new ComponentNotFoundException(vars[0])
-                );
+                var args = new List<object>
+                           {new Point(double.Parse(vars[1]), double.Parse(vars[2])), bool.Parse(vars[3])};
+                if (vars.Length >= 5) args.Add(vars[4].Trim());
+                App.MainWindow.GridCanvas.Components.Add(
+                    (Component) Activator.CreateInstance(t, args.ToArray()) ??
+                    throw new ComponentNotFoundException(vars[0]));
             }
         }
 

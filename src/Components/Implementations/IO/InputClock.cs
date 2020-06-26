@@ -13,8 +13,11 @@ namespace BetterHades.Components.Implementations.IO
         // TODO remove this constructor
         // ReSharper disable once IntroduceOptionalParameters.Global
         public InputClock(Point pos, bool isActive) : this(pos, isActive, 1000) { }
+        public InputClock(Point pos, bool isActive, string name) : this(pos, isActive, name, 1000) { }
 
-        public InputClock(Point pos, bool isActive, long duration) : base(pos, isActive)
+        public InputClock(Point pos, bool isActive, long duration) : this(pos, isActive, null) { }
+
+        public InputClock(Point pos, bool isActive, string name, long duration) : base(pos, isActive, name)
         {
             //TODO Popup when Constructing
             _duration = duration;

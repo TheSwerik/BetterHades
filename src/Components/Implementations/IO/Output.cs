@@ -10,14 +10,19 @@ namespace BetterHades.Components.Implementations.IO
 {
     public class Output : ObservingComponent
     {
-        private static int _counter = 1;
-        private string _name = $"o{_counter}";
+        public static int Counter = 1;
+        private string _name = $"o{Counter}";
 
-        public Output(Point pos, bool isActive) : base(pos, isActive, $"o{_counter++}")
+        public Output(Point pos, bool isActive) : this(pos, isActive, null) { }
+
+        public Output(Point pos, bool isActive, string name) : base(pos, isActive, $"o{Counter++}")
         {
             Polygon.Fill = IsActive ? Brushes.Red : Brushes.Gray;
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * 0.8);
+            if (name == null || Name.Equals(name)) return;
+            Name = name;
+            Counter--;
         }
 
         protected override double PositionMultiplier => 1 - 0.2 * (Text.FontSize / MainWindow.GridCellSize * 1.4);
@@ -28,7 +33,7 @@ namespace BetterHades.Components.Implementations.IO
             set
             {
                 Text.Text = _name = value;
-                Text.FontSize = (double) MainWindow.GridCellSize * _name.Length / 27;
+                Text.FontSize = (double) MainWindow.GridCellSize / _name.Length * 2;
                 Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
                 Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             }
