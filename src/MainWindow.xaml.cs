@@ -210,6 +210,7 @@ namespace BetterHades
             Config.AddFileToHistory(result);
         }
 
+        public void Export(object sender, RoutedEventArgs args) { HadesFileHandler.ExportToHades(); }
         public void Exit(object sender, RoutedEventArgs args) { Close(); }
 
         public void AboutOnClick(object sender, RoutedEventArgs args)

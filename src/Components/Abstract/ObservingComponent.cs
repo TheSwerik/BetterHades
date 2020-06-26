@@ -10,7 +10,7 @@ namespace BetterHades.Components
 {
     public abstract class ObservingComponent : Component, IObserver<Connection>
     {
-        protected readonly ObservableCollection<Connection> Inputs;
+        public readonly ObservableCollection<Connection> Inputs;
         private Ellipse InPointCircle;
 
         protected ObservingComponent(Point pos, bool isActive, string text) : base(pos, isActive, text)

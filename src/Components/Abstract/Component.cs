@@ -26,15 +26,18 @@ namespace BetterHades.Components
             Output = 203
         }
 
-        private readonly List<Connection> _outputs;
+        private static int _nameCounter = 1;
+        public readonly string Name;
+
+        public readonly List<Connection> Outputs;
+        protected readonly TextBlock Text;
         protected Ellipse OutPointCircle;
         public Polygon Polygon;
         public Point Pos;
-        public TextBlock Text;
 
         protected Component(Point position, bool isActive, string text)
         {
-            _outputs = new List<Connection>();
+            Outputs = new List<Connection>();
             IsActive = isActive;
             Pos = position;
             Polygon = new Polygon {Fill = Brushes.Gray, Points = GetPoints()};
@@ -53,6 +56,7 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Add(Text);
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75);
+            Name = "i" + _nameCounter++;
         }
 
         protected virtual double PositionMultiplier => 1;
@@ -67,11 +71,11 @@ namespace BetterHades.Components
         */
         public IDisposable Subscribe(IObserver<Component> observer)
         {
-            _outputs.Add((Connection) observer);
+            Outputs.Add((Connection) observer);
             return (observer as IDisposable)!;
         }
 
-        public void Notify(bool b) { _outputs.ForEach(o => o.OnNext(this)); }
+        public void Notify(bool b) { Outputs.ForEach(o => o.OnNext(this)); }
 
         // Converters
         public static Dictionary<string, List<Type>> ToDictionary()
@@ -107,14 +111,14 @@ namespace BetterHades.Components
             App.MainWindow.GridCanvas.Canvas.Children.Add(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             OutPointCircle = GenerateIOPort(OutPoint, Brushes.Blue);
-            _outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
+            Outputs.ForEach(c => c.UpdateLine(oldOut, OutPoint));
             Canvas.SetLeft(Text, Pos.X - MainWindow.GridCellSize * PositionMultiplier);
             Canvas.SetTop(Text, Pos.Y - MainWindow.GridCellSize * 0.75 * (Text.FontSize / MainWindow.GridCellSize));
         }
 
         public virtual void Remove()
         {
-            for (var i = 0; i < _outputs.Count; i++) _outputs[i--].Remove();
+            for (var i = 0; i < Outputs.Count; i++) Outputs[i--].Remove();
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Polygon);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(OutPointCircle);
             App.MainWindow.GridCanvas.Canvas.Children.Remove(Text);
@@ -122,7 +126,7 @@ namespace BetterHades.Components
 
         public virtual void Remove(Connection connection)
         {
-            if (_outputs.Contains(connection)) _outputs.Remove(connection);
+            if (Outputs.Contains(connection)) Outputs.Remove(connection);
         }
 
         // Abstract
