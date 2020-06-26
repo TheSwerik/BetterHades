@@ -11,15 +11,15 @@ namespace BetterHades.Util
     {
         private const string FileName = "config.cfg";
         private static string _fullPath;
-        public static OpeningBehaviour OpeningBehaviour = OpeningBehaviour.AlwaysAsk;
         private static Queue<string> _fileHistory;
+        public static OpeningBehaviour OpeningBehaviour = OpeningBehaviour.AlwaysAsk;
 
         private static readonly string[] Headers =
         {
             "Better Hades Config File\n",
             "[FileHistory]\n",
-            "[WindowOpeningBehaviour] (Valid Options are \"AlwaysAsk\", \"AlwaysOpen\", \"NeverOpen\",\n",
-            "Always ask"
+            "[WindowOpeningBehaviour] (Valid Options are \"AlwaysAsk\", \"AlwaysOpen\", \"NeverOpen\"",
+            "AlwaysAsk"
         };
 
         public static IEnumerable<string> FileHistory => _fileHistory.Reverse();
@@ -32,8 +32,8 @@ namespace BetterHades.Util
             foreach (var file in ReadProperty("FileHistory").Reverse())
                 if (File.Exists(file))
                     _fileHistory.Enqueue(file);
+            OpeningBehaviour = OpeningBehaviourMethods.Parse(ReadProperty("WindowOpeningBehaviour").First());
             Save();
-            //TODO Window opening weitermachen
         }
 
         public static void AddFileToHistory(string file)
@@ -62,6 +62,7 @@ namespace BetterHades.Util
                 _fullPath, WriteProperty(ConfigHeader.WindowOpeningBehaviour, OpeningBehaviour.ToString()));
         }
 
+        // Helper Methods
         private static IEnumerable<string> ReadProperty(string property)
         {
             if (!property.Contains("[")) property = "[" + property + "]";
